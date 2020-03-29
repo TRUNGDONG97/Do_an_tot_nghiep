@@ -2,9 +2,9 @@
 	GO
 /****** Object:  Database [ManagerAbsent]    Script Date: 02/25/2020 16:14:52 ******/
 CREATE DATABASE [ManagerAbsent1] ON  PRIMARY 
-( NAME = N'ManagerAbsent1', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.MSSQLSERVER\MSSQL\DATA\ManagerAbsent1.mdf' , SIZE = 2304KB , MAXSIZE = UNLIMITED, FILEGROWTH = 1024KB )
+( NAME = N'ManagerAbsent1', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS\MSSQL\DATA\ManagerAbsent1.mdf' , SIZE = 2304KB , MAXSIZE = UNLIMITED, FILEGROWTH = 1024KB )
  LOG ON 
-( NAME = N'ManagerAbsent1_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.MSSQLSERVER\MSSQL\DATA\ManagerAbsent1_log.LDF' , SIZE = 832KB , MAXSIZE = 2048GB , FILEGROWTH = 10%)
+( NAME = N'ManagerAbsent1_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS\MSSQL\DATA\ManagerAbsent1_log.LDF' , SIZE = 832KB , MAXSIZE = 2048GB , FILEGROWTH = 10%)
 GO
 ALTER DATABASE [ManagerAbsent1] SET COMPATIBILITY_LEVEL = 100
 GO
@@ -248,6 +248,8 @@ CREATE TABLE [dbo].[ABSENT_DETAIL](
 	[STATUS] [tinyint] NULL,
 	[COMMENT] [nvarchar](max) NULL,
 	[USER_UPDATE_ID] [int] NULL,
+	[SSID] [nvarchar] NULL,
+	[GPS] [nvarchar] NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
@@ -326,7 +328,6 @@ GO
 /****** Object:  Default [DF__USER__IS_ACTIVE]  ******/
 ALTER TABLE [dbo].[USER] ADD  DEFAULT ((1)) FOR [IS_ACTIVE]
 GO
-/****** Object:  Default [DF__CONFIG_TI__START]     ******/
 
 /****** Object:  Default [DF__SUBJECT__NAME]    ******/
 ALTER TABLE [dbo].[SUBJECT] ADD  DEFAULT ('') FOR [NAME]

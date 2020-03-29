@@ -1,18 +1,7 @@
 var express = require('express');
 var router = express.Router();
-// var mySql = require('mysql')
 
-/* GET users listing. */
-// router.get('/', function (req, res, next) {
-//     var user = {
-//         id: 12,
-//         username: "Thangnt"
-//     }
-//
-//
-//     res.json(user);
-// });
-
+ 
 
 /* GET login listing. */
 router.get('/login', function (req, res, next) {
@@ -48,39 +37,6 @@ router.get('/login', function (req, res, next) {
 });
 
 
-// router.get('/getUserById/', (req, res) => {
-//     console.log(req.query.id)
-//     const connection = mySql.createConnection({
-//         host: 'localhost',
-//         user: 'root',
-//         password: '123456Aa@',
-//         database: 'itachi'
-//     })
-//     connection.query('select * from user', (err, row, feild) => {
-//         console.log(err)
-//         var result = {
-//             data: row
-//         }
-//         res.json(result)
-//     })
-// })
 
-
-// router.get('/delUserById/', (req, res) => {
-//     console.log(req.query.id)
-//     const connection = mySql.createConnection({
-//         host: 'localhost',
-//         user: 'root',
-//         password: '123456Aa@',
-//         database: 'itachi'
-//     })
-//     connection.query('select * from user', (err, row, feild) => {
-//         console.log(err)
-//         var result = {
-//             data: row
-//         }
-//         res.json(result)
-//     })
-// })
 
 module.exports = router;
