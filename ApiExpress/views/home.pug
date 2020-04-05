@@ -1,0 +1,24 @@
+html
+  head
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" >  
+  <link rel="stylesheet" href="/stylesheets/home.css" >
+
+  body
+    .container
+      .row
+        .col-sm-3
+          ul.nav.nav-tabs.tabs-left(role='tablist')
+            li.active(role='presentation')
+              a(href='#home' aria-controls='home' role='tab' data-toggle='tab') Home
+            li(role='presentation')
+              a(href='#profile' aria-controls='profile' role='tab' data-toggle='tab') Profile
+            li(role='presentation')
+              a(href='#messages' aria-controls='messages' role='tab' data-toggle='tab') Messages
+            li(role='presentation')
+              a(href='#settings' aria-controls='settings' role='tab' data-toggle='tab') Settings
+        .col-sm-9
+          .tab-content
+            #home.tab-pane.active(role='tabpanel') home tab
+            #profile.tab-pane(role='tabpanel') profile tab
+            #messages.tab-pane(role='tabpanel') messages tab
+            #settings.tab-pane(role='tabpanel') setting tabs

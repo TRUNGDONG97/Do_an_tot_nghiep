@@ -1,0 +1,25 @@
+html
+  head
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" >  
+    <link rel="stylesheet" href="/stylesheets/login.css" >
+
+  body
+    #login
+      .container
+        #login-row.row.justify-content-center.align-items-center
+          #login-column.col-md-6
+            #login-box.col-md-12             
+              form#login-form.form(action='/login' method='post')
+                h2.text-center.text-title Đăng nhập
+                if error
+                  .alert.alert-danger #{error}
+                .form-group
+                  label.text-title(for='username') Tài Khoản:
+                  br
+                  input#username.form-control(type='text' name='username' value=values?values.username:'')
+                .form-group
+                  label.text-title(for='password') Mật Khẩu:
+                  br
+                  input#password.form-control(type='password' name='password' value=values?values.password:'' )
+                .form-group
+                  input.btn-login(type='submit' name='submit' value='Đăng nhập')
