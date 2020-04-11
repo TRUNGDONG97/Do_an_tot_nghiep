@@ -1,24 +1,40 @@
-html
-  head
+doctype html
+head
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" >  
   <link rel="stylesheet" href="/stylesheets/home.css" >
-
-  body
-    .container
-      .row
-        .col-sm-3
-          ul.nav.nav-tabs.tabs-left(role='tablist')
-            li.active(role='presentation')
-              a(href='#home' aria-controls='home' role='tab' data-toggle='tab') Home
-            li(role='presentation')
-              a(href='#profile' aria-controls='profile' role='tab' data-toggle='tab') Profile
-            li(role='presentation')
-              a(href='#messages' aria-controls='messages' role='tab' data-toggle='tab') Messages
-            li(role='presentation')
-              a(href='#settings' aria-controls='settings' role='tab' data-toggle='tab') Settings
-        .col-sm-9
-          .tab-content
-            #home.tab-pane.active(role='tabpanel') home tab
-            #profile.tab-pane(role='tabpanel') profile tab
-            #messages.tab-pane(role='tabpanel') messages tab
-            #settings.tab-pane(role='tabpanel') setting tabs
+  <link href="https://use.fontawesome.com/releases/v5.0.11/css/all.css" rel="stylesheet">
+  script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js') 
+  script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js')
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js')
+  script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js')
+  meta(name='viewport' content='width=device-width, initial-scale=1')
+  meta(charset='utf-8')
+  script.
+    $(document).ready{
+      alert('hello')
+    }
+  .container-fluid
+    .div-logo
+      img(src='/images/img_logo_bk.jpg')
+      .dropdown
+        button#btn-drop.btn.dropdown-toggle(type='button', data-toggle='dropdown')
+          | admin
+        .dropdown-menu
+          a.dropdown-item(href='#') Đổi mật khẩu
+          a.dropdown-item(href='#') Đăng xuất
+    .sidebar
+      #v-pills-tab.nav.flex-column.nav-pills(role='tablist' aria-orientation='vertical')
+        a#generality-tab.nav-link.active(data-toggle='pill' href='#generality' role='tab' aria-controls='generality' aria-selected='true') Tổng quát
+        a#listStudent-tab.nav-link(data-toggle='pill' href='#list-student' role='tab' aria-controls='list-student' aria-selected='false') Danh sách sinh viên
+        a#listTeacher-tab.nav-link(data-toggle='pill' href='#list-teacher' role='tab' aria-controls='list-teacher' aria-selected='false') Danh sách Giáo viên
+        a#listClass-tab.nav-link(data-toggle='pill' href='#list-class' role='tab' aria-controls='list-class' aria-selected='false') Danh sách lớp
+    #content.tab-content
+      #generality.tab-pane.fade.show.active(role='tabpanel' aria-labelledby='generality-tab') 
+        include generality
+      #list-student.tab-pane.fade(role='tabpanel' aria-labelledby='listStudent-tab') 
+        include listStudent
+      #list-teacher.tab-pane.fade(role='tabpanel' aria-labelledby='listTeacher-tab') 
+        include listTeacher
+      #list-class.tab-pane.fade(role='tabpanel' aria-labelledby='listClass-tab')
+        include listClass
+  

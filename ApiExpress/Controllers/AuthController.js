@@ -8,6 +8,7 @@ const postLogin = async(req, res, next) => {
     // console.log(req.body)
     var user_name = req.body.username
     var password = md5(req.body.password)
+    console.log(md5('admin'))
         // console.log(user_name)
         // var hashPass = md5(123456)
         // console.log(hashPass)

@@ -6,6 +6,6 @@ const router = express.Router();
 // router.post('/', testControlller.AddTeacher);
 
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+    res.render('index', { name: 'John' });
 });
 module.exports = router;
