@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize'
 import { sequelize, Op } from '../ConnectData/database'
-const Teacher = sequelize.define('User', {
+const User = sequelize.define('User', {
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true,
@@ -36,4 +36,4 @@ const Teacher = sequelize.define('User', {
     })
     // Teacher.hasMany(Absent,{foreignKey:'teacher_id',sourceKey:'id'})
     // Absent.belongsTo(Teacher,{foreignKey:'teacher_id',targetKey:'id'})
-export default Teacher
+export default User

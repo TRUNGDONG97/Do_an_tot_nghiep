@@ -5,10 +5,15 @@ import cookieParser from 'cookie-parser'
 import logger from 'morgan'
 import indexRouter from './routes/index'
 import usersRouter from './routes/users'
-import teacherRouter from './routes/teacher'
-import loginRouter from './routes/authRouter'
+// import teacherRouter from './routes/teacher'
+import authRouter from './routes/authRouter'
 import homeRouter from './routes/homeRouter'
+import studentRouter from './routes/studentRouter'
+import teacherRouter from './routes/teacherRouter'
+import classRouter from './routes/classRouter'
 import AuthMiddleware from './Middlewares/AuthMiddleware'
+import logoutRouter from './routes/logoutRouter'
+import teacher from './routes/teacher'
 // console.log(process.env)
 const app = express();
 
@@ -24,11 +29,15 @@ app.use(cookieParser('12312fdf'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/teachers', teacherRouter);
-app.use('/login', loginRouter);
+app.use('/user',  usersRouter);
+app.use('/teacher', AuthMiddleware.requireAuth, teacherRouter);
+app.use('/login', authRouter);
 app.use('/home', AuthMiddleware.requireAuth, homeRouter);
+app.use('/student', AuthMiddleware.requireAuth, studentRouter);
+app.use('/class', AuthMiddleware.requireAuth, classRouter);
+app.use('/logout', logoutRouter);
 
+app.use('/api/teacher', teacher);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     next(createError(404));

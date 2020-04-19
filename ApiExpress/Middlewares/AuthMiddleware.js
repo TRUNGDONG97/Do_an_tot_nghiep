@@ -3,9 +3,9 @@ import UserModel from '../Models/UserModel'
 const requireAuth = async(req, res, next) => {
     // console.log(req.cookies.user_name)
     var token = req.signedCookies.token
-    var user_name = req.signedCookies.user_name
+    var password = req.signedCookies.password
     if (!token) {
-        res.redirect('login');
+        res.redirect('/login');
         return;
     }
     try {
@@ -13,15 +13,15 @@ const requireAuth = async(req, res, next) => {
             attribute: ["token"],
             where: {
                 token,
-                user_name
+                password
             }
         })
         if (tokens.length < 0) {
-            res.redirect('login');
+            res.redirect('/login');
             return;
         }
     } catch (error) {
-        res.redirect('login');
+        res.redirect('/login');
         return
     }
     next();

@@ -1,7 +1,7 @@
 
 import Sequelize from 'sequelize'
 import {sequelize,Op} from '../ConnectData/database'
-import Absent from './AbsentModel'
+// import Absent from './AbsentModel'
 const Teacher = sequelize.define('Teacher', {
     id: {
         type: Sequelize.INTEGER,
@@ -28,15 +28,6 @@ const Teacher = sequelize.define('Teacher', {
         type: Sequelize.STRING,
         unique: 'compositeIndex'
     },
-    created_date: {
-        type: Sequelize.DATE
-    },
-    is_active: {
-        type: Sequelize.INTEGER
-    },
-    subject_id: {
-        type: Sequelize.INTEGER
-    },
     note: {
         type: Sequelize.STRING
     },
@@ -57,6 +48,6 @@ const Teacher = sequelize.define('Teacher', {
     timestamps:false,   
     freezeTableName: true ,
 })
-Teacher.hasMany(Absent,{foreignKey:'teacher_id',sourceKey:'id'})
-Absent.belongsTo(Teacher,{foreignKey:'teacher_id',targetKey:'id'})
+// Teacher.hasMany(Absent,{foreignKey:'teacher_id',sourceKey:'id'})
+// Absent.belongsTo(Teacher,{foreignKey:'teacher_id',targetKey:'id'})
 export default Teacher

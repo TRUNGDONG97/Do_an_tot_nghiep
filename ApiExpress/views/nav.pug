@@ -1,0 +1,65 @@
+.container-fluid
+    .div-logo
+        img(src='/images/img_logo_bk.jpg')
+        .dropdown
+            button#btn-drop.btn.dropdown-toggle(type='button' data-toggle='dropdown')
+                | admin
+            .dropdown-menu
+                button#changepass.dropdown-item(type='button' data-toggle='modal' data-target='#changePass')
+                    i.fas.fa-key
+                        | &nbsp; Đổi mật khẩu
+                button#logout.dropdown-item( type="button" onclick="logout()")
+                    i.fas.fa-sign-out-alt
+                        | &nbsp; Đăng xuất 
+
+    .sidebar
+        .tab-content
+            .tab-pane.active
+                nav.sidebar-nav
+                    ul.main-menu.metismenu
+                        li#tabHome.li-tab 
+                            a(href='/home/index')  
+                                i.fas.fa-tachometer-alt 
+                                    | &nbsp; Tổng quan
+                        li#tabStudent.li-tab
+                            a(href='/student/index')
+                                i.fas.fa-user-graduate
+                                    | &nbsp; Sinh viên
+                        li#tabTeacher.li-tab
+                            a(href='/teacher/index')
+                                i.fas.fa-chalkboard-teacher
+                                    | &nbsp; Giáo viên
+                        li#tabClass.li-tab
+                            a(href='/class/index') 
+                                i.fas.fa-house-user
+                                    | &nbsp; Lớp học
+#changePass.modal.fade(tabindex='-1' role='dialog' aria-labelledby='changePassTitle' aria-hidden='true')
+    .modal-dialog(role='document')
+        .modal-content
+            .modal-header
+                h5#exampleModalLabel.modal-title
+                    i.fa.fa-lock(aria-hidden='false')
+                    |   Thay đổi mật khẩu
+                button.close(type='button' data-dismiss='modal' aria-label='Close')
+                    span(aria-hidden='true') &times;
+            .modal-body
+                .row
+                    .col-md-12.col-sm-12.col-12
+                        label Mật khẩu hiện tại
+                        input#txtCurrentPassword.form-control(type='password')
+                .row.mt-2
+                    .col-md-12.col-sm-12.col-12
+                        label Mật khẩu mới
+                        input#txtNewPassword.form-control(type='password')
+                .row.mt-2
+                    .col-md-12.col-sm-12.col-12
+                        label Xác nhận mật khẩu mới
+                        input#txtConfirmPassword.form-control(type='password')
+                        //- i.iconChangePassword.text-success.fa.fa-check
+                        //- #notification.container-fluid
+
+            .modal-footer
+                button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+                button.btn.btn-primary(type='button' onclick="changePassword()") Save changes
+
+

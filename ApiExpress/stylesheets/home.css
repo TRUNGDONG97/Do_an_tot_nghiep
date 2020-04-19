@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    list-style: none;
+    text-decoration: none;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background-color: #f3f5f9;
+    flex-direction: row;
+}
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    width: 220px;
+    height: 100%;
+    background-color: #fff;
+    /* margin-top: 15px; */
+    margin-left: 15px;
+}
+
+.sidebar #v-pills-tab a {
+    display: block;
+    height: 100%;
+    width: 100%;
+    line-height: 40px;
+    font-size: 18px;
+    /* color: #fff; */
+    padding-left: 20px;
+    /* box-sizing: border-box; */
+    margin-top: 5px;
+    box-shadow: 0px 0px 1px;
+}
+
+.container-tab {
+    margin-top: 15px;
+    margin-left: 250px;
+}
+
+.div-logo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    /* width: 100%; */
+    background-color: #fff;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 1px;
+}
+
+.div-logo img {
+    height: 150px;
+    width: 100px;
+    margin-left: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.div-logo .dropdown button {
+    margin-right: 100px;
+    background-color: #fff !important;
+    color: red;
+    margin-top: 10px;
+}
+.container-fluid .row{
+    justify-content: space-around;
+    /* margin: auto; */
+    /* background-color: red   ; */
+    overflow: hidden;
+}
+.container-fluid .row .selection {  
+    padding:10px;
+    border-radius: 5px;
+    height: 120px;
+    /* background-color: coral; */
+    margin-top: 30px;
+}
+    
+.container-fluid .row .selection .wrapper .icon i{
+    font-size: 80px;
+    padding:10px;
+    color: #fff;
+}
+#student-selection{
+    background-image: linear-gradient(to bottom right, rgb(241, 137, 137), rgb(202, 11, 11));
+}
+#teacher-selection{
+    background-image: linear-gradient(to bottom right, rgb(169, 238, 255), rgb(13, 136, 145));
+}
+#class-selection{
+    background-image: linear-gradient(to bottom right, rgb(189, 253, 192), rgb(10, 136, 42));
+}
+.container-fluid .row .selection .wrapper .name{
+    margin: 10px;
+    color: #fff;
+}
+.container-tab .div-title h4{
+    margin-top: 10px;
+    color:rgb(74, 99, 104);
+    margin-left:5px ;
+}
+.container-fluid .row  .selection:hover{
+    margin-top: 20px;
+    transition:0.2s;
+}

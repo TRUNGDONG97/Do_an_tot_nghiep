@@ -1,7 +1,7 @@
 import Teacher from '../Models/TeacherModel'
 import { isNumeric, isEmty } from 'validator'
 import Absent from '../Models/AbsentModel'
-const AddTeacher = async (req, res, next) => {
+const addTeacher = async(req, res, next) => {
     let { name, phone, password, email } = req.body
     if (name.isEmty) {
         res.json({
@@ -13,7 +13,7 @@ const AddTeacher = async (req, res, next) => {
     }
 
     try {
-        
+
         let newTeacher = await Teacher.create({
             name,
             phone,
@@ -42,8 +42,16 @@ const AddTeacher = async (req, res, next) => {
             error: error
         })
     }
-   
+
 }
+// import UserModel from '../Models/UserModel'
+// import { isNumeric, isEmty } from 'validator'
+const getTeacher = async(req, res, next) => {
+    res.render('listTeacher');
+
+}
+
 export default {
-    AddTeacher: AddTeacher
+     addTeacher,
+     getTeacher
 }

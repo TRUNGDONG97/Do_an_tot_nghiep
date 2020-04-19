@@ -4,5 +4,5 @@ import TeacherControlller from'../Controllers/TeacherController'
 // const Absent = require('../public/Models/AbsentModel')
 const router = express.Router();
 /* GET home page. */
-router.post('/', TeacherControlller.AddTeacher);
+router.post('/', TeacherControlller.addTeacher);
 export default router;
