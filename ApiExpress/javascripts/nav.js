@@ -61,6 +61,7 @@ function changePassword() {
             text: "",
             icon: "success"
         })
+        return;
     } else {
         if (response.type == "WRONG_PASSWORD") {
             $("#txtCurrentPassword").val("");
@@ -69,64 +70,25 @@ function changePassword() {
                 text: "",
                 icon: "warning"
             })
+            return;
         } else {
             swal({
                 title: "Không thể đổi mật khẩu",
                 text: "",
                 icon: "warning"
             })
+            return;
         }
     }
     }).fail(function(jqXHR, textStatus, errorThrown) {
         // If fail
+        swal({
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            dangerMode: true,
+            icon: "warning"
+        })
         console.log(textStatus + ': ' + errorThrown);
+        return;
     });
-    // $.ajax({
-    //     url: '/user/changePass',
-    //     data: {
-    //         CurrentPassword: currentPassword,
-    //         NewPassword: newPassword
-    //     },
-    //     type: 'POST',
-    //     dataType: "json",
-    //     cache: false,
-    //     timeout: 50000,
-    //     success: function (response) {
-    //         //  alert(response.type == "SUCCESS")
-    //         // console.log("elll")
-    //         if (response.type == "SUCCESS") {
-    //             $("#changePass").modal("hide");
-    //             swal({
-    //                 title: "Đổi mật khẩu thành công",
-    //                 text: "",
-    //                 icon: "success"
-    //             })
-    //         } else {
-    //             if (response.type == "WRONG_PASSWORD") {
-    //                 $("#txtCurrentPassword").val("");
-    //                 swal({
-    //                     title: "Mật khẩu cũ không đúng",
-    //                     text: "",
-    //                     icon: "warning"
-    //                 })
-    //             } else {
-    //                 swal({
-    //                     title: "Không thể đổi mật khẩu",
-    //                     text: "",
-    //                     icon: "warning"
-    //                 })
-    //             }
-    //         }
-    //     },
-    //     error: function (result) {
-    //         // console.log(result);
-    //         alert('co loi')
-    //         // swal({
-    //         //     title: "Có lỗi",
-    //         //     text: "",
-    //         //     icon: "warning"
-    //         // })
-    //     }
-    // });
-
 }

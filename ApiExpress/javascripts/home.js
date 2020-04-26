@@ -1,26 +1,30 @@
-const ajaxGetStudent=$.ajax({
-    url: '/getStudent',
+// import {ajaxGetClass,ajaxGetTeacher,ajaxGetStudent} from '../constants/ajax'
+const ajaxGetCountStudent=$.ajax({
+    url: '/getCountStudent',
         type: 'GET',
         dataType: "json",
         cache: false,
         timeout: 50000,
 })
-const ajaxGetClass=$.ajax({
-    url: '/getClass',
+const ajaxGetCountClass=$.ajax({
+    url: '/getCountClass',
         type: 'GET',
         dataType: "json",
         cache: false,
         timeout: 50000,
 })
-const ajaxGetTeacher=$.ajax({
-    url: '/getTeacher',
+const ajaxGetCountTeacher=$.ajax({
+    url: '/getCountTeacher',
         type: 'GET',
         dataType: "json",
         cache: false,
         timeout: 50000,
 })
-
+// ajaxGetStudent.id=1
+// ajaxGetTeacher.id=2
+// ajaxGetClass.id=3
 $(document).ready(function () {
+    
     $('#tabHome a').css({
         "background-color": "#17a2b8",
         "color": "#fff"
@@ -34,10 +38,17 @@ $(document).ready(function () {
     $('#class-selection').click(function() {
         window.location = '/class/index';
     })
-    $.when(ajaxGetStudent,ajaxGetTeacher,ajaxGetClass).done(function(resStudent,resTeacher,resClass) {
-        $('#student-selection span').append(resStudent[0].students.length)
-        $('#teacher-selection span').append(resTeacher[0].teachers.length)
-        $('#class-selection span').append(resClass[0].classes.length)
+    $.when(ajaxGetCountStudent,ajaxGetCountTeacher,ajaxGetCountClass).done(function(resStudent,resTeacher,resClass) {
+        $('#student-selection span').append(resStudent[0].countStudent)
+        $('#teacher-selection span').append(resTeacher[0].countTeacher)
+        $('#class-selection span').append(resClass[0].countClass)
+    }).fail(function(result){
+        swal({
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true
+        })
+        console.log(result)
     })
-   
 });

@@ -1,0 +1,39 @@
+//- if pageCount>1
+//-     ul#pagination.pagination.well-sm
+//-         if 
+//-             li.page-item.previous
+//-                 a.page-link(href=paginate.href(true)).prev
+//-                     i.fas.fa-angle-double-left
+//-         if pages
+//-             each page in pages
+//-                 if(page.number==currentPage)
+//-                     li.page-item
+//-                         a.page-link.active(href=page.url)= page.number
+//-                 else
+//-                     li.page-item
+//-                         a.page-link(href=page.url)= page.number
+//-         if currentPage < pageCount
+//-             li.page-item.next
+//-                 a.page-link(href=paginate.href()).next
+//-                     i.fas.fa-angle-double-right
+
+//- h1 #{STT} 
+//- &nbsp;
+//- h1 #{pageCount}
+//- &nbsp;
+//- h1 #{currentPage}
+if pageCount>=1
+    if  currentPage>1
+        button.btn.page-item(onclick='getStudent('+pages.prev+')')
+            i.fas.fa-angle-double-left
+    if pages
+        each page in pages.pages
+            if(page==currentPage)
+                button#paginateActive.btn.page-item(onclick='getStudent('+page+')') #{page}
+            else
+                button.btn.page-item(onclick='getStudent('+page+')') #{page}
+                
+    if  currentPage < pageCount
+        button.btn.page-item(onclick='getStudent('+pages.next+')')
+            i.fas.fa-angle-double-right
+    

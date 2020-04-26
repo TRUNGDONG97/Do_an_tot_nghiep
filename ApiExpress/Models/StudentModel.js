@@ -47,7 +47,7 @@ const Students = sequelize.define('Students', {
         type: Sequelize.INTEGER
     },
     mssv: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
     }
    
 },{

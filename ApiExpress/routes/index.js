@@ -9,7 +9,10 @@ router.get('/', function(req, res, next) {
     res.render('index', { name: 'John' });
 });
 router.post('/user/changePass',WebApi.changePass)
-router.get('/getStudent',WebApi.getStudent)
-router.get('/getTeacher',WebApi.getTeacher)
-router.get('/getClass',WebApi.getClass)
+router.get('/getCountStudent',WebApi.getCountStudent)
+router.get('/getCountTeacher',WebApi.getCountTeacher)
+router.get('/getCountClass',WebApi.getCountClass)
+router.post('/getStudent',WebApi.getStudent)
+router.post('/student/search',WebApi.searchStudent)
+router.post('/student/delete',WebApi.deleteStudent)
 module.exports = router;

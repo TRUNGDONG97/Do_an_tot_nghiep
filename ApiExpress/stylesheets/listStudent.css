@@ -20,3 +20,77 @@ body {
     color:rgb(74, 99, 104);
     margin-left:5px ;
 }
+.container-tab .container-fluid th{
+    /* display: flex; */
+    /* align-items: center; */
+    /* flex-direction: row;  */
+    /* background-color: red; */
+    text-align: center;
+}
+.container-tab .container-fluid .table{
+    margin-top:20px ;
+    margin-bottom: 50px;
+}
+/* .btn-group{
+    justify-content: space-around;
+    background-color: #28a745;
+    ;
+} */
+.btn-success{
+    background-color: #f3f5f9 ;
+    border-color: #f3f5f9;
+    color: #28a745;
+    padding: 0px;
+    margin-right: 2px;
+}
+.btn-danger{
+    background-color: #f3f5f9 ;
+    border-color: #f3f5f9;
+    color: red;
+    padding: 0px;
+    margin-left: 2px;
+}
+.container-tab .container-fluid .table tr{
+    font-size: 15px;
+    /* background-color: #f3f5f9 ;  */
+}
+.container-tab .container-fluid .table tr i{
+    height: 20px;
+    width: 20px;
+}
+.container-tab .container-fluid .table tr:hover{
+    background-color: #b9fafa;
+}
+/* #pagination{
+    margin-right: 20px;
+} */
+/* #pagination li {
+    display: flex;
+    align-items: center;
+} */
+/* #pagination li .active{
+    background-color:#b9fafa !important ;
+} */
+.div-search .col-md-10{
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+    align-items: center ;
+    /* text-align: center; */
+    /* background-color: #28a745; */
+}
+.div-search .col-md-10 button{
+    margin-left: 20px;
+}
+#txtMssv{
+    margin-left: 20px;
+}
+#tableStudent thead tr{
+    background-color: #56e2e2;
+}
+
+#paginateStudent{
+    margin-left: 20px;
+    margin-bottom: 20px;
+    margin-right: 20px;
+}

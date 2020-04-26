@@ -7,7 +7,14 @@
     text-decoration: none;
     font-family: 'Roboto', sans-serif;
 }
-
+*:focus {
+    outline: none;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 body {
     background-color: #f3f5f9;
 }
@@ -44,7 +51,22 @@ body {
     color: red;
     margin-top: 10px;
 }
-
+.btn.active.focus,
+.btn.active:focus,
+.btn.focus,
+.btn.focus:active,
+.btn:active:focus,
+.btn:focus {
+  outline: 0 !important;
+  outline-offset: 0  !important;
+  background-image: none  !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none  !important;
+}
+#btn-drop:focus{
+    background-color:#17a2b8 !important ;
+    color:#fff;
+}
 
 
 .container-fluid .sidebar {
@@ -92,3 +114,13 @@ body {
 /* #notification{
     flex-direction: row;
 } */
+
+.page-item{
+    padding: 2px;
+    height: 26px;
+    width: 20px;
+    color: #17a2b8;
+    text-align: center;
+    border-width: 0.5px;
+    border-color: #17a2b8;
+}

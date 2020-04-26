@@ -13,8 +13,8 @@ const logout = async (req, res, next) => {
 }
 const postLogin = async (req, res, next) => {
     // console.log(req.body)
-    var user_name = req.body.username
-    var password = md5(req.body.password)
+    var user_name = req.body.username.trim()
+    var password = md5(req.body.password.trim())
     // console.log(md5('admin'))
     // console.log(req.body.password)
     // console.log(password)
@@ -28,7 +28,7 @@ const postLogin = async (req, res, next) => {
         })
         return;
     }
-    if (isEmpty(password)) {
+    if (isEmpty(req.body.password.trim())) {
         res.render('login', {
             error: 'Bạn chưa nhập mật khẩu',
             values: req.body
@@ -69,7 +69,9 @@ const postLogin = async (req, res, next) => {
         //     data: {},
         //     error: error
         // })
-        res.render('error')
+        res.render('error',{
+            error:error
+        })
         return;
     }
 }
