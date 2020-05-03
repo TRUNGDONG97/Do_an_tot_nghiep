@@ -1,5 +1,5 @@
 const getClass = async(req, res, next) => {
-    res.render('listClass');
+    res.render('ClassView');
 
 }
 export default {

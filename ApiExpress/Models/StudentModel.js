@@ -1,6 +1,6 @@
 
 import Sequelize from 'sequelize'
-import {sequelize,Op} from '../ConnectData/database'
+import {sequelize,Op} from '../connectData/Database'
 // import Absent from './AbsentModel'
 const Students = sequelize.define('Students', {
     id: {
@@ -38,12 +38,6 @@ const Students = sequelize.define('Students', {
         type: Sequelize.STRING
     },
     sex: {
-        type: Sequelize.INTEGER
-    },
-    mark1: {
-        type: Sequelize.INTEGER
-    },
-    mark2: {
         type: Sequelize.INTEGER
     },
     mssv: {

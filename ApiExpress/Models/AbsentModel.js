@@ -1,5 +1,5 @@
 import Sequelize from 'sequelize'
-import {sequelize,Op} from '../ConnectData/database'
+import {sequelize,Op} from '../connectData/Database'
 const Absent = sequelize.define('absent', {
     id: {
         type: Sequelize.INTEGER,

@@ -1,0 +1,47 @@
+#addStudentModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='addStudentTitle' aria-hidden='true')
+  .modal-dialog.modal-lg
+    .modal-content(style='color: #007bff')
+      .modal-header(style='background-color: #d8061a')
+        h5.modal-title(style='color: white;')
+          i.fas.fa-user-plus(aria-hidden='false')
+          |   Thêm sinh viên
+        button.close(type='button' data-dismiss='modal' aria-label='Close' style='color: white;' )
+          span(aria-hidden='true') &times;
+      .modal-body(style='margin-bottom:20px;background-color: #f3f5f9;')
+        .row(style='margin-bottom:20px;')
+          mixin propStudent(id,title,type)
+            .row(style='margin-top:20px;')
+              label.col-md-4.col-sm-4.col-4(style='padding-top:6px;padding-right:10px;') #{title}:
+              .col-md-8.col-sm-8.col-8(style='margin-bottom:20px;')
+                input.form-control(type=type id=id) 
+          .col-md-6.col-sm-6.col-6
+            + propStudent('txtAddName','Họ và tên','text')
+            + propStudent('txtAddMssv','Mssv','number')
+            + propStudent('txtAddPhone','Số điện','number')
+            .row(style='margin-top:20px;')
+              label.col-md-4.col-sm-4.col-4(style='padding-right:10px') Ngày sinh:
+              .col-md-8.col-sm-8.col-8
+                input#txtAddBirthday(data-date-format='yyyy-mm-dd')
+          .col-md-6.col-sm-6.col-6
+            + propStudent('txtAddAddress','Địa chỉ','text')
+            + propStudent('txtAddEmail','Email','text')
+            .row(style='margin-top:20px;')
+              label.col-md-4.col-sm-4.col-4(style='padding-right:10px;') Giới tính:
+              .col-md-8.col-sm-8.col-8
+                .row
+                  .form-check(style='margin-left:15px')
+                    input#addSexMale.form-check-input(type='radio' name='groupOfMaterialRadios' checked='true')
+                    label.form-check-label(for='materialGroupExample1') Nam
+                  .form-check(style='margin-left:30px')
+                    input#addSexFemale.form-check-input(type='radio' name='groupOfMaterialRadios' )
+                    label.form-check-label(for='materialGroupExample2') Nữ
+            .row(style='margin-top:20px;')
+              label.col-md-4.col-sm-4.col-4(style='padding-top:6px;padding-right:10px;') Ảnh đại diện:
+              .col-md-8.col-sm-8.col-8(style='margin-bottom:20px;')
+                .custom-file
+                  input#addUrlImage.custom-file-input(type='file' aria-describedby='inputGroupFileAddon01')
+                  label.custom-file-label(for='addUrlImage') Choose file
+      .modal-footer
+        button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+        button.btn.btn-danger(type='button' onclick="addStudent()") Add Student         
+

@@ -1,0 +1,48 @@
+
+doctype html
+html
+  include Layout
+  style
+    include ../stylesheets/HomeStyle.css
+  script
+    include ../javascripts/HomeScript.js
+  body
+    include NavbarView
+    .container-tab
+      .div-title
+        h4
+          i.fas.fa-tachometer-alt
+            |  &nbsp;  Tổng quan      
+      .container-fluid      
+        .row
+          // Count item widget
+          #student-selection.selection.col-xl-3
+            .wrapper.count-title.d-flex
+              .icon
+                i.fas.fa-user-graduate
+              .name
+                strong.text-uppercase Sinh viên 
+                br
+                span Số lượng : 
+                //- p#numberStudent
+
+          // Count item widget
+          #teacher-selection.selection.col-xl-3
+            .wrapper.count-title.d-flex
+              .icon
+                i.fas.fa-chalkboard-teacher
+              .name
+                strong.text-uppercase Giáo viên
+                br
+                span Số lượng : 
+          // Count item widget
+          #class-selection.selection.col-xl-3
+            .wrapper.count-title.d-flex
+              .icon
+                i.fas.fa-house-user
+              .name
+                strong.text-uppercase Lớp học
+                br
+                span Số lượng: 
+
+

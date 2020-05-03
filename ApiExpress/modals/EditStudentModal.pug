@@ -1,0 +1,51 @@
+#EditStudentModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='editStudentTitle' aria-hidden='true')
+  .modal-dialog.modal-lg
+    .modal-content(style='color: #007bff')
+      .modal-header(style='background-color: #28a745')
+        h5.modal-title(style='color: white;')
+          i.fas.fa-user-plus(aria-hidden='false')
+          |   Sửa thông tin sinh viên
+        button.close(type='button' data-dismiss='modal' aria-label='Close' style='color: white;' )
+          span(aria-hidden='true') &times;
+      .modal-body(style='margin-bottom:20px;background-color: #f3f5f9;')
+        .row(style='margin-bottom:20px;')
+          mixin propStudent(id,title,type,value)
+            .row(style='margin-top:20px;')
+              label.col-md-4.col-sm-4.col-4(style='padding-top:6px;padding-right:10px;') #{title}:
+              .col-md-8.col-sm-8.col-8(style='margin-bottom:20px;')
+                input.form-control(type=type id=id value=value) 
+          .col-md-6.col-sm-6.col-6
+            + propStudent('txtEditName','Họ và tên','text',student.name)
+            + propStudent('txtEditMssv','Mssv','number',student.mssv)
+            + propStudent('txtEditPhone','Số điện thoại','text',student.phone)
+            //- .row(style='margin-top:20px;')
+            //-   label.col-md-4.col-sm-4.col-4(style='padding-top:6px;padding-right:10px;') Số điện thoại:
+            //-   .col-md-8.col-sm-8.col-8(style='margin-bottom:20px;')
+            //-       input#txtEditPhone.form-control(type='text' ) 
+            .row(style='margin-top:20px;')
+              label.col-md-4.col-sm-4.col-4(style='padding-right:10px') Ngày sinh:
+              .col-md-8.col-sm-8.col-8
+                input#txtEditBirthday.form-control(data-date-format='yyyy-mm-dd' value=student.birthday)
+          .col-md-6.col-sm-6.col-6
+            + propStudent('txtEditAddress','Địa chỉ','text',student.address)
+            + propStudent('txtEditEmail','Email','text',student.email)
+            .row(style='margin-top:20px;')
+              label.col-md-4.col-sm-4.col-4(style='padding-right:10px;') Giới tính:
+              .col-md-8.col-sm-8.col-8
+                .row
+                  .form-check(style='margin-left:15px')
+                    input#editSexMale.form-check-input(type='radio' name='groupOfMaterialRadios' checked=student.sex==1?true:false)
+                    label.form-check-label(for='materialGroupExample1') Nam
+                  .form-check(style='margin-left:30px')
+                    input#editSexFemale.form-check-input(type='radio' name='groupOfMaterialRadios' checked=student.sex==0?true:false )
+                    label.form-check-label(for='materialGroupExample2') Nữ
+            .row(style='margin-top:20px;')
+              label.col-md-4.col-sm-4.col-4(style='padding-top:6px;padding-right:10px;') Ảnh đại diện:
+              .col-md-8.col-sm-8.col-8(style='margin-bottom:20px;')
+                .custom-file
+                  input#editUrlImage.custom-file-input(type='file' aria-describedby='inputGroupFileAddon01')
+                  label.custom-file-label(for='EditUrlImage') Choose file
+      .modal-footer 
+        button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+        button.btn.btn-danger(type='button' onclick='resetPass('+student.id+')' ) Reset Password
+        button.btn.btn-primary(type='button' onclick='saveStudent('+student.id+')') Save

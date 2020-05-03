@@ -1,0 +1,25 @@
+#changePass.modal.fade(tabindex='-1' role='dialog' aria-labelledby='changePassTitle' aria-hidden='true')
+    .modal-dialog
+        .modal-content(style='color: #007bff')
+            .modal-header(style='background-color: #007bff')
+                h5.modal-title(style='color: white;')
+                    i.fa.fa-lock(aria-hidden='false')
+                    |   Thay đổi mật khẩu
+                button.close(type='button' data-dismiss='modal' aria-label='Close' style='color: white;')
+                    span(aria-hidden='true') &times;
+            .modal-body
+                .row
+                    .col-md-12.col-sm-12.col-12
+                        label Mật khẩu hiện tại
+                        input#txtCurrentPassword.form-control(type='password')
+                .row.mt-2
+                    .col-md-12.col-sm-12.col-12
+                        label Mật khẩu mới
+                        input#txtNewPassword.form-control(type='password')
+                .row.mt-2
+                    .col-md-12.col-sm-12.col-12
+                        label Xác nhận mật khẩu mới
+                        input#txtConfirmPassword.form-control(type='password')
+            .modal-footer
+                button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+                button.btn.btn-primary(type='button' onclick="changePassword()") Save changes

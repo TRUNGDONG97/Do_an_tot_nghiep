@@ -1,5 +1,5 @@
 import express from 'express'
-import TeacherController from '../Controllers/TeacherController'
+import TeacherController from '../controllers/TeacherController'
 const router = express.Router();
 /* GET home page. */
 

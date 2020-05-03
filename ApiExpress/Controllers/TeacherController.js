@@ -1,6 +1,6 @@
-import Teacher from '../Models/TeacherModel'
+import Teacher from '../models/TeacherModel'
 import { isNumeric, isEmty } from 'validator'
-import Absent from '../Models/AbsentModel'
+import Absent from '../models/AbsentModel'
 const addTeacher = async(req, res, next) => {
     let { name, phone, password, email } = req.body
     if (name.isEmty) {
@@ -44,10 +44,8 @@ const addTeacher = async(req, res, next) => {
     }
 
 }
-// import UserModel from '../Models/UserModel'
-// import { isNumeric, isEmty } from 'validator'
 const getTeacher = async(req, res, next) => {
-    res.render('listTeacher');
+    res.render('TeacherView');
 
 }
 

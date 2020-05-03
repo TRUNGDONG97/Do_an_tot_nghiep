@@ -1,9 +1,9 @@
-import UserModel from '../Models/UserModel'
+import UserModel from '../models/UserModel'
 import { isNumeric, isEmpty } from 'validator'
 import md5 from 'md5'
 import Constants from '../constants/Constants'
 const login = async (req, res, next) => {
-    res.render('login')
+    res.render('LoginView')
 }
 const logout = async (req, res, next) => {
     res.cookie('token', "")
@@ -22,14 +22,14 @@ const postLogin = async (req, res, next) => {
     // var hashPass = md5(123456)
     // console.log(hashPass)
     if (isEmpty(user_name)) {
-        res.render('login', {
+        res.render('LoginView', {
             error: 'Bạn chưa nhập tên đăng nhập',
             value: req.body
         })
         return;
     }
     if (isEmpty(req.body.password.trim())) {
-        res.render('login', {
+        res.render('LoginView', {
             error: 'Bạn chưa nhập mật khẩu',
             values: req.body
         })
@@ -56,7 +56,7 @@ const postLogin = async (req, res, next) => {
             return
         } else {
             // console.log("tk ko tồn tại")
-            res.render('login', {
+            res.render('LoginView', {
                 error: 'Bạn nhập sai tài khoản hoặc mật khẩu',
                 values: req.body
             })

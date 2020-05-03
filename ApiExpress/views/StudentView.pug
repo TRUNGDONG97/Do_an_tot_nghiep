@@ -1,0 +1,34 @@
+doctype html
+html
+  include Layout
+  style
+    include ../stylesheets/StudentStyle.css
+  script
+    include ../javascripts/StudentScript.js
+  body
+    include NavbarView
+    .container-tab
+      .div-title
+        h4
+          i.fas.fa-user-graduate
+            |  &nbsp;  Sinh viên
+      .div-search
+        .col-md-12.col-sm-12.col-12
+          //- h6 Nhập MSSV : &nbsp;  
+          input#txtName.form-control.col-md-3.col-sm-3.col-3(type="text" placeholder="Nhập tên sinh viên")
+          input#txtMssv.form-control.col-md-2.col-sm-2.col-2(type="number" placeholder="Nhập mã số sinh viên")
+          button#btnSearch.btn.btn-primary(type="button")
+            i.fas.fa-search
+              | &nbsp;  Tìm kiếm
+          button#addStudent.btn.btn-danger(type="button" data-toggle='modal' data-target='#addStudentModal')
+            i.fas.fa-user-plus
+              | &nbsp;  Thêm sinh viên
+      .container-fluid
+        #tableStudent
+    include ../modals/AddStudentModal
+    #divModalEditStudent
+
+
+
+
+

@@ -3,9 +3,10 @@ const OPTION = {
     httpOnly: true, // The cookie only accessible by the web server
     signed: true,
 }
-const PER_PAGE=20
-
+const PER_PAGE=20;
+const PAGE_SIZE=10;
 export default{
     OPTION,
     PER_PAGE,
+    PAGE_SIZE
 }

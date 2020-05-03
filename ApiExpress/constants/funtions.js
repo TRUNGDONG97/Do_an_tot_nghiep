@@ -1,33 +1,37 @@
-import qs from 'qs'
-import url from 'url'
-// import assign from 'lodash.assign'
-// import clone from 'lodash.clone'
-// import isObject from 'lodash.isobject'
-
-// function getParameterByName(name, url) {
-//     if (!url) url = window.location.href;
-//     name = name.replace(/[\[\]]/g, "\\$&");
-//     var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-//         results = regex.exec(url);
-//     if (!results) return null;
-//     if (!results[2]) return '';
-//     return decodeURIComponent(results[2].replace(/\+/g, " "));
-// }
-
+import Constants from './Constants'
 
 module.exports.getArrayPages = function (req) {
-    return function (pageCount,currentPage) {
-        // const pathname = url.parse(req.originalUrl).pathname
+    return function (pageCount, currentPage) {
+        const currP = parseInt(currentPage)
+        const pageC = parseInt(pageCount)
+        const pageSize = parseInt(Constants.PAGE_SIZE)
+        const prev = currP - 1
+        const next =currP + 1
         var pages = [];
-        for (var i = 1; i <= pageCount; i++) {
-            pages.push(i)
+        if (pageC <= pageSize) {
+            for (var i = 1; i <= pageC; i++) {
+                pages.push(i)
+            }
+            
+        } else if (currP <= 2) {
+            for (var i = 1; i <= pageSize; i++) {
+                pages.push(i)
+            }
+          
+        } else if (currP > pageC + 2 - pageSize) {
+            for (var i = (pageC - pageSize+1); i <= pageC; i++) {
+                pages.push(i)
+            }
+        } else {
+            for (var i = (currP - 1); i <= currP+pageSize-2; i++) {
+                pages.push(i)
+            }
+           
         }
-        const prev=parseInt( currentPage)-1
-        const next=parseInt( currentPage)+1
         return {
-            prev:prev,
-            next:next,
-            pages:pages
+            prev: prev,
+            next: next,
+            pages: pages,
         }
     }
 }

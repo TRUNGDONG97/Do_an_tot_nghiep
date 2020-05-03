@@ -1,5 +1,5 @@
 import express from 'express'
-import ClassController from '../Controllers/ClassController'
+import ClassController from '../controllers/ClassController'
 const router = express.Router();
 /* GET home page. */
 

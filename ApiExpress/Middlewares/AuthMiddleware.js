@@ -1,4 +1,4 @@
-import UserModel from '../Models/UserModel'
+import UserModel from '../models/UserModel'
 
 const requireAuth = async(req, res, next) => {
     // console.log(req.cookies.user_name)

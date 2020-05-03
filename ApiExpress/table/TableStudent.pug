@@ -1,0 +1,66 @@
+table.table.table-bordered.table-hover
+    thead
+        tr
+            th STT
+            th MSSV 
+            th Họ và tên  
+            th Số điện thoại
+            th Ngày sinh
+            th Email
+            th Giới tính
+            th
+    tbody#tbodyTableStudent
+        if students.length <=0        
+            tr
+                td(colspan='9' style='text-align: center;') Không có sinh viên nào.
+        else
+            each item in students
+                tr
+                    td #{STT=STT+1}
+                    td #{item.mssv}
+                    td #{item.name}
+                    td #{item.phone}
+                    td #{item.birthday}
+                    td #{item.email}
+                    td #{item.sex==1?'Nam':'Nữ'}
+                    td
+                        button#editStu.btn.btn-success(type='button' onclick='editStudent('+item.id+')')
+                            i.far.fa-edit 
+                        button#deleteStu.btn.btn-danger(type='button' title='Xóa Danh Mục' onclick='deleteStudent('+item.id+')')
+                            i.far.fa-trash-alt
+#paginateStudent.row.float-right
+    if pageCount>=1
+        if !search
+            if  pages.prev>0
+                button.btn.page-item(onclick='getStudent(1)')
+                    i.fas.fa-angle-double-left
+                button.btn.page-item(onclick='getStudent('+pages.prev+')')
+                    i.fas.fa-chevron-left
+            if pages.pages
+                each page in pages.pages
+                    if(page==currentPage)
+                        button#paginateActive.btn.page-item(onclick='getStudent('+page+')') #{page}
+                    else
+                        button.btn.page-item(onclick='getStudent('+page+')') #{page}                        
+            if  pages.next <= pageCount
+                button.btn.page-item(onclick='getStudent('+pages.next+')')
+                    i.fas.fa-chevron-right
+                button.btn.page-item(onclick='getStudent('+pageCount+')')
+                    i.fas.fa-angle-double-right
+        else
+            if  pages.prev>0
+                button.btn.page-item(onclick='searchStudent(1)')
+                    i.fas.fa-angle-double-left
+                button.btn.page-item(onclick='searchStudent('+pages.prev+')')
+                    i.fas.fa-chevron-left
+            if pages
+                each page in pages.pages
+                    if page==currentPage
+                        button#paginateActive.btn.page-item(onclick='searchStudent('+page+')') #{page}
+                    else
+                        button.btn.page-item(onclick='searchStudent('+page+')') #{page}                    
+            if  pages.next <= pageCount
+                button.btn.page-item(onclick='searchStudent('+pages.next+')')
+                    i.fas.fa-chevron-right
+                button.btn.page-item(onclick='searchStudent('+pageCount+')')
+                    i.fas.fa-angle-double-right

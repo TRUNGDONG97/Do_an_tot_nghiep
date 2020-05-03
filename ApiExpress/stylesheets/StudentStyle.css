@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    list-style: none;
+    text-decoration: none;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background-color: #f3f5f9;
+}
+
+.container-tab {
+    margin-left: 240px;
+}
+.container-tab .div-title h4{
+    margin-top: 10px;
+    color:rgb(74, 99, 104);
+    margin-left:5px ;
+}
+.container-tab .container-fluid th{
+    /* display: flex; */
+    /* align-items: center; */
+    /* flex-direction: row;  */
+    /* background-color: red; */
+    text-align: center;
+}
+.container-tab .container-fluid .table{
+    margin-top:20px ;
+    margin-bottom: 50px;
+}
+/* .btn-group{
+    justify-content: space-around;
+    background-color: #28a745;
+    ;
+} */
+#editStu{
+    background-color: #f3f5f9 ;
+    border-color: #f3f5f9;
+    color: #28a745;
+    padding: 0px;
+    margin-right: 2px;
+}
+#deleteStu{
+    background-color: #f3f5f9 ;
+    border-color: #f3f5f9;
+    color: red;
+    padding: 0px;
+    margin-left: 2px;
+}
+.container-tab .container-fluid .table tr{
+    font-size: 15px;
+    /* background-color: #f3f5f9 ;  */
+}
+.container-tab .container-fluid .table tr i{
+    height: 20px;
+    width: 20px;
+}
+.container-tab .container-fluid .table tr:hover{
+    background-color: #b9fafa;
+}
+.div-search .col-md-12{
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+    align-items: center ;
+}
+#btnSearch{
+    margin-left: 20px;
+}
+#txtMssv{
+    margin-left: 20px;
+}
+#tableStudent thead tr{
+    background-color: #56e2e2;
+}
+
+#paginateStudent{
+    margin-left: 20px;
+    margin-bottom: 20px;
+    margin-right: 20px;
+}
+
+#addStudent{
+    margin-left: 40px;
+}

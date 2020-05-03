@@ -1,7 +1,6 @@
 
 import Sequelize from 'sequelize'
-import {sequelize,Op} from '../ConnectData/database'
-// import Absent from './AbsentModel'
+import {sequelize,Op} from '../connectData/Database'
 const Class = sequelize.define('Class', {
     id: {
         type: Sequelize.INTEGER,

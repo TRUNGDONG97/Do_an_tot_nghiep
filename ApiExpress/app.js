@@ -3,20 +3,18 @@ import express from 'express'
 import path from 'path'
 import cookieParser from 'cookie-parser'
 import logger from 'morgan'
-import paginate from 'express-paginate' 
-import Constants from './constants/Constants'
 
-import indexRouter from './routes/index'
-import usersRouter from './routes/users'
+import indexRouter from './routes/IndexRouter'
+import usersRouter from './routes/Users'
 // import teacherRouter from './routes/teacher'
-import authRouter from './routes/authRouter'
-import homeRouter from './routes/homeRouter'
-import studentRouter from './routes/studentRouter'
-import teacherRouter from './routes/teacherRouter'
-import classRouter from './routes/classRouter'
-import AuthMiddleware from './Middlewares/AuthMiddleware'
-import logoutRouter from './routes/logoutRouter'
-import teacher from './routes/teacher'
+import authRouter from './routes/AuthRouter'
+import homeRouter from './routes/HomeRouter'
+import studentRouter from './routes/StudentRouter'
+import teacherRouter from './routes/TeacherRouter'
+import classRouter from './routes/ClassRouter'
+import AuthMiddleware from './middlewares/AuthMiddleware'
+import logoutRouter from './routes/LogoutRouter'
+import teacher from './routes/Teacher'
 // console.log(process.env)
 const app = express();
 
@@ -30,8 +28,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser('12312fdf'));
 app.use(express.static(path.join(__dirname, 'public')));
-//middleware set default 10item per page and restrict the number of results returned to per page (defaults to 50)
-app.use(paginate.middleware(Constants.PER_PAGE, 100)); 
 
 app.use('/', indexRouter);
 app.use('/user',  usersRouter);
@@ -56,7 +52,7 @@ app.use(function(err, req, res, next) {
 
     // render the error page
     res.status(err.status || 500);
-    res.render('error',{
+    res.render('ErrorView',{
         error:err
     });
 });
