@@ -30,13 +30,13 @@ $(document).ready(function () {
         "color": "#fff"
     }),
     $('#student-selection').click(function() {
-        window.location = '/student/index';
+        window.location = '/admin/student/index';
     })
     $('#teacher-selection').click(function() {
-        window.location = '/teacher/index';
+        window.location = '/admin/teacher/index';
     })
     $('#class-selection').click(function() {
-        window.location = '/class/index';
+        window.location = '/admin/class/index';
     })
     $.when(ajaxGetCountStudent,ajaxGetCountTeacher,ajaxGetCountClass).done(function(resStudent,resTeacher,resClass) {
         $('#student-selection span').append(resStudent[0].countStudent)
@@ -49,6 +49,6 @@ $(document).ready(function () {
             icon: "warning",
             dangerMode: true
         })
-        console.log(result)
+        // console.log(result)
     })
 });

@@ -17,11 +17,7 @@
           .col-md-6.col-sm-6.col-6
             + propStudent('txtEditName','Họ và tên','text',student.name)
             + propStudent('txtEditMssv','Mssv','number',student.mssv)
-            + propStudent('txtEditPhone','Số điện thoại','text',student.phone)
-            //- .row(style='margin-top:20px;')
-            //-   label.col-md-4.col-sm-4.col-4(style='padding-top:6px;padding-right:10px;') Số điện thoại:
-            //-   .col-md-8.col-sm-8.col-8(style='margin-bottom:20px;')
-            //-       input#txtEditPhone.form-control(type='text' ) 
+            + propStudent('txtEditPhone','Số điện thoại','number',student.phone.trim())
             .row(style='margin-top:20px;')
               label.col-md-4.col-sm-4.col-4(style='padding-right:10px') Ngày sinh:
               .col-md-8.col-sm-8.col-8
@@ -41,11 +37,22 @@
                     label.form-check-label(for='materialGroupExample2') Nữ
             .row(style='margin-top:20px;')
               label.col-md-4.col-sm-4.col-4(style='padding-top:6px;padding-right:10px;') Ảnh đại diện:
-              .col-md-8.col-sm-8.col-8(style='margin-bottom:20px;')
-                .custom-file
-                  input#editUrlImage.custom-file-input(type='file' aria-describedby='inputGroupFileAddon01')
-                  label.custom-file-label(for='EditUrlImage') Choose file
+              .col-md-8.col-sm-8.col-8
+                input#editImageStudent.dropify(type='file' name="avatar" data-max-file-size="10M" data-default-file=student.url_avatar)
       .modal-footer 
         button.btn.btn-secondary(type='button' data-dismiss='modal') Close
         button.btn.btn-danger(type='button' onclick='resetPass('+student.id+')' ) Reset Password
         button.btn.btn-primary(type='button' onclick='saveStudent('+student.id+')') Save
+script
+  include ../javascripts/CustomInputImageScript.js
+script(type='text/javascript').
+  $(document).ready(function(){
+    $('#txtEditBirthday').datepicker({
+        weekStart: 1,
+        daysOfWeekHighlighted: "6,0",
+        autoclose: true,
+        todayHighlight: true,
+        orientation: "bottom auto",
+    });
+  });
+  

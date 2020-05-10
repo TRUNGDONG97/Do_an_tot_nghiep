@@ -20,3 +20,52 @@ body {
     color:rgb(74, 99, 104);
     margin-left:5px ;
 }
+
+.container-tab .container-fluid th{
+    text-align: center;
+}
+.container-tab .container-fluid .table{
+    margin-top:20px ;
+    margin-bottom: 50px;
+}
+#editTeac{
+    background-color: #f3f5f9 ;
+    border-color: #f3f5f9;
+    color: #28a745;
+    padding: 0px;
+    margin-right: 2px;
+    margin-left: 2px;
+}
+#deleteTeac{
+    background-color: #f3f5f9 ;
+    border-color: #f3f5f9;
+    color: red;
+    padding: 0px;
+    margin-left: 2px;
+}
+.container-tab .container-fluid .table tr{
+    font-size: 15px;
+    /* background-color: #f3f5f9 ;  */
+}
+.container-tab .container-fluid .table tr i{
+    height: 20px;
+    width: 20px;
+}
+.container-tab .container-fluid .table tr:hover{
+    background-color: #b9fafa;
+}
+#tableTeacher thead tr{
+    background-color: #56e2e2;
+}
+#paginateteacher{
+    margin-left: 20px;
+    margin-bottom: 20px;
+    margin-right: 20px;
+}
+#detailTeac{
+    background-color: #f3f5f9 ;
+    border-color: #f3f5f9;
+    color: #007bff;
+    padding: 0px;
+    margin-right: 2px;
+}

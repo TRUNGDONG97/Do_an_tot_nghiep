@@ -1,0 +1,95 @@
+table.table.table-bordered.table-hover
+    thead
+        tr
+            th STT 
+            th Tên giáo viên     
+            th Số điện thoại
+            th Ngày sinh
+            th Email
+            th Giới tính
+            th Trạng thái
+            th Lương
+            th
+    tbody#tbodyTableTeacher
+        if teachers.length <=0        
+            tr
+                td(colspan='9' style='text-align: center;') Không có giáo viên nào.
+        else
+            each item in teachers
+                tr
+                    td #{STT=STT+1}
+                    td #{item.name}
+                    td #{item.phone}
+                    td #{item.birthday}
+                    td #{item.email}
+                    td #{item.sex==1?'Nam':'Nữ'}
+                    td #{item.status==0?'Đã nghỉ':(item.status==1?'Thực tập':'Chính thức')}
+                    td.salary #{item.salary}
+                    //- #{formatNumber(item.salary,'.',',')} 
+                    td
+                        //- button#detailTeac.btn.btn-primary(type='button' onclick='detailTeacher('+item.id+')')
+                        //-     i.fas.fa-info-circle
+                        button#editTeac.btn.btn-success(type='button' onclick='editTeacher('+item.id+')')
+                            i.far.fa-edit 
+                        button#deleteTeac.btn.btn-danger(type='button' title='Xóa Danh Mục' onclick='deleteTeacher('+item.id+')')
+                            i.far.fa-trash-alt
+#paginateteacher.row.float-right
+    if pageCount>=1
+        if !search
+            if  pages.prev>0
+                button.btn.page-item(onclick='getTeacher(1)')
+                    i.fas.fa-angle-double-left
+                button.btn.page-item(onclick='getTeacher('+pages.prev+')')
+                    i.fas.fa-chevron-left
+            if pages.pages
+                each page in pages.pages
+                    if(page==currentPage)
+                        button#paginateActive.btn.page-item(onclick='getTeacher('+page+')') #{page}
+                    else
+                        button.btn.page-item(onclick='getTeacher('+page+')') #{page}                        
+            if  pages.next <= pageCount
+                button.btn.page-item(onclick='getTeacher('+pages.next+')')
+                    i.fas.fa-chevron-right
+                button.btn.page-item(onclick='getTeacher('+pageCount+')')
+                    i.fas.fa-angle-double-right
+        else
+            if  pages.prev>0
+                button.btn.page-item(onclick='searchTeacher(1)')
+                    i.fas.fa-angle-double-left
+                button.btn.page-item(onclick='searchTeacher('+pages.prev+')')
+                    i.fas.fa-chevron-left
+            if pages
+                each page in pages.pages
+                    if page==currentPage
+                        button#paginateActive.btn.page-item(onclick='searchTeacher('+page+')') #{page}
+                    else
+                        button.btn.page-item(onclick='searchTeacher('+page+')') #{page}                    
+            if  pages.next <= pageCount
+                button.btn.page-item(onclick='searchTeacher('+pages.next+')')
+                    i.fas.fa-chevron-right
+                button.btn.page-item(onclick='searchTeacher('+pageCount+')')
+                    i.fas.fa-angle-double-right
+script(type='text/javascript').
+    $(document).ready(function () {
+        $('.salary').each(
+            function () {
+                if ($(this).text() == "") {
+                    $(this).text('0 vnđ')
+                } else {
+                    $(this).text(formatNumber($(this).text(), '.', ','))
+                }
+            }
+        )
+    });
+
+    function formatNumber(nStr, decSeperate, groupSeperate) {
+        nStr += '';
+        x = nStr.split(decSeperate);
+        x1 = x[0];
+        x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + groupSeperate + '$2');
+        }
+        return x1 + x2 + " vnđ";
+    }

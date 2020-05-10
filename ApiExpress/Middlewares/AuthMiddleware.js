@@ -5,7 +5,7 @@ const requireAuth = async(req, res, next) => {
     var token = req.signedCookies.token
     var password = req.signedCookies.password
     if (!token) {
-        res.redirect('/login');
+        res.redirect('/admin/login');
         return;
     }
     try {
@@ -17,11 +17,11 @@ const requireAuth = async(req, res, next) => {
             }
         })
         if (tokens.length < 0) {
-            res.redirect('/login');
+            res.redirect('/admin/login');
             return;
         }
     } catch (error) {
-        res.redirect('/login');
+        res.redirect('/admin/login');
         return
     }
     next();

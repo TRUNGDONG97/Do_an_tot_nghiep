@@ -1,14 +1,15 @@
 // $(document).ready(function () {
-//     $(".inputNumber").addEventListener("keypress", function (evt) {
-//         if (evt.which != 8 && evt.which != 0 && evt.which < 48 || evt.which > 57)
-//         {
-//             evt.preventDefault();
-//         }
+//     $('.datepicker').datepicker({
+//         weekStart: 1,
+//         daysOfWeekHighlighted: "6,0",
+//         autoclose: true,
+//         todayHighlight: true,
+//         orientation: "bottom auto",
 //     });
 // });
 
 function logout() {
-    window.location = '/logout';
+    window.location = '/admin/logout';
 }
 function changePassword() {
     if (!navigator.onLine) {

@@ -9,6 +9,7 @@ $(document).ready(function () {
         daysOfWeekHighlighted: "6,0",
         autoclose: true,
         todayHighlight: true,
+        orientation: "bottom auto",
     });
     $('#txtAddBirthday').datepicker("setDate", new Date());
     $('#txtEditBirthday').datepicker({
@@ -16,8 +17,10 @@ $(document).ready(function () {
         daysOfWeekHighlighted: "6,0",
         autoclose: true,
         todayHighlight: true,
+        orientation: "bottom auto",
     });
     $('#txtEditBirthday').datepicker();
+
 });
 
 function getStudent(currentPage) {
@@ -37,7 +40,7 @@ function getStudent(currentPage) {
         timeout: 50000,
     }).done(function (res) {
         $('#tableStudent').html(res.htmlTable)
-        $('#paginateActive').css({ "background-color": "#17a2b8", "color": "#fff" })
+        // $('#paginateActive').css({ "background-color": "#17a2b8", "color": "#fff" })
         return
     }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
@@ -156,8 +159,7 @@ function deleteStudent(id) {
         });
 }
 
-function addStudent() {
-    // alert('hello')
+const addStudent = async () => {
     if (!navigator.onLine) {
         swal({
             title: "Kiểm tra kết nối internet!",
@@ -173,6 +175,10 @@ function addStudent() {
     var address = $.trim($("#txtAddAddress").val());
     var email = $.trim($("#txtAddEmail").val());
     var sex = $('#addSexFemale').prop('checked')
+    //get file image
+    var fileUpload = $("#ImageStudent").get(0);
+    var files = fileUpload.files;
+
     if (name == '' || mssv == '' || phone == '' || birthday == '' || address == '') {
         swal({
             title: "Chưa nhập đầy đủ thông tin",
@@ -184,6 +190,24 @@ function addStudent() {
     checkedMssv(mssv)
     checkedPhone(phone)
     checkedMail(email)
+    // console.log(files.length);
+    if (files.length <= 0) {
+        swal({
+            title: "Chưa thêm ảnh ",
+            text: "",
+            icon: "warning"
+        })
+        return;
+    }
+
+    var fileData = new FormData();
+    var fileName = "";
+    for (var i = 0; i < files.length; i++) {
+        fileData.append(files[i].name, files[i]);
+        fileName = files[i].name;
+    }
+    var srcImg = window.location.origin + "/upload/avatarStudent/" + fileName
+
     $.ajax({
         url: '/student/add',
         type: 'POST',
@@ -194,7 +218,8 @@ function addStudent() {
             birthday,
             address,
             email,
-            sex: sex ? 0 : 1
+            sex: sex ? 0 : 1,
+            url_avatar: srcImg
         },
         cache: false,
         timeout: 50000,
@@ -238,10 +263,9 @@ function addStudent() {
             text: "",
             icon: "success"
         })
+        uploadImage(fileData)
         getStudent(1)
         return;
-
-
     }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
@@ -311,6 +335,12 @@ function saveStudent(id) {
     var address = $.trim($("#txtEditAddress").val());
     var email = $.trim($("#txtEditEmail").val());
     var sex = $('#editSexFemale').prop('checked')
+    var srcImg = $('#editImageStudent').attr('data-default-file')
+    var fileUpload = $("#editImageStudent").get(0);
+    var files = fileUpload.files;
+
+    // console.log(files.length)
+
     if (name == '' || mssv == '' || phone == '' || birthday == '' || address == '') {
         swal({
             title: "Chưa nhập đầy đủ thông tin",
@@ -322,6 +352,23 @@ function saveStudent(id) {
     checkedMssv(mssv)
     checkedPhone(phone)
     checkedMail(email)
+    if (files.length > 0) {
+        var fileData = new FormData();
+        var fileName = "";
+        for (var i = 0; i < files.length; i++) {
+            fileData.append(files[i].name, files[i]);
+            fileName = files[i].name;
+        }
+        srcImg = window.location.origin + "/upload/avatarStudent/" + fileName
+    }
+    if (srcImg == null) {
+        swal({
+            title: "Cần thêm ảnh cho sinh viên",
+            text: "",
+            icon: "warning"
+        })
+        return;
+    }
     $.ajax({
         url: '/student/save',
         data: {
@@ -332,7 +379,8 @@ function saveStudent(id) {
             birthday,
             address,
             email,
-            sex: sex ? 0 : 1
+            sex: sex ? 0 : 1,
+            url_avatar: srcImg
         },
         type: 'POST',
         cache: false,
@@ -363,6 +411,7 @@ function saveStudent(id) {
             })
             return;
         }
+        uploadImage(fileData)
         $("#EditStudentModal").modal("hide");
         $("#txtEditName").val("");
         $("#txtEditPhone").val("");
@@ -370,7 +419,7 @@ function saveStudent(id) {
         $("#txtEditAddress").val("");
         $("#txtEditEmail").val("");
         swal({
-            title: "Sửa thành công",
+            title: "Thay đổi thành công",
             text: "",
             icon: "success"
         })
@@ -387,6 +436,7 @@ function saveStudent(id) {
         // console.log(textStatus + ': ' + errorThrown);
         return;
     })
+
 }
 function resetPass(id) {
     if (!navigator.onLine) {
@@ -432,6 +482,49 @@ function resetPass(id) {
     })
 }
 
+// function detailStudent(id) {
+//     if (!navigator.onLine) {
+//         swal({
+//             title: "Kiểm tra kết nối internet!",
+//             text: "",
+//             icon: "warning"
+//         })
+//         return;
+//     }
+//     $.ajax({
+//         url: '/student/detail',
+//         data: { id },
+//         type: 'POST',
+//         cache: false,
+//         timeout: 50000
+//     }).done(function (res) {
+//         // console.log(res)
+//         if (res.result == 0) {
+//             swal({
+//                 title: "",
+//                 text: "Không tồn tại sinh viên này",
+//                 icon: "warning"
+//             });
+//         } else {
+//             $('#divModalDetailStudent').html(res.htmlModalDetailStudent)
+//             $('#detailStudentModal').modal('show');
+//         }
+//         return;
+//     }).fail(function (jqXHR, textStatus, errorThrown) {
+//         // If fail
+//         swal({
+//             title: "Đã có lỗi xảy ra",
+//             text: "",
+//             icon: "warning",
+//             dangerMode: true,
+//         })
+//         // console.log(textStatus + ': ' + errorThrown);
+//         return;
+//     })
+// }
+function clickItem(id) {
+    alert(id)
+}
 function checkedMail(email) {
     var email_regex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
     if (!email_regex.test(email)) {
@@ -464,4 +557,34 @@ function checkedMssv(mssv) {
         })
         return;
     }
+}
+function uploadImage(fileData) {
+    $.ajax({
+        url: "/uploadAvatar",
+        type: 'POST',
+        data: fileData,
+        contentType: false, // Not to set any content header  
+        processData: false, // Not to process data  
+        cache: false,
+        enctype: 'multipart/form-data'
+    }).done(function (res) {
+        if (res.result == 0) {
+            swal({
+                title: "Không thể upload ảnh",
+                text: "",
+                icon: "warning",
+                dangerMode: true,
+            })
+        }
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        // If fail
+        swal({
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown.message);
+        // console.log(jqXHR);
+    })
 }

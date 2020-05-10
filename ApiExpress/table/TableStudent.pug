@@ -24,6 +24,8 @@ table.table.table-bordered.table-hover
                     td #{item.email}
                     td #{item.sex==1?'Nam':'Nữ'}
                     td
+                        //- button#detailStu.btn.btn-primary(type='button' onclick='detailStudent('+item.id+')')
+                        //-     i.fas.fa-info-circle
                         button#editStu.btn.btn-success(type='button' onclick='editStudent('+item.id+')')
                             i.far.fa-edit 
                         button#deleteStu.btn.btn-danger(type='button' title='Xóa Danh Mục' onclick='deleteStudent('+item.id+')')

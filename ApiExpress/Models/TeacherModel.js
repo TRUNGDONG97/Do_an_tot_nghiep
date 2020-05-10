@@ -41,6 +41,12 @@ const Teacher = sequelize.define('Teacher', {
     },
     sex: {
         type: Sequelize.INTEGER
+    },
+    status: {
+        type: Sequelize.INTEGER
+    },
+    salary: {
+        type: Sequelize.INTEGER
     }
 },{
     //

@@ -35,3 +35,6 @@ module.exports.getArrayPages = function (req) {
         }
     }
 }
+module.exports.PageCount=function(count){
+    return count % Constants.PER_PAGE == 0 ? Math.floor(count / Constants.PER_PAGE) : Math.floor(count / Constants.PER_PAGE) + 1
+}

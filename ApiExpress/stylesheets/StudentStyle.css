@@ -21,26 +21,18 @@ body {
     margin-left:5px ;
 }
 .container-tab .container-fluid th{
-    /* display: flex; */
-    /* align-items: center; */
-    /* flex-direction: row;  */
-    /* background-color: red; */
     text-align: center;
 }
 .container-tab .container-fluid .table{
     margin-top:20px ;
     margin-bottom: 50px;
 }
-/* .btn-group{
-    justify-content: space-around;
-    background-color: #28a745;
-    ;
-} */
 #editStu{
     background-color: #f3f5f9 ;
     border-color: #f3f5f9;
     color: #28a745;
     padding: 0px;
+    margin-left: 2px;
     margin-right: 2px;
 }
 #deleteStu{
@@ -85,4 +77,15 @@ body {
 
 #addStudent{
     margin-left: 40px;
+}
+#detailStu{
+    background-color: #f3f5f9 ;
+    border-color: #f3f5f9;
+    color: #007bff;
+    padding: 0px;
+    margin-right: 2px;
+}
+#avatar{
+   height: 200px;
+   width: 170px; 
 }
