@@ -1,12 +1,12 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+/* @import url('https://fonts.googleapis.com/css?family=sans-serif&display=swap');
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     list-style: none;
     text-decoration: none;
-    font-family: 'Roboto', sans-serif;
-}
+    font-family:  sans-serif;
+} */
 
 body {
     background-color: #f3f5f9;
@@ -19,4 +19,54 @@ body {
     margin-top: 10px;
     color:rgb(74, 99, 104);
     margin-left:5px ;
+}
+#editCla{
+    background-color: #f3f5f9 ;
+    border-color: #f3f5f9;
+    color: #28a745;
+    padding: 0px;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+#deleteCla{
+    background-color: #f3f5f9 ;
+    border-color: #f3f5f9;
+    color: red;
+    padding: 0px;
+    margin-left: 2px;
+}
+#tableClass th{
+    text-align: center;
+}
+#tableClass thead tr{
+    background-color: #56e2e2;
+}
+#tableClass tr:hover{
+    background-color: #b9fafa;
+}
+#detailCla{
+    background-color: #f3f5f9 ;
+    border-color: #f3f5f9;
+    color: #007bff;
+    padding: 0px;
+    margin-right: 4px;
+}
+#tableClass .table tr{
+    font-size: 15px;
+    /* background-color: #f3f5f9 ;  */
+}
+#tableClass .table{
+    margin-top:20px ;
+    margin-bottom: 50px;
+}
+#tableClass p{
+   margin: 0px;
+   padding: 0px;
+}
+/* #tableClass td{
+    text-align: center;
+} */
+.div-search input{
+    padding-top: 0px;
+    padding-bottom: 0px;
 }

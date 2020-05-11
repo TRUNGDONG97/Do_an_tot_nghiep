@@ -70,6 +70,7 @@ function searchStudent(currentPage) {
         return;
     }
     checkedMssv(mssv)
+    
     $.ajax({
         url: '/student/search',
         type: 'POST',
@@ -84,7 +85,7 @@ function searchStudent(currentPage) {
     }).done(function (res) {
         // console.log(res.htmlTable)
         $('#tableStudent').html(res.htmlTable)
-        $('#paginateActive').css({ "background-color": "#17a2b8", "color": "#fff" })
+        // $('#paginateActive').css({ "background-color": "#17a2b8", "color": "#fff" })
         return
     }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
@@ -94,11 +95,9 @@ function searchStudent(currentPage) {
             icon: "warning",
             dangerMode: true,
         })
-        // console.log(textStatus + ': ' + errorThrown);
+        console.log(textStatus + ': ' + errorThrown);
         return;
     });
-
-
 }
 
 function deleteStudent(id) {

@@ -1,8 +1,9 @@
 
 import Sequelize from 'sequelize'
 import {sequelize,Op} from '../connectData/Database'
-// import Absent from './AbsentModel'
-const Students = sequelize.define('Students', {
+import StudentClass from './StudentClassModel';
+
+const Student= sequelize.define('Students', {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -49,5 +50,6 @@ const Students = sequelize.define('Students', {
     timestamps:false,   
     freezeTableName: true ,
 })
-
-export default Students
+Student.hasMany(StudentClass,{foreignKey:'student_id',sourceKey:'id'});
+StudentClass.belongsTo(Student,{foreignKey:'student_id',targetKey:'id'})
+export default Student

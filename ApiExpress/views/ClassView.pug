@@ -14,4 +14,39 @@ html
         h4
           i.fas.fa-house-user
             |  &nbsp;  Lớp học
+      .div-search
+        .col-md-12.col-sm-12.col-12
+          .row(style='margin-top:10px')
+            .col-md-4.col-sm-4.col-4
+              .row
+                label.col-md-5.col-sm-5.col-5(style='padding-top:6px;padding-right:10px;') Tên môn học:
+                .col-md-7.col-sm-7.col-7
+                  input#txtSearchSubjectName.form-control(type="text" placeholder="Nhập tên môn học") 
+              .row(style='margin-top:10px')
+                label.col-md-5.col-sm-5.col-5(style='padding-top:6px;padding-right:10px;') Tên giáo viên:
+                .col-md-7.col-sm-7.col-7
+                  input#txtSearchTeacherName.form-control(type="text" placeholder="Nhập tên giáo viên") 
+            .col-md-4.col-sm-4.col-4
+              .row
+                label.col-md-5.col-sm-5.col-5(style='padding-top:6px;padding-right:10px;') Mã học phần:
+                .col-md-7.col-sm-7.col-7
+                  input#txtSearchSubjectCode.form-control(type="text" placeholder="Nhập mã học phần") 
+              .row(style='margin-top:10px')
+                label.col-md-5.col-sm-5.col-5(style='padding-top:6px;padding-right:10px;') Mã lớp học:
+                .col-md-7.col-sm-7.col-7
+                  input#txtSearchClassCode.form-control(type="text" placeholder="Nhập mã lớp học") 
+            .col-md-4.col-sm-4.col-4
+              .row
+                label.col-md-4.col-sm-4.col-4(style='padding-top:6px;padding-right:10px;') Phòng học:
+                .col-md-7.col-sm-7.col-7
+                  input#txtSearchRoomName.form-control(type="text" placeholder="Nhập tên phòng học") 
+        .col-lg-7.offset-lg-4(style='margin-top:20px')
+          button#btnSearchClass.btn.btn-primary(type="button" style='margin-right:100px')
+            i.fas.fa-search
+              | &nbsp;  Tìm kiếm
+          button#btnAddClass.btn.btn-danger(type="button" data-toggle='modal' data-target='#addClassModal')
+            i.fas.fa-plus-square
+              | &nbsp;  Thêm lớp học
       .container-fluid
+          .container-fluid
+            #tableClass

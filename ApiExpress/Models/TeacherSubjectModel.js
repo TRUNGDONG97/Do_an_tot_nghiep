@@ -1,13 +1,16 @@
 import Sequelize from 'sequelize'
 import { sequelize, Op } from '../connectData/Database'
-const Subject = sequelize.define('Subject', {
+const TeacherSubject = sequelize.define('Teacher_subject', {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    name: {
-        type: Sequelize.STRING
+    teacher_id: {
+        type: Sequelize.INTEGER
+    },
+    subject_id: {
+        type: Sequelize.INTEGER
     }
 
 }, {
@@ -15,4 +18,4 @@ const Subject = sequelize.define('Subject', {
     timestamps: false,
     freezeTableName: true,
 })
-export default Subject
+export default TeacherSubject
