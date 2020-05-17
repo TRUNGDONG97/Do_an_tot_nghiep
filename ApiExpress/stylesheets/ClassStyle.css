@@ -15,58 +15,65 @@ body {
 .container-tab {
     margin-left: 240px;
 }
-.container-tab .div-title h4{
+
+.container-tab .div-title h4 {
     margin-top: 10px;
-    color:rgb(74, 99, 104);
-    margin-left:5px ;
+    color: rgb(74, 99, 104);
+    margin-left: 5px;
 }
-#editCla{
-    background-color: #f3f5f9 ;
+
+#editCla {
+    background-color: #f3f5f9;
     border-color: #f3f5f9;
     color: #28a745;
     padding: 0px;
     margin-left: 2px;
     margin-right: 2px;
 }
-#deleteCla{
-    background-color: #f3f5f9 ;
+
+#deleteCla {
+    background-color: #f3f5f9;
     border-color: #f3f5f9;
     color: red;
     padding: 0px;
     margin-left: 2px;
 }
-#tableClass th{
+
+#tableClass th {
     text-align: center;
 }
-#tableClass thead tr{
+
+#tableClass thead tr {
     background-color: #56e2e2;
 }
-#tableClass tr:hover{
+
+#tableClass tr td :hover {
     background-color: #b9fafa;
 }
-#detailCla{
-    background-color: #f3f5f9 ;
+
+#tableClass .table tr {
+    font-size: 15px;
+}
+
+#tableClass .table {
+    margin-top: 20px;
+    margin-bottom: 50px;
+}
+
+#tableClass p {
+    margin: 0px;
+    padding: 0px;
+}
+
+.div-search input {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+#detailCla {
+    background-color: #f3f5f9;
     border-color: #f3f5f9;
     color: #007bff;
     padding: 0px;
     margin-right: 4px;
-}
-#tableClass .table tr{
-    font-size: 15px;
-    /* background-color: #f3f5f9 ;  */
-}
-#tableClass .table{
-    margin-top:20px ;
-    margin-bottom: 50px;
-}
-#tableClass p{
-   margin: 0px;
-   padding: 0px;
-}
-/* #tableClass td{
-    text-align: center;
-} */
-.div-search input{
-    padding-top: 0px;
-    padding-bottom: 0px;
 }

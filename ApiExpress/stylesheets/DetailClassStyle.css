@@ -1,0 +1,38 @@
+body {
+    background-color: #f3f5f9;
+}
+
+.container-tab {
+    margin-left: 240px;
+}
+
+.container-tab .div-title h4 {
+    margin-top: 10px;
+    color: rgb(74, 99, 104);
+    margin-left: 5px;
+}
+
+.div-info p {
+    color: #007bff;
+}
+
+#tableDetailClass th {
+    text-align: center;
+}
+
+#tableDetailClass thead tr {
+    background-color: #56e2e2;
+}
+
+#tableDetailClass tr td:hover {
+    background-color: #b9fafa;
+}
+
+#tableDetailClass .table tr {
+    font-size: 15px;
+}
+
+#tableDetailClass .table {
+    margin-top: 20px;
+    margin-bottom: 50px;
+}

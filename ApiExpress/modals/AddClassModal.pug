@@ -1,0 +1,98 @@
+//- script
+//-     include ../node_modules/bootstrap-timepicker/js/bootstrap-timepicker.min.js
+//- style
+//-     include ../node_modules/bootstrap-timepicker/css/bootstrap-timepicker.min.css
+#addClassModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='addStudentTitle' aria-hidden='true')
+    .modal-dialog.modal-lg
+        .modal-content(style='color: #007bff')
+            .modal-header(style='background-color: #d8061a')
+                h5.modal-title(style='color: white;')
+                    i.fas.fa-user-plus(aria-hidden='false')
+                    |   Thêm lớp
+                button.close(type='button' data-dismiss='modal' aria-label='Close' style='color: white;' )
+                    span(aria-hidden='true') &times;
+            .modal-body(style='margin-bottom:20px;background-color: #f3f5f9;')
+                .row(style='margin-bottom:20px;')
+                    mixin propAddClass(id,title,type)
+                        .row(style='margin-top:20px;')
+                            label.col-md-6.col-sm-6.col-6(style='padding-top:6px;padding-right:10px;') #{title}:
+                            .col-md-6.col-sm-6.col-6(style='margin-bottom:20px;')
+                                input.form-control(type=type id=id maxlength="50")   
+                    .col-md-6.col-sm-6.col-6
+                        +propAddClass('txtClassCode','Mã lớp hoc','text')
+                        +propAddClass('txtSubjectCode','Mã môn học','text')
+                    .col-md-6.col-sm-6.col-6
+                        +propAddClass('txtTeacherPhone','Số điện thoại giáo viên','number')
+                label Lịch học:
+                .row.col-md-11.col-sm-11.col-11.offset-md-1
+                    .col-md-2
+                        .row
+                            label.col-md-5(style='padding-top:6px;') Thứ:
+                            .col-md-7.col-sm-7.col-7
+                                input#txtDay1.form-control(type='number' min='2' max='7')
+                    p(style='padding-top:6px;padding-right:10px;') từ:
+                    .col-md-2
+                        .row
+                            .form-group
+                                #time_start1.time-picker.input-group.date(data-target-input='nearest')
+                                    input#timeStart1.form-control.datetimepicker-input(type='text' data-target='#time_start1')
+                                    .input-group-append(data-target='#time_start1' data-toggle='datetimepicker')
+                                        .input-group-text
+                                            i.far.fa-clock
+                    p(style='padding-top:6px;padding-right:10px;padding-left:10px;') đến:
+                    .col-md-2
+                        .row
+                            .form-group
+                                #time_end1.time-picker.input-group.date(data-target-input='nearest')
+                                    input#timeEnd1.form-control.datetimepicker-input(type='text' data-target='#time_end1')
+                                    .input-group-append(data-target='#time_end1' data-toggle='datetimepicker')
+                                        .input-group-text
+                                            i.far.fa-clock
+                    .col-md-4
+                        .row
+                            label.col-md-6.col-sm-6.col-6(style='padding-top:6px;padding-right:10px;') Phòng:
+                            .col-md-6.col-sm-6.col-6
+                                input#room1.form-control(type='text' maxlength="50")   
+                .row.col-md-11.col-sm-11.col-11.offset-md-1
+                    .col-md-2
+                        .row
+                            label.col-md-5(style='padding-top:6px;') Thứ:
+                            .col-md-7.col-sm-7.col-7
+                                input#txtDay2.form-control(type='number' min='2' max='7')
+                    p(style='padding-top:6px;padding-right:10px;') từ:
+                    .col-md-2
+                        .row
+                            .form-group
+                                #time_start2.time-picker.input-group.date(data-target-input='nearest')
+                                    input#timeStart2.form-control.datetimepicker-input(type='text' data-target='#time_start2')
+                                    .input-group-append(data-target='#time_start2' data-toggle='datetimepicker')
+                                        .input-group-text
+                                            i.far.fa-clock
+                    p(style='padding-top:6px;padding-right:10px;padding-left:10px;') đến:
+                    .col-md-2
+                        .row
+                            .form-group
+                                #time_end2.time-picker.input-group.date(data-target-input='nearest')
+                                    input#timeEnd2.form-control.datetimepicker-input(type='text' data-target='#time_end2')
+                                    .input-group-append(data-target='#time_end2' data-toggle='datetimepicker')
+                                        .input-group-text
+                                            i.far.fa-clock
+                    .col-md-4
+                        .row
+                            label.col-md-6.col-sm-6.col-6(style='padding-top:6px;padding-right:10px;') Phòng:
+                            .col-md-6.col-sm-6.col-6
+                                input#room2.form-control(type='text' maxlength="50")  
+                //- script(type='text/javascript').
+                //-     $(document).ready(function(){
+                //-         $('#timepicker2').timepicker({
+                //-             minuteStep: 1,
+                //-             template: 'modal',
+                //-             appendWidgetTo: 'body',
+                //-             showSeconds: true,
+                //-             showMeridian: false,
+                //-             defaultTime: false
+                //-             });
+                //-         });
+            .modal-footer
+                button.btn.btn-secondary(type='button' data-dismiss='modal') Đóng
+                button.btn.btn-danger(type='button' onclick="addClass()") Thêm Lớp

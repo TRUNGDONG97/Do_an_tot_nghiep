@@ -1,0 +1,66 @@
+doctype html
+html
+    include Layout
+    style
+        include ../stylesheets/DetailClassStyle.css
+    script
+        include ../javascripts/DetailClassScript.js
+    body
+        include NavbarView
+        .container-tab
+            .div-title
+                h4
+                    i.fas.fa-info-circle
+                        |  &nbsp;  Lớp #{class_code?class_code:'no_id'}
+            .div-info
+                .col-md-8.offset-md-2
+                    .row(style='margin-top:10px;')
+                        .col-md-6
+                            .row
+                                label.col-md-5(style='padding-right:10px;') Tên môn học:
+                                .col-md-6.col-sm-6.col-6
+                                    p #{classes.Subject.subject_name}
+                            .row
+                                label.col-md-5(style='padding-right:10px;') Mã môn học:
+                                .col-md-6.col-sm-6.col-6
+                                    p #{classes.Subject.subject_code}
+                            .row
+                                label.col-md-5(style='padding-right:10px;') Tên giáo viên:
+                                .col-md-6.col-sm-6.col-6
+                                    p #{classes.Teacher.name}
+                        .col-md-6
+                            .row
+                                label.col-md-5.col-sm-5.col-5(style='padding-right:10px;') Trạng thái:
+                                .col-md-6.col-sm-6.col-6
+                                    p #{classes.status==0?'Bị hủy':(classes.status==1?'Đang học':'Đã Hoàn thành')}
+                            .row
+                                label.col-md-5.col-sm-5.col-5(style='padding-right:10px;') Sống lượng sv:
+                                .col-md-6.col-sm-6.col-6
+                                    p #{classes.Student_classes.length}
+                            .row       
+                                label.col-md-5.col-sm-5.col-5(style='padding-right:10px;') Số điện thoại:
+                                .col-md-6.col-sm-6.col-6
+                                    p #{classes.Teacher.phone}
+                    .row
+                        label.col-md-2 Lịch học :
+                        .col-md-10
+                            each schedule in classes.Schedule_classes
+                                p(style='margin: 0px;padding: 0px;') Thứ #{schedule.day_of_week}, #{schedule.time_start}-#{schedule.time_end} &nbsp #{schedule.room_name}<br>
+            .div-search-detail-class.col-md-12.col-sm-12.col-12(style='margin-top:30px')
+                .row(style='margin-left:10px')
+                    input#txtNameStudent.form-control.col-md-2.col-sm-2.col-2(type="text" placeholder="Nhập tên sinh viên" style='margin-left:20px') 
+                    input#txtMssvStudent.form-control.col-md-2.col-sm-2.col-2(type="number" placeholder="Nhập mã số sinh viên" style='margin-left:20px')
+                    button#btnSearchInClass.btn.btn-primary(type="button"  style='margin-left:20px' onclick='searchStudentInclass('+classes.id+')')
+                        i.fas.fa-search
+                        | &nbsp;  Tìm kiếm
+                    button.btn.btn-danger(type="button" style='margin-left:20px' onclick='addStudentInclass('+classes.id+')')
+                        i.fas.fa-user-plus
+                        | &nbsp;  Thêm sinh viên
+                    //- button.btn.btn-info(type="button" data-toggle='modal' data-target='#editDetailclass' style='margin-left:20px')
+                    //-     i.far.fa-edit 
+                    //-     | &nbsp;  Thay đổi thông tin
+            .container-fluid
+                #tableDetailClass
+                    include ../table/TableDetailClass.pug
+        
+        

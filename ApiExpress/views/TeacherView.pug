@@ -1,8 +1,6 @@
 doctype html
 html
     include Layout
-    //- <link rel="stylesheet" href="/stylesheets/listTeacher.css" >
-    //- script(src='/javascripts/listTeacher.js')
     style
         include ../stylesheets/TeacherStyle.css
     script
@@ -17,7 +15,7 @@ html
             .div-search
                 .col-lg-10.offset-lg-2
                     .row(style='margin-bottom:35px')
-                        .col-md-6.col-sm-6.col-6
+                        .col-md-5
                             .row
                                 label.col-md-4.col-sm-4.col-4(style='padding-top:6px;padding-right:10px;') Tên giáo viên:
                                 .col-md-8.col-sm-8.col-8
@@ -26,12 +24,15 @@ html
                                 label.col-md-4.col-sm-4.col-4(style='padding-top:6px;padding-right:10px;') Số điện thoại :
                                 .col-md-8.col-sm-8.col-8
                                     input#txtSearchTeacherPhone.form-control(type="number" placeholder="Nhập số điện thoại")
-                        .col-md-4.col-sm-4.col-4.offset-md-1
-                            select#seachTeacherStatus.form-control.text_seach.seach_parent(name='status')
-                                option(value='') --Lựa chon--
-                                option(value='0') Đã nghỉ 
-                                option(value='1') Thực tập
-                                option(value='2') Chính thức
+                        .col-md-4.col-sm-4.col-4
+                            .row
+                                label.col-md-4.col-sm-4.col-4(style='padding-top:6px;padding-right:10px;') Trạng thái :
+                                .col-md-8.col-sm-8.col-8
+                                    select#searchTeacherStatus.form-control(name='status')
+                                        option(value='') --Lựa chon--
+                                        option(value='0') Đã nghỉ 
+                                        option(value='1') Thực tập
+                                        option(value='2') Chính thức
                 .col-lg-7.offset-lg-4
                     button#btnSearchTeacher.btn.btn-primary(type="button" style='margin-right:50px')
                         i.fas.fa-search

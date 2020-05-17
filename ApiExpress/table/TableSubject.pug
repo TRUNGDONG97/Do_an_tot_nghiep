@@ -1,0 +1,64 @@
+table.table.table-bordered.table-hover
+    thead
+        tr
+            th STT
+            th Tên môn học
+            th Mã môn học
+            th Thời lượng
+            th Số tín chỉ        
+            th Tín chỉ học phí   
+            th
+    tbody#tbodyTableStudent
+        if subject.length <=0        
+            tr
+                td(colspan='7' style='text-align: center;') Chưa có môn nào.
+        else
+            each item in subject
+                tr
+                    td #{STT=STT+1}
+                    td #{item.subject_name}
+                    td #{item.subject_code}
+                    td #{item.time}
+                    td #{item.credit_hour}
+                    td #{item.coefficient}
+                    td
+                        button#editSub.btn.btn-success(type='button' onclick='editSubject('+item.id+')')
+                            i.far.fa-edit 
+                        button#deleteSub.btn.btn-danger(type='button' title='Xóa Danh Mục' onclick='deleteSubject('+item.id+')')
+                            i.far.fa-trash-alt
+#paginateSubject.row.float-right(style='margin-right:20px')
+    if pageCount>=1
+        if !search
+            if  pages.prev>0
+                button.btn.page-item(onclick='getSubject(1)')
+                    i.fas.fa-angle-double-left
+                button.btn.page-item(onclick='getSubject('+pages.prev+')')
+                    i.fas.fa-chevron-left
+            if pages.pages
+                each page in pages.pages
+                    if(page==currentPage)
+                        button#paginateActive.btn.page-item(onclick='getSubject('+page+')') #{page}
+                    else
+                        button.btn.page-item(onclick='getSubject('+page+')') #{page}                        
+            if  pages.next <= pageCount
+                button.btn.page-item(onclick='getSubject('+pages.next+')')
+                    i.fas.fa-chevron-right
+                button.btn.page-item(onclick='getSubject('+pageCount+')')
+                    i.fas.fa-angle-double-right
+        else
+            if  pages.prev>0
+                button.btn.page-item(onclick='searchSubject(1)')
+                    i.fas.fa-angle-double-left
+                button.btn.page-item(onclick='searchSubject('+pages.prev+')')
+                    i.fas.fa-chevron-left
+            if pages
+                each page in pages.pages
+                    if page==currentPage
+                        button#paginateActive.btn.page-item(onclick='searchSubject('+page+')') #{page}
+                    else
+                        button.btn.page-item(onclick='searchSubject('+page+')') #{page}                    
+            if  pages.next <= pageCount
+                button.btn.page-item(onclick='searchSubject('+pages.next+')')
+                    i.fas.fa-chevron-right
+                button.btn.page-item(onclick='searchSubject('+pageCount+')')
+                    i.fas.fa-angle-double-right

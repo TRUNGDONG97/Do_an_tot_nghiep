@@ -17,7 +17,7 @@ style
             .row(style='margin-top:20px;')
               label.col-md-4.col-sm-4.col-4(style='padding-top:6px;padding-right:10px;') #{title}:
               .col-md-8.col-sm-8.col-8(style='margin-bottom:20px;')
-                input.form-control(type=type id=id)   
+                input.form-control(type=type id=id maxlength="100")   
           .col-md-6.col-sm-6.col-6
             + propTeacher('txtAddName','Họ và tên','text')
             + propTeacher('txtAddPhone','Số điện','number')
@@ -28,7 +28,8 @@ style
               .col-md-8.col-sm-8.col-8
                 input#txtAddBirthday(data-date-format='yyyy-mm-dd')
           .col-md-6.col-sm-6.col-6
-            + propTeacher('txtAddSalary','Lương','number')
+            #addSalary
+              + propTeacher('txtAddSalary','Lương','text')
             .row(style='margin-top:20px;')
               label.col-md-4.col-sm-4.col-4(style='padding-right:10px;') Giới tính:
               .col-md-8.col-sm-8.col-8 
@@ -40,20 +41,34 @@ style
                     input#addSexFemale.form-check-input(type='radio' name='groupOfMaterialRadios' )
                     label.form-check-label(for='materialGroupExample2') Nữ    
             .row(style='margin-top:40px;')
-                label.col-md-4.col-sm-4.col-4(style='padding-right:10px;margin-top:6px;')  Trạng thái:
-                .col-md-8.col-sm-8.col-8
-                  select#addTeacherStatus.form-control.text_seach.seach_parent(name='status' style='margin-right:20px;')
-                    option(value='') --Lựa chon--
-                    option(value='0') Đã nghỉ 
-                    option(value='1') Thực tập
-                    option(value='2') Chính thức
+              label.col-md-4.col-sm-4.col-4(style='padding-right:10px;margin-top:6px;')  Trạng thái:
+              .col-md-8.col-sm-8.col-8
+                select#addTeacherStatus.form-control.text_seach.seach_parent(name='status' style='margin-right:20px;')
+                  option(value='') --Lựa chon--
+                  option(value='0') Đã nghỉ 
+                  option(value='1') Thực tập
+                  option(value='2') Chính thức
             .row(style='margin-top:100px;margin-bottom:20px;')
               label.col-md-4.col-sm-4.col-4(style='padding-top:6px;padding-right:10px;') Ảnh đại diện:
               .col-md-8.col-sm-8.col-8
                 input#ImageTeacher.dropify(type='file' name="avatar" data-max-file-size="10M")      
       .modal-footer
-        button.btn.btn-secondary(type='button' data-dismiss='modal') Close
-        button.btn.btn-danger(type='button' onclick="addTeacher()") Add Teacher  
+        button.btn.btn-secondary(type='button' data-dismiss='modal') Đóng
+        button.btn.btn-danger(type='button' onclick="addTeacher()") Thêm giáo viên 
 script
   include ../javascripts/CustomInputImageScript.js
-
+//- script(type='text/javascript').
+//-   $('#addSalary').on('input', function (e) {
+//-     $(this).val(formatCurrency(this.value.replace(/[,VNĐ]/g, '')));
+//-     }).on('keypress', function (e) {
+//-       if (!$.isNumeric(String.fromCharCode(e.which))) e.preventDefault();
+//-     }).on('paste', function (e) {
+//-       var cb = e.originalEvent.clipboardData || window.clipboardData;
+//-       if (!$.isNumeric(cb.getData('text'))) e.preventDefault();
+//-     });
+  
+//-   function formatCurrency(number) {
+//-     var n = number.split('').reverse().join("");
+//-     var n2 = n.replace(/\d\d\d(?!$)/g, "$&,");
+//-     return n2.split('').reverse().join('');
+//-   }

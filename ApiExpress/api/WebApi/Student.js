@@ -4,27 +4,29 @@ import Constants from '../../constants/Constants'
 import StudentModel from '../../models/StudentModel'
 import pug from 'pug'
 import { getArrayPages, PageCount } from '../../constants/Funtions'
-const getStudent = async (req, res, next) => {
+const getStudent = async(req, res, next) => {
 
     try {
         const { currentPage } = req.body
         const { count, rows } = await StudentModel.findAndCountAll({
             offset: Constants.PER_PAGE * (currentPage - 1),
             limit: Constants.PER_PAGE,
-            order: [['name', 'ASC']]
+            order: [
+                ['name', 'ASC']
+            ]
         })
+        console.log(count)
         const pageCount = PageCount(count)
-        // console.log(students.length)
+            // console.log(students.length)
         var urlTable = `${process.cwd()}/table/TableStudent.pug`;
-        var htmlTable = await pug.renderFile(urlTable,
-            {
-                students:rows,
-                STT: (currentPage - 1) * Constants.PER_PAGE,
-                currentPage,
-                pageCount: pageCount,
-                search: false,
-                pages: getArrayPages(req)(pageCount, currentPage)
-            });
+        var htmlTable = await pug.renderFile(urlTable, {
+            students: rows,
+            STT: (currentPage - 1) * Constants.PER_PAGE,
+            currentPage,
+            pageCount: pageCount,
+            search: false,
+            pages: getArrayPages(req)(pageCount, currentPage)
+        });
         res.send({
             htmlTable,
         })
@@ -35,43 +37,62 @@ const getStudent = async (req, res, next) => {
         return;
     }
 }
-const searchStudent = async (req, res, next) => {
+const searchStudent = async(req, res, next) => {
     const { name, mssv, currentPage } = req.body
-    // console.log(currentPage)
+        // console.log(currentPage)
     var students = []
     var count = 0
     try {
         if (mssv == "") {
             students = await StudentModel.findAll({
-                where: sequelize.where(sequelize.fn("lower", sequelize.col("name")), { [Op.like]: '%' + name + '%' }),
-                offset: Constants.PER_PAGE * (currentPage - 1), limit: Constants.PER_PAGE
+                where: sequelize.where(sequelize.fn("lower", sequelize.col("name")), {
+                    [Op.like]: '%' + name + '%'
+                }),
+                offset: Constants.PER_PAGE * (currentPage - 1),
+                limit: Constants.PER_PAGE
             })
             count = await StudentModel.count({
-                where: sequelize.where(sequelize.fn("lower", sequelize.col("name")), { [Op.like]: '%' + name + '%' })
+                where: sequelize.where(sequelize.fn("lower", sequelize.col("name")), {
+                    [Op.like]: '%' + name + '%'
+                })
             })
         } else if (name == "") {
             students = await StudentModel.findAll({
-                where: sequelize.where(sequelize.fn("lower", sequelize.col("mssv")), { [Op.like]: '%' + mssv + '%' }),
-                offset: Constants.PER_PAGE * (currentPage - 1), limit: Constants.PER_PAGE
+                where: sequelize.where(sequelize.fn("lower", sequelize.col("mssv")), {
+                    [Op.like]: '%' + mssv + '%'
+                }),
+                offset: Constants.PER_PAGE * (currentPage - 1),
+                limit: Constants.PER_PAGE
             })
             count = await StudentModel.count({
-                where: sequelize.where(sequelize.fn("lower", sequelize.col("mssv")), { [Op.like]: '%' + mssv + '%' })
+                where: sequelize.where(sequelize.fn("lower", sequelize.col("mssv")), {
+                    [Op.like]: '%' + mssv + '%'
+                })
             })
         } else {
             students = await StudentModel.findAll({
                 where: {
                     [Op.and]: [
-                        sequelize.where(sequelize.fn('lower', sequelize.col('name')), { [Op.like]: '%' + name + '%' }),
-                        sequelize.where(sequelize.fn("lower", sequelize.col("mssv")), { [Op.like]: '%' + mssv + '%' })
+                        sequelize.where(sequelize.fn('lower', sequelize.col('name')), {
+                            [Op.like]: '%' + name + '%'
+                        }),
+                        sequelize.where(sequelize.fn("lower", sequelize.col("mssv")), {
+                            [Op.like]: '%' + mssv + '%'
+                        })
                     ]
                 },
-                offset: Constants.PER_PAGE * (currentPage - 1), limit: Constants.PER_PAGE
+                offset: Constants.PER_PAGE * (currentPage - 1),
+                limit: Constants.PER_PAGE
             })
             count = await StudentModel.count({
                 where: {
                     [Op.and]: [
-                        sequelize.where(sequelize.fn('lower', sequelize.col('name')), { [Op.like]: '%' + name + '%' }),
-                        sequelize.where(sequelize.fn("lower", sequelize.col("mssv")), { [Op.like]: '%' + mssv + '%' })
+                        sequelize.where(sequelize.fn('lower', sequelize.col('name')), {
+                            [Op.like]: '%' + name + '%'
+                        }),
+                        sequelize.where(sequelize.fn("lower", sequelize.col("mssv")), {
+                            [Op.like]: '%' + mssv + '%'
+                        })
                     ]
                 }
             })
@@ -80,15 +101,14 @@ const searchStudent = async (req, res, next) => {
         // console.log(count)
         const urlTable = `${process.cwd()}/table/TableStudent.pug`;
         const pageCount = PageCount(count)
-        const htmlTable = await pug.renderFile(urlTable,
-            {
-                students,
-                STT: 0,
-                currentPage,
-                pageCount,
-                search: true,
-                pages: getArrayPages(req)(pageCount, currentPage)
-            });
+        const htmlTable = await pug.renderFile(urlTable, {
+            students,
+            STT: 0,
+            currentPage,
+            pageCount,
+            search: true,
+            pages: getArrayPages(req)(pageCount, currentPage)
+        });
 
         res.send({
             htmlTable
@@ -101,16 +121,16 @@ const searchStudent = async (req, res, next) => {
         return;
     }
 }
-const deleteStudent = async (req, res, next) => {
+const deleteStudent = async(req, res, next) => {
     const id = parseInt(req.body.id)
-    // console.log(id)
+        // console.log(id)
     try {
         const students = await StudentModel.findAll({
-            where: {
-                id
-            }
-        })
-        // console.log(students.length)
+                where: {
+                    id
+                }
+            })
+            // console.log(students.length)
         if (students.length > 0) {
             await StudentModel.destroy({
                 where: {
@@ -131,8 +151,9 @@ const deleteStudent = async (req, res, next) => {
         return;
     }
 }
-const addStudent = async (req, res, next) => {
-    const { name,
+const addStudent = async(req, res, next) => {
+    const {
+        name,
         phone,
         mssv,
         birthday,
@@ -141,7 +162,7 @@ const addStudent = async (req, res, next) => {
         sex,
         url_avatar
     } = req.body
-    // console.log(birthday,'birthday')
+        // console.log(birthday,'birthday')
     try {
         const countMssv = await StudentModel.count({
             where: {
@@ -171,17 +192,17 @@ const addStudent = async (req, res, next) => {
             return;
         }
         const newStudent = await StudentModel.create({
-            name,
-            phone,
-            password: mssv,
-            birthday,
-            address,
-            email,
-            mssv,
-            sex,
-            url_avatar
-        })
-        // console.log(newStudent)
+                name,
+                phone,
+                password: mssv,
+                birthday,
+                address,
+                email,
+                mssv,
+                sex,
+                url_avatar
+            })
+            // console.log(newStudent)
         res.send({
             result: 3
         })
@@ -192,16 +213,16 @@ const addStudent = async (req, res, next) => {
         return;
     }
 }
-const editStudent = async (req, res, next) => {
+const editStudent = async(req, res, next) => {
     const id = parseInt(req.body.id)
     const urlModalEditStudent = `${process.cwd()}/modals/EditStudentModal.pug`;
     try {
         const student = await StudentModel.findAll({
-            where: {
-                id
-            }
-        })
-        // console.log(student)
+                where: {
+                    id
+                }
+            })
+            // console.log(student)
         if (student.length > 0) {
             const htmlModalEditStudent = await pug.renderFile(urlModalEditStudent, {
                 student: student[0]
@@ -224,7 +245,7 @@ const editStudent = async (req, res, next) => {
 }
 
 
-const saveStudent = async (req, res, next) => {
+const saveStudent = async(req, res, next) => {
     const {
         id,
         name,
@@ -245,11 +266,11 @@ const saveStudent = async (req, res, next) => {
         })
         if (mssv != student[0].mssv) {
             var countMssv = await StudentModel.count({
-                where: {
-                    mssv
-                }
-            })
-            // console.log(typeof countMssv)
+                    where: {
+                        mssv
+                    }
+                })
+                // console.log(typeof countMssv)
             if (countMssv > 0) {
                 res.send({ result: 0 })
                 return;
@@ -288,13 +309,11 @@ const saveStudent = async (req, res, next) => {
             mssv,
             sex,
             url_avatar
-        },
-            {
-                where: {
-                    id
-                }
+        }, {
+            where: {
+                id
             }
-        )
+        })
         console.log(updateStudent)
         res.send({
             result: 3
@@ -307,7 +326,7 @@ const saveStudent = async (req, res, next) => {
     }
 
 }
-const resetPass = async (req, res, next) => {
+const resetPass = async(req, res, next) => {
     const { id } = req.body;
     try {
         const student = await StudentModel.findAll({
@@ -323,13 +342,11 @@ const resetPass = async (req, res, next) => {
         } else {
             const updatePass = await StudentModel.update({
                 password: student[0].mssv
-            },
-                {
-                    where: {
-                        id
-                    }
+            }, {
+                where: {
+                    id
                 }
-            )
+            })
             res.send({
                 result: 1
             })
@@ -341,16 +358,16 @@ const resetPass = async (req, res, next) => {
         return;
     }
 }
-const detailStudent = async (req, res, next) => {
+const detailStudent = async(req, res, next) => {
     const id = parseInt(req.body.id)
     const urlModalEditStudent = `${process.cwd()}/modals/DetailStudentModal.pug`;
     try {
         const student = await StudentModel.findAll({
-            where: {
-                id
-            }
-        })
-        // console.log(student)
+                where: {
+                    id
+                }
+            })
+            // console.log(student)
         if (student.length > 0) {
             const htmlModalDetailStudent = await pug.renderFile(urlModalEditStudent, {
                 student: student[0]

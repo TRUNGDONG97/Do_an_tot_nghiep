@@ -1,7 +1,7 @@
-$(document).ready(function () {
+$(document).ready(function() {
     $('#tabTeacher a').css({ "background-color": "#17a2b8", "color": "#fff" })
     getTeacher(1)
-    $('#btnSearchTeacher').click(function () {
+    $('#btnSearchTeacher').click(function() {
         searchTeacher(1)
     })
     $('#txtAddBirthday').datepicker({
@@ -14,6 +14,7 @@ $(document).ready(function () {
     $('#txtAddBirthday').datepicker("setDate", new Date());
 
 });
+
 function getTeacher(currentPage) {
     if (!navigator.onLine) {
         swal({
@@ -29,11 +30,11 @@ function getTeacher(currentPage) {
         data: { currentPage },
         cache: false,
         timeout: 50000,
-    }).done(function (res) {
+    }).done(function(res) {
         $('#tableTeacher').html(res.htmlTable)
-        // $('#paginateActive').css({ "background-color": "#17a2b8", "color": "#fff" })
+            // $('#paginateActive').css({ "background-color": "#17a2b8", "color": "#fff" })
         return
-    }).fail(function (jqXHR, textStatus, errorThrown) {
+    }).fail(function(jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
             title: "Đã có lỗi xảy ra",
@@ -45,6 +46,7 @@ function getTeacher(currentPage) {
         return;
     })
 }
+
 function searchTeacher(currentPage) {
     // alert(currentPage)
     if (!navigator.onLine) {
@@ -57,8 +59,9 @@ function searchTeacher(currentPage) {
     }
     var name = $.trim($("#txtSearchTeacherName").val());
     var phone = $.trim($("#txtSearchTeacherPhone").val());
-    var status = $('#seachTeacherStatus').val();
+    var status = $('#searchTeacherStatus').val();
     if (name == "" && phone == "" && status == "") {
+        getTeacher(1)
         return;
     }
     // checkedPhone(phone)
@@ -74,18 +77,18 @@ function searchTeacher(currentPage) {
         // dataType: "json",
         cache: false,
         timeout: 50000,
-    }).done(function (res) {
+    }).done(function(res) {
         $('#tableTeacher').html(res.htmlTable)
         return
-    }).fail(function (jqXHR, textStatus, errorThrown) {
+    }).fail(function(jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
-            title: "Đã có lỗi xảy ra",
-            text: "",
-            icon: "warning",
-            dangerMode: true,
-        })
-        // console.log(textStatus + ': ' + errorThrown);
+                title: "Đã có lỗi xảy ra",
+                text: "",
+                icon: "warning",
+                dangerMode: true,
+            })
+            // console.log(textStatus + ': ' + errorThrown);
         return;
     });
 }
@@ -120,7 +123,7 @@ function addTeacher() {
     }
     checkedPhone(phone)
     checkedMail(email)
-    // console.log(files.length);
+        // console.log(files.length);
     if (files.length <= 0) {
         swal({
             title: "Chưa thêm ảnh ",
@@ -136,7 +139,7 @@ function addTeacher() {
         fileName = files[i].name;
     }
     var srcImg = window.location.origin + "/upload/avatarStudent/" + fileName
-   
+
     $.ajax({
         url: "/teacher/add",
         type: 'POST',
@@ -153,7 +156,7 @@ function addTeacher() {
         },
         cache: false,
         timeout: 50000,
-    }).done(function (res) {
+    }).done(function(res) {
         console.log(res.result)
         if (res.result == 0) {
             $("#txtAddPhone").val("");
@@ -186,15 +189,15 @@ function addTeacher() {
         })
         getTeacher(1)
         return;
-    }).fail(function (jqXHR, textStatus, errorThrown) {
+    }).fail(function(jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
-            title: "Đã có lỗi xảy ra",
-            text: "",
-            icon: "warning",
-            dangerMode: true,
-        })
-        // console.log(textStatus + ': ' + errorThrown);
+                title: "Đã có lỗi xảy ra",
+                text: "",
+                icon: "warning",
+                dangerMode: true,
+            })
+            // console.log(textStatus + ': ' + errorThrown);
         return;
     })
 }
@@ -209,12 +212,12 @@ function deleteTeacher(id) {
         return;
     }
     swal({
-        title: "Bạn chắc chắn xóa chứ?",
-        text: "",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true
-    })
+            title: "Bạn chắc chắn xóa chứ?",
+            text: "",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true
+        })
         .then((isConFirm) => {
             if (isConFirm) {
                 $.ajax({
@@ -225,7 +228,7 @@ function deleteTeacher(id) {
                     },
                     cache: false,
                     timeout: 50000,
-                }).done(function (res) {
+                }).done(function(res) {
                     // console.log(res.result)
                     if (res.result == 1) {
                         swal({
@@ -233,7 +236,7 @@ function deleteTeacher(id) {
                             text: "Xóa thành công!",
                             icon: "success"
                         });
-                      getTeacher(1)
+                        getTeacher(1)
                     } else {
                         swal({
                             title: "",
@@ -241,20 +244,21 @@ function deleteTeacher(id) {
                             icon: "warning"
                         });
                     }
-                }).fail(function (jqXHR, textStatus, errorThrown) {
+                }).fail(function(jqXHR, textStatus, errorThrown) {
                     // If fail
                     swal({
-                        title: "Đã có lỗi xảy ra",
-                        text: "",
-                        icon: "warning",
-                        dangerMode: true,
-                    })
-                    // console.log(textStatus + ': ' + errorThrown);
+                            title: "Đã có lỗi xảy ra",
+                            text: "",
+                            icon: "warning",
+                            dangerMode: true,
+                        })
+                        // console.log(textStatus + ': ' + errorThrown);
                     return;
                 })
             }
         });
 }
+
 function editTeacher(id) {
     if (!navigator.onLine) {
         swal({
@@ -270,7 +274,7 @@ function editTeacher(id) {
         type: 'POST',
         cache: false,
         timeout: 50000
-    }).done(function (res) {
+    }).done(function(res) {
         // console.log(res)
         if (res.result == 0) {
             swal({
@@ -283,15 +287,15 @@ function editTeacher(id) {
             $('#editTeacherModal').modal('show');
         }
         return;
-    }).fail(function (jqXHR, textStatus, errorThrown) {
+    }).fail(function(jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
-            title: "Đã có lỗi xảy ra",
-            text: "",
-            icon: "warning",
-            dangerMode: true,
-        })
-        // console.log(textStatus + ': ' + errorThrown);
+                title: "Đã có lỗi xảy ra",
+                text: "",
+                icon: "warning",
+                dangerMode: true,
+            })
+            // console.log(textStatus + ': ' + errorThrown);
         return;
     })
 }
@@ -311,7 +315,7 @@ function resetPass(id) {
         type: 'POST',
         cache: false,
         timeout: 50000
-    }).done(function (res) {
+    }).done(function(res) {
         // console.log(res)
         if (res.result == 0) {
             swal({
@@ -327,19 +331,20 @@ function resetPass(id) {
             })
         }
         return;
-    }).fail(function (jqXHR, textStatus, errorThrown) {
+    }).fail(function(jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
-            title: "Đã có lỗi xảy ra",
-            text: "",
-            icon: "warning",
-            dangerMode: true,
-        })
-        // console.log(textStatus + ': ' + errorThrown);
+                title: "Đã có lỗi xảy ra",
+                text: "",
+                icon: "warning",
+                dangerMode: true,
+            })
+            // console.log(textStatus + ': ' + errorThrown);
         return;
     })
 }
-function saveTeacher(id){
+
+function saveTeacher(id) {
     if (!navigator.onLine) {
         swal({
             title: "Kiểm tra kết nối internet!",
@@ -369,9 +374,9 @@ function saveTeacher(id){
     // console.log(salary)
     // console.log(status)
     // console.log(sex)
-   
 
-    if (name == ''  || phone == '' || birthday == '' || address == ''||status==''||salary==''||email=='') {
+
+    if (name == '' || phone == '' || birthday == '' || address == '' || status == '' || salary == '' || email == '') {
         swal({
             title: "Chưa nhập đầy đủ thông tin",
             text: "",
@@ -416,9 +421,9 @@ function saveTeacher(id){
         type: 'POST',
         cache: false,
         timeout: 50000
-    }).done(function (res) {
+    }).done(function(res) {
         // console.log(res.result)
-      
+
         if (res.result == 0) {
             swal({
                 title: "Số điện thoại đã tồn tại",
@@ -442,24 +447,25 @@ function saveTeacher(id){
         // $("#txtEditAddress").val("");
         // $("#txtEditEmail").val("");
         swal({
-            title: "Thay đổi thành công",
+            title: "Cập nhập thành công",
             text: "",
             icon: "success"
         })
         getTeacher(1)
         return;
-    }).fail(function (jqXHR, textStatus, errorThrown) {
+    }).fail(function(jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
-            title: "Đã có lỗi xảy ra",
-            text: "",
-            icon: "warning",
-            dangerMode: true,
-        })
-        // console.log(textStatus + ': ' + errorThrown);
+                title: "Đã có lỗi xảy ra",
+                text: "",
+                icon: "warning",
+                dangerMode: true,
+            })
+            // console.log(textStatus + ': ' + errorThrown);
         return;
     })
 }
+
 function checkedMail(email) {
     var email_regex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
     if (!email_regex.test(email)) {
@@ -471,6 +477,7 @@ function checkedMail(email) {
         return;
     }
 }
+
 function checkedPhone(phone) {
     var vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
     if (!vnf_regex.test(phone)) {
@@ -482,6 +489,7 @@ function checkedPhone(phone) {
         return;
     }
 }
+
 function uploadImage(fileData) {
     $.ajax({
         url: "/uploadAvatar",
@@ -491,7 +499,7 @@ function uploadImage(fileData) {
         processData: false, // Not to process data  
         cache: false,
         enctype: 'multipart/form-data'
-    }).done(function (res) {
+    }).done(function(res) {
         if (res.result == 0) {
             swal({
                 title: "Không thể upload ảnh",
@@ -500,15 +508,15 @@ function uploadImage(fileData) {
                 dangerMode: true,
             })
         }
-    }).fail(function (jqXHR, textStatus, errorThrown) {
+    }).fail(function(jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
-            title: "Đã có lỗi xảy ra",
-            text: "",
-            icon: "warning",
-            dangerMode: true,
-        })
-        // console.log(textStatus + ': ' + errorThrown.message);
-        // console.log(jqXHR);
+                title: "Đã có lỗi xảy ra",
+                text: "",
+                icon: "warning",
+                dangerMode: true,
+            })
+            // console.log(textStatus + ': ' + errorThrown.message);
+            // console.log(jqXHR);
     })
 }

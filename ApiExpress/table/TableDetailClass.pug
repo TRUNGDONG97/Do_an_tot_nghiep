@@ -1,0 +1,26 @@
+table.table.table-bordered.table-hover
+    thead
+        tr
+            th STT
+            th Tên sinh viên
+            th MSSV
+            th Ngày sinh
+            th Số điện thoại
+            th Điểm giữa kì         
+            th Điểm cuối kì
+    tbody
+        if student_classes.length <=0        
+            tr
+                td(colspan='9' style='text-align: center;') Chưa có sinh viên nào.
+        else
+            - var STT=0
+            each item in student_classes
+                tr
+                    td #{STT=STT+1}
+                    td #{item.Student.name}
+                    td #{item.Student.mssv}
+                    td #{item.Student.birthday}
+                    td #{item.Student.phone}
+                    td #{item.mid_semester?item.mid_semester:''}
+                    td #{item.mid_semester?item.mid_semester:''}
+

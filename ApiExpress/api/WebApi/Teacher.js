@@ -9,7 +9,7 @@ import pug from 'pug'
 import { getArrayPages, PageCount } from '../../constants/Funtions'
 // import formidable from 'formidable'
 // import fs from 'fs'
-const getTeacher = async (req, res, next) => {
+const getTeacher = async(req, res, next) => {
     const { currentPage } = req.body
     try {
         const count = await TeacherModel.count()
@@ -17,18 +17,19 @@ const getTeacher = async (req, res, next) => {
         const teachers = await TeacherModel.findAll({
             offset: Constants.PER_PAGE * (currentPage - 1),
             limit: Constants.PER_PAGE,
-            order: [['name', 'ASC']]
+            order: [
+                ['name', 'ASC']
+            ]
         })
         var urlTable = `${process.cwd()}/table/TableTeacher.pug`;
-        var htmlTable = await pug.renderFile(urlTable,
-            {
-                teachers,
-                STT: (currentPage - 1) * Constants.PER_PAGE,
-                currentPage,
-                pageCount: pageCount,
-                search: false,
-                pages: getArrayPages(req)(pageCount, currentPage)
-            });
+        var htmlTable = await pug.renderFile(urlTable, {
+            teachers,
+            STT: (currentPage - 1) * Constants.PER_PAGE,
+            currentPage,
+            pageCount: pageCount,
+            search: false,
+            pages: getArrayPages(req)(pageCount, currentPage)
+        });
         res.send({
             htmlTable,
         })
@@ -39,27 +40,39 @@ const getTeacher = async (req, res, next) => {
         return;
     }
 }
-const searchTeacher = async (req, res, next) => {
+const searchTeacher = async(req, res, next) => {
     const { currentPage, name, phone, status } = req.body
     var teachers = []
     var count = 0
-    // console.log(status,"status")
+        // console.log(status,"status")
     try {
         if (status == '') {
             teachers = await TeacherModel.findAll({
                 where: {
                     [Op.and]: [
-                        sequelize.where(sequelize.fn('lower', sequelize.col('name')), { [Op.like]: '%' + name + '%' }),
-                        sequelize.where(sequelize.fn("lower", sequelize.col("phone")), { [Op.like]: '%' + phone + '%' })
+                        sequelize.where(sequelize.fn('lower', sequelize.col('name')), {
+                            [Op.like]: '%' + name + '%'
+                        }),
+                        sequelize.where(sequelize.fn("lower", sequelize.col("phone")), {
+                            [Op.like]: '%' + phone + '%'
+                        })
                     ]
                 },
-                offset: Constants.PER_PAGE * (currentPage - 1), limit: Constants.PER_PAGE
+                offset: Constants.PER_PAGE * (currentPage - 1),
+                limit: Constants.PER_PAGE,
+                order: [
+                    ['name', 'ASC']
+                ]
             })
             count = await TeacherModel.count({
                 where: {
                     [Op.and]: [
-                        sequelize.where(sequelize.fn('lower', sequelize.col('name')), { [Op.like]: '%' + name + '%' }),
-                        sequelize.where(sequelize.fn("lower", sequelize.col("phone")), { [Op.like]: '%' + phone + '%' })
+                        sequelize.where(sequelize.fn('lower', sequelize.col('name')), {
+                            [Op.like]: '%' + name + '%'
+                        }),
+                        sequelize.where(sequelize.fn("lower", sequelize.col("phone")), {
+                            [Op.like]: '%' + phone + '%'
+                        })
                     ]
                 }
             })
@@ -67,33 +80,44 @@ const searchTeacher = async (req, res, next) => {
             teachers = await TeacherModel.findAll({
                 where: {
                     [Op.and]: [
-                        sequelize.where(sequelize.fn('lower', sequelize.col('name')), { [Op.like]: '%' + name + '%' }),
-                        sequelize.where(sequelize.fn("lower", sequelize.col("phone")), { [Op.like]: '%' + phone + '%' }),
+                        sequelize.where(sequelize.fn('lower', sequelize.col('name')), {
+                            [Op.like]: '%' + name + '%'
+                        }),
+                        sequelize.where(sequelize.fn("lower", sequelize.col("phone")), {
+                            [Op.like]: '%' + phone + '%'
+                        }),
                         { status }
                     ]
                 },
-                offset: Constants.PER_PAGE * (currentPage - 1), limit: Constants.PER_PAGE
+                offset: Constants.PER_PAGE * (currentPage - 1),
+                limit: Constants.PER_PAGE,
+                order: [
+                    ['name', 'ASC']
+                ]
             })
             count = await TeacherModel.count({
                 where: {
                     [Op.and]: [
-                        sequelize.where(sequelize.fn('lower', sequelize.col('name')), { [Op.like]: '%' + name + '%' }),
-                        sequelize.where(sequelize.fn("lower", sequelize.col("phone")), { [Op.like]: '%' + phone + '%' })
+                        sequelize.where(sequelize.fn('lower', sequelize.col('name')), {
+                            [Op.like]: '%' + name + '%'
+                        }),
+                        sequelize.where(sequelize.fn("lower", sequelize.col("phone")), {
+                            [Op.like]: '%' + phone + '%'
+                        })
                     ]
                 }
             })
         }
         const urlTable = `${process.cwd()}/table/TableTeacher.pug`;
         const pageCount = PageCount(count)
-        const htmlTable = await pug.renderFile(urlTable,
-            {
-                teachers,
-                STT: 0,
-                currentPage,
-                pageCount,
-                search: true,
-                pages: getArrayPages(req)(pageCount, currentPage)
-            });
+        const htmlTable = await pug.renderFile(urlTable, {
+            teachers,
+            STT: 0,
+            currentPage,
+            pageCount,
+            search: true,
+            pages: getArrayPages(req)(pageCount, currentPage)
+        });
 
         res.send({
             htmlTable
@@ -105,7 +129,7 @@ const searchTeacher = async (req, res, next) => {
         return;
     }
 }
-const addTeacher = async (req, res, next) => {
+const addTeacher = async(req, res, next) => {
     const {
         name,
         phone,
@@ -137,17 +161,18 @@ const addTeacher = async (req, res, next) => {
             return;
         }
         const newTeacher = await TeacherModel.create({
-            name,
-            phone,
-            password: phone,
-            birthday,
-            address,
-            email,
-            sex,
-            url_avatar,
-            status, salary
-        })
-        // console.log(newStudent)
+                name,
+                phone,
+                password: phone,
+                birthday,
+                address,
+                email,
+                sex,
+                url_avatar,
+                status,
+                salary
+            })
+            // console.log(newStudent)
         res.send({
             result: 2
         })
@@ -158,16 +183,16 @@ const addTeacher = async (req, res, next) => {
         return;
     }
 }
-const deleteTeacher = async (req, res, next) => {
+const deleteTeacher = async(req, res, next) => {
     const id = parseInt(req.body.id)
-    console.log(id)
+        // console.log(id)
     try {
         const teachers = await TeacherModel.findAll({
-            where: {
-                id
-            }
-        })
-        // console.log(students.length)
+                where: {
+                    id
+                }
+            })
+            // console.log(students.length)
         if (teachers.length > 0) {
             await TeacherModel.destroy({
                 where: {
@@ -188,16 +213,16 @@ const deleteTeacher = async (req, res, next) => {
         return;
     }
 }
-const editTeacher = async (req, res, next) => {
+const editTeacher = async(req, res, next) => {
     const id = parseInt(req.body.id)
     const urlModalEditTeacher = `${process.cwd()}/modals/EditTeacherModal.pug`;
     try {
         const teachers = await TeacherModel.findAll({
-            where: {
-                id
-            }
-        })
-        // console.log(student)
+                where: {
+                    id
+                }
+            })
+            // console.log(student)
         if (teachers.length > 0) {
             const htmlModalEditTeacher = await pug.renderFile(urlModalEditTeacher, {
                 teacher: teachers[0]
@@ -218,7 +243,7 @@ const editTeacher = async (req, res, next) => {
         return;
     }
 }
-const saveTeacher = async (req, res, next) => {
+const saveTeacher = async(req, res, next) => {
     const {
         id,
         name,
@@ -231,16 +256,16 @@ const saveTeacher = async (req, res, next) => {
         salary,
         status
     } = req.body
-    // console.log(id)
-    // console.log(name)
-    // console.log(phone)
-    // console.log(birthday)
-    // console.log(address)
-    // console.log(email)
-    // console.log(sex)
-    // console.log(url_avatar)
-    // console.log(salary)
-    // console.log(status)
+        // console.log(id)
+        // console.log(name)
+        // console.log(phone)
+        // console.log(birthday)
+        // console.log(address)
+        // console.log(email)
+        // console.log(sex)
+        // console.log(url_avatar)
+        // console.log(salary)
+        // console.log(status)
     try {
         const teacher = await TeacherModel.findAll({
             where: {
@@ -280,13 +305,11 @@ const saveTeacher = async (req, res, next) => {
             url_avatar,
             salary,
             status
-        },
-            {
-                where: {
-                    id
-                }
+        }, {
+            where: {
+                id
             }
-        )
+        })
         res.send({
             result: 2
         })
@@ -298,7 +321,7 @@ const saveTeacher = async (req, res, next) => {
     }
 
 }
-const resetPassTeacher = async (req, res, next) => {
+const resetPassTeacher = async(req, res, next) => {
     const { id } = req.body;
     try {
         const teacher = await TeacherModel.findAll({
@@ -314,13 +337,11 @@ const resetPassTeacher = async (req, res, next) => {
         } else {
             const updatePass = await TeacherModel.update({
                 password: teacher[0].phone
-            },
-                {
-                    where: {
-                        id
-                    }
+            }, {
+                where: {
+                    id
                 }
-            )
+            })
             res.send({
                 result: 1
             })

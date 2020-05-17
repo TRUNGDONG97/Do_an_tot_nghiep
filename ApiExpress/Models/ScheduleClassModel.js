@@ -1,6 +1,5 @@
-
 import Sequelize from 'sequelize'
-import {sequelize,Op} from '../connectData/Database'
+import { sequelize, Op } from '../connectData/Database'
 const Scheduleclass = sequelize.define('Schedule_class', {
     id: {
         type: Sequelize.INTEGER,
@@ -8,9 +7,6 @@ const Scheduleclass = sequelize.define('Schedule_class', {
         autoIncrement: true
     },
     class_id: {
-        type: Sequelize.INTEGER
-    },
-    room_id: {
         type: Sequelize.INTEGER
     },
     day_of_week: {
@@ -21,11 +17,14 @@ const Scheduleclass = sequelize.define('Schedule_class', {
     },
     time_end: {
         type: Sequelize.INTEGER
+    },
+    room_name: {
+        type: Sequelize.STRING
     }
-},{
+}, {
     //
-    timestamps:false,   
-    freezeTableName: true ,
+    timestamps: false,
+    freezeTableName: true,
 })
 
 export default Scheduleclass

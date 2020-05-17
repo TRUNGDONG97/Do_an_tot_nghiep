@@ -25,9 +25,8 @@ table.table.table-bordered.table-hover
                     td #{item.sex==1?'Nam':'Nữ'}
                     td #{item.status==0?'Đã nghỉ':(item.status==1?'Thực tập':'Chính thức')}
                     td.salary #{item.salary}
-                    //- #{formatNumber(item.salary,'.',',')} 
                     td
-                        //- button#detailTeac.btn.btn-primary(type='button' onclick='detailTeacher('+item.id+')')
+                        //- button#detailTeac.btn.btn-primary(type='button' onclick='detailTeacher('+item+')')
                         //-     i.fas.fa-info-circle
                         button#editTeac.btn.btn-success(type='button' onclick='editTeacher('+item.id+')')
                             i.far.fa-edit 

@@ -6,10 +6,19 @@ const Subject = sequelize.define('Subject', {
         primaryKey: true,
         autoIncrement: true
     },
-    name: {
-        type: Sequelize.STRING
+    subject_name: {
+        type: Sequelize.STRING,
     },
     subject_code: {
+        type: Sequelize.STRING
+    },
+    credit_hour: {
+        type: Sequelize.STRING
+    },
+    coefficient: {
+        type: Sequelize.STRING
+    },
+    time: {
         type: Sequelize.STRING
     }
 

@@ -1,0 +1,94 @@
+#editClassModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='editDetailclass' aria-hidden='true')
+    .modal-dialog.modal-lg
+        .modal-content(style='color: #007bff')
+            .modal-header(style='background-color: #17a2b8')
+                h5.modal-title(style='color: white;')
+                    i.fas.fa-user-plus(aria-hidden='false')
+                    |   Chỉnh sửa lớp học
+                button.close(type='button' data-dismiss='modal' aria-label='Close' style='color: white;' )
+                    span(aria-hidden='true') &times;
+            .modal-body(style='margin-bottom:20px;background-color: #f3f5f9;')
+                .row(style='margin-bottom:20px;')
+                    mixin propEditClass(id,title,type,value)
+                        .row(style='margin-top:20px;')
+                            label.col-md-6.col-sm-6.col-6(style='padding-top:6px;padding-right:10px;') #{title}:
+                            .col-md-6.col-sm-6.col-6(style='margin-bottom:20px;')
+                                input.form-control(type=type id=id maxlength="50" value=value)   
+                    .col-md-6.col-sm-6.col-6
+                        +propEditClass('txtEditSubjectCode','Mã môn học','text',classes.Subject.subject_code)
+                        +propEditClass('txtEditTeacherPhone','Số điện thoại giáo viên','text',classes.Teacher.phone)
+                    .col-md-6.col-sm-6.col-6
+                        .row(style='margin-top:20px;margin-bottom:50px;')   
+                            label.col-md-4.col-sm-4.col-4(style='padding-top:6px;padding-right:10px;') Trạng thái:
+                            .col-md-7.col-sm-7.col-7
+                                select#editStuClassStatus.form-control(name='status' )
+                                    option(value='') --Lựa chon--
+                                    option(value='0') Đã bị hủy
+                                    option(value='1') Đang học
+                                    option(value='2') Đã hoàn thành
+                label Lịch học:
+                .row.col-md-11.col-sm-11.col-11.offset-md-1
+                    .col-md-2
+                        .row
+                            label.col-md-5(style='padding-top:6px;') Thứ:
+                            .col-md-7.col-sm-7.col-7
+                                input#txtEditDay1.form-control(type='number' min='2' max='7' placeholder='' value=parseInt(classes.Schedule_classes[0].day_of_week))
+                    p(style='padding-top:6px;padding-right:10px;') từ:
+                    .col-md-2
+                        .row
+                            .form-group
+                                #time_start1.time-picker.input-group.date(data-target-input='nearest')
+                                    input#editTimeStart1.form-control.datetimepicker-input(type='text' data-target='#time_start1' value=classes.Schedule_classes[0].time_start)
+                                    .input-group-append(data-target='#time_start1' data-toggle='datetimepicker' )
+                                        .input-group-text
+                                            i.far.fa-clock
+                    p(style='padding-top:6px;padding-right:10px;padding-left:10px;') đến:
+                    .col-md-2
+                        .row
+                            .form-group
+                                #time_end1.time-picker.input-group.date(data-target-input='nearest')
+                                    input#editTimeEnd1.form-control.datetimepicker-input(type='text' data-target='#time_end1' value=classes.Schedule_classes[0].time_end)
+                                    .input-group-append(data-target='#time_end1' data-toggle='datetimepicker')
+                                        .input-group-text
+                                            i.far.fa-clock
+                    .col-md-4
+                        .row
+                            label.col-md-4.col-sm-4.col-4(style='padding-top:6px;padding-right:10px;') Phòng:
+                            .col-md-8.col-sm-8.col-8
+                                input#editRoom1.form-control(type='text' maxlength="50" value=classes.Schedule_classes[0].room_name)   
+                .row.col-md-11.col-sm-11.col-11.offset-md-1
+                    .col-md-2
+                        .row
+                            label.col-md-5(style='padding-top:6px;') Thứ:
+                            .col-md-7.col-sm-7.col-7
+                                input#txtEditDay2.form-control(type='number' min='1' max='7' value=classes.Schedule_classes.length>1?parseInt(classes.Schedule_classes[1].day_of_week):null)
+                    p(style='padding-top:6px;padding-right:10px;') từ:
+                    .col-md-2
+                        .row
+                            .form-group
+                                #time_start2.time-picker.input-group.date(data-target-input='nearest')
+                                    input#editTimeStart2.form-control.datetimepicker-input(type='text' data-target='#time_start2' value=classes.Schedule_classes.length>1?classes.Schedule_classes[1].time_start:'')
+                                    .input-group-append(data-target='#time_start2' data-toggle='datetimepicker')
+                                        .input-group-text
+                                            i.far.fa-clock
+                    p(style='padding-top:6px;padding-right:10px;padding-left:10px;') đén:
+                    .col-md-2
+                        .row
+                            .form-group
+                                #time_end2.time-picker.input-group.date(data-target-input='nearest')
+                                    input#editTimeEnd2.form-control.datetimepicker-input(type='text' data-target='#time_end2' value=classes.Schedule_classes.length>1?classes.Schedule_classes[1].time_end:'' )
+                                    .input-group-append(data-target='#time_end2' data-toggle='datetimepicker')
+                                        .input-group-text
+                                            i.far.fa-clock
+                    .col-md-4
+                        .row
+                            label.col-md-4.col-sm-4.col-4(style='padding-top:6px;padding-right:10px;') Phòng:
+                            .col-md-8.col-sm-8.col-8
+                                input#editRoom2.form-control(type='text' maxlength="50" value=classes.Schedule_classes.length>1?classes.Schedule_classes[1].room_name:'')  
+            .modal-footer
+                button.btn.btn-secondary(type='button' data-dismiss='modal') Đóng
+                button.btn.btn-danger(type='button' onclick='saveClass('+classes.id+')') Lưu
+script(type='text/javascript').
+    $(document).ready(function(){
+        $("#editStuClassStatus").val(#{classes.status})
+    });

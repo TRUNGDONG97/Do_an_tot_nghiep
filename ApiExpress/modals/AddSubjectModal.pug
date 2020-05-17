@@ -1,0 +1,26 @@
+#AddSubjectModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='addClassTitle' aria-hidden='true')
+    .modal-dialog.modal-lg
+        .modal-content(style='color: #007bff')
+            .modal-header(style='background-color: #d8061a')
+                h5.modal-title(style='color: white;')
+                    i.fas.fa-user-plus(aria-hidden='false')
+                    |   Thêm môn học
+                button.close(type='button' data-dismiss='modal' aria-label='Close' style='color: white;' )
+                    span(aria-hidden='true') &times;
+            .modal-body(style='margin-bottom:20px;background-color: #f3f5f9;')
+                .row(style='margin-bottom:20px;')
+                    mixin propAddClass(id,title,type)
+                        .row(style='margin-top:20px;')
+                            label.col-md-6.col-sm-6.col-6(style='padding-top:6px;padding-right:10px;') #{title}:
+                            .col-md-6.col-sm-6.col-6(style='margin-bottom:20px;')
+                                input.form-control(type=type id=id maxlength="50")   
+                    .col-md-7.col-sm-7.col-7
+                        +propAddClass('txtAddSubjectName','Tên môn hoc','text')
+                        +propAddClass('txtAddSubjectCode','Mã môn học','text')
+                        +propAddClass('txtTime','Thời lượng','text')
+                    .col-md-5.col-sm-5.col-5
+                        +propAddClass('txtCreditHour','Tín chỉ','number')
+                        +propAddClass('txtcoefficient','Tín chỉ học phí','number')
+            .modal-footer
+                button.btn.btn-secondary(type='button' data-dismiss='modal') Đóng
+                button.btn.btn-danger(type='button' onclick="addSubject()") Thêm môn học

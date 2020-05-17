@@ -11,6 +11,12 @@ const StudentClass = sequelize.define('Student_class', {
     },
     class_id: {
         type: Sequelize.INTEGER
+    },
+    mid_semester: {
+        type: Sequelize.FLOAT
+    },
+    end_semester: {
+        type: Sequelize.FLOAT
     }
 
 }, {

@@ -1,0 +1,29 @@
+doctype html
+html
+    include Layout
+    style
+        include ../stylesheets/SubjectStyle.css
+    script
+        include ../javascripts/SubjectScript.js
+    body
+        include NavbarView
+        .container-tab
+            .div-title
+                h4
+                    i.fas.fa-book
+                        |  &nbsp;  Môn học
+            .div-search(style='margin-top:30px;margin-bottom:30px;')
+                .col-md-12.col-sm-12.col-12
+                    .row(style='margin-left:0px;')
+                        input#txtSubjectName.form-control.col-md-3.col-sm-3.col-3(type="text" placeholder="Nhập tên môn học")
+                        input#txtSubjectCode.form-control.col-md-2.col-sm-2.col-2(type="text" placeholder="Nhập mã môn học" style='margin-left:20px;')
+                        button#btnSearchSubject.btn.btn-primary(type="button" style='margin-left:20px;')
+                            i.fas.fa-search
+                            | &nbsp;  Tìm kiếm
+                        button#btnAddSubject.btn.btn-danger(type="button" data-toggle='modal' data-target='#AddSubjectModal' style='margin-left:20px;')
+                            i.fas.fa-user-plus
+                            | &nbsp;  Thêm Môn học
+            .container-fluid
+                #tableSubject
+        include ../modals/AddSubjectModal
+        #divModalEditSubject

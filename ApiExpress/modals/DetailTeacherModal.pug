@@ -1,0 +1,22 @@
+#detailTeacherModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='editStudentTitle' aria-hidden='true')
+  .modal-dialog.modal-lg
+    .modal-content
+      .modal-header(style='background-color: #007bff')
+        h5.modal-title(style='color: white;')
+          i.fas.fa-user-plus(aria-hidden='false')
+          |   Thông tin giáo viên
+        button.close(type='button' data-dismiss='modal' aria-label='Close' style='color: white;' )
+          span(aria-hidden='true') &times;
+      .modal-body(style='margin-bottom:20px;background-color: #f3f5f9;')
+        .row
+          .col-md-3.col-sm-3.col-3
+            img#avatar.d-block(src=student.url_avatar!=null?teacher.url_avatar:(teacher.sex==1?'/images/img_avatar_male.jpg':'/images/img_avatar_female.jpg'))
+          .col-md-9.col-sm-9.col-9
+            p Họ tên : #{teacher.name}
+            p Giới tính : #{teacher.sex==1?'Nam':"Nữ"}
+            p Số điện thoại : #{teacher.phone}
+            p Email : #{teacher.email}
+            p Địa chỉ : #{teacher.address}
+      .modal-footer 
+        button.btn.btn-secondary(type='button' data-dismiss='modal') Đóng
+

@@ -13,7 +13,7 @@
             .row(style='margin-top:20px;')
               label.col-md-4.col-sm-4.col-4(style='padding-top:6px;padding-right:10px;') #{title}:
               .col-md-8.col-sm-8.col-8(style='margin-bottom:20px;')
-                input.form-control(type=type id=id value=value) 
+                input.form-control(type=type id=id value=value maxlength="100") 
           .col-md-6.col-sm-6.col-6
             + propStudent('txtEditName','Họ và tên','text',student.name)
             + propStudent('txtEditMssv','Mssv','number',student.mssv)
@@ -40,9 +40,9 @@
               .col-md-8.col-sm-8.col-8
                 input#editImageStudent.dropify(type='file' name="avatar" data-max-file-size="10M" data-default-file=student.url_avatar)
       .modal-footer 
-        button.btn.btn-secondary(type='button' data-dismiss='modal') Close
-        button.btn.btn-danger(type='button' onclick='resetPass('+student.id+')' ) Reset Password
-        button.btn.btn-primary(type='button' onclick='saveStudent('+student.id+')') Save
+        button.btn.btn-secondary(type='button' data-dismiss='modal') Đóng
+        button.btn.btn-danger(type='button' onclick='resetPass('+student.id+')' ) Đặt lại mật khẩu
+        button.btn.btn-primary(type='button' onclick='saveStudent('+student.id+')') Lưu
 script
   include ../javascripts/CustomInputImageScript.js
 script(type='text/javascript').

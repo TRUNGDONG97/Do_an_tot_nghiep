@@ -1,8 +1,6 @@
 doctype html
 html
   include Layout
-  //- <link rel="stylesheet" href="/stylesheets/listClass.css" >
-  //- script(src='/javascripts/listClass.js')
   style
     include ../stylesheets/ClassStyle.css
   script
@@ -15,32 +13,27 @@ html
           i.fas.fa-house-user
             |  &nbsp;  Lớp học
       .div-search
-        .col-md-12.col-sm-12.col-12
+        mixin searchTea(id,title,type,placeholder)
           .row(style='margin-top:10px')
+            label.col-md-5.col-sm-5.col-5(style='padding-top:6px;padding-right:10px;') #{title}:
+            .col-md-7.col-sm-7.col-7
+              input.form-control(type=type placeholder=placeholder id=id) 
+        .col-md-12.col-sm-12.col-12
+          .row
             .col-md-4.col-sm-4.col-4
-              .row
-                label.col-md-5.col-sm-5.col-5(style='padding-top:6px;padding-right:10px;') Tên môn học:
-                .col-md-7.col-sm-7.col-7
-                  input#txtSearchSubjectName.form-control(type="text" placeholder="Nhập tên môn học") 
+              +searchTea('txtSearchClassCode','Mã lớp học','text',"Nhập mã lớp học") 
+            .col-md-4.col-sm-4.col-4
+              +searchTea('txtSearchSubjectCode','Mã học phần','text',"Nhập mã học phần")
+            .col-md-4.col-sm-4.col-4
               .row(style='margin-top:10px')
-                label.col-md-5.col-sm-5.col-5(style='padding-top:6px;padding-right:10px;') Tên giáo viên:
+                label.col-md-4.col-sm-4.col-4(style='padding-top:6px;padding-right:10px;') Trạng thái:
                 .col-md-7.col-sm-7.col-7
-                  input#txtSearchTeacherName.form-control(type="text" placeholder="Nhập tên giáo viên") 
-            .col-md-4.col-sm-4.col-4
-              .row
-                label.col-md-5.col-sm-5.col-5(style='padding-top:6px;padding-right:10px;') Mã học phần:
-                .col-md-7.col-sm-7.col-7
-                  input#txtSearchSubjectCode.form-control(type="text" placeholder="Nhập mã học phần") 
-              .row(style='margin-top:10px')
-                label.col-md-5.col-sm-5.col-5(style='padding-top:6px;padding-right:10px;') Mã lớp học:
-                .col-md-7.col-sm-7.col-7
-                  input#txtSearchClassCode.form-control(type="text" placeholder="Nhập mã lớp học") 
-            .col-md-4.col-sm-4.col-4
-              .row
-                label.col-md-4.col-sm-4.col-4(style='padding-top:6px;padding-right:10px;') Phòng học:
-                .col-md-7.col-sm-7.col-7
-                  input#txtSearchRoomName.form-control(type="text" placeholder="Nhập tên phòng học") 
-        .col-lg-7.offset-lg-4(style='margin-top:20px')
+                  select#seachClassStatus.form-control(name='status' )
+                    option(value='') --Lựa chon--
+                    option(value='0') Đã bị hủy
+                    option(value='1') Đang học
+                    option(value='2') Đã hoàn thành
+        .col-md-7.offset-md-4(style='margin-top:20px')
           button#btnSearchClass.btn.btn-primary(type="button" style='margin-right:100px')
             i.fas.fa-search
               | &nbsp;  Tìm kiếm
@@ -48,5 +41,6 @@ html
             i.fas.fa-plus-square
               | &nbsp;  Thêm lớp học
       .container-fluid
-          .container-fluid
-            #tableClass
+        #tableClass
+    include ../modals/AddClassModal
+    #divModalEditClass
