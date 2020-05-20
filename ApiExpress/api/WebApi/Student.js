@@ -4,18 +4,19 @@ import Constants from '../../constants/Constants'
 import StudentModel from '../../models/StudentModel'
 import pug from 'pug'
 import { getArrayPages, PageCount } from '../../constants/Funtions'
+import xlsx from 'xlsx'
 const getStudent = async(req, res, next) => {
 
     try {
         const { currentPage } = req.body
         const { count, rows } = await StudentModel.findAndCountAll({
-            offset: Constants.PER_PAGE * (currentPage - 1),
-            limit: Constants.PER_PAGE,
-            order: [
-                ['name', 'ASC']
-            ]
-        })
-        console.log(count)
+                offset: Constants.PER_PAGE * (currentPage - 1),
+                limit: Constants.PER_PAGE,
+                order: [
+                    ['name', 'ASC']
+                ]
+            })
+            // console.log(count)
         const pageCount = PageCount(count)
             // console.log(students.length)
         var urlTable = `${process.cwd()}/table/TableStudent.pug`;
@@ -388,6 +389,25 @@ const detailStudent = async(req, res, next) => {
         return;
     }
 }
+const importStudent = async(req, res, next) => {
+    const { formData } = req.body
+    try {
+        var reader = new FileReader();
+        reader.readAsArrayBuffer(formData);
+        var data = new Uint8Array(reader.result);
+        var wb = xlsx.read(data, { type: 'array' });
+        console.log(wb)
+        res.send({
+            result: 1
+        })
+
+    } catch (error) {
+        console.log(error)
+        res.status(404).send()
+        return;
+    }
+
+}
 export default {
     searchStudent,
     deleteStudent,
@@ -397,4 +417,5 @@ export default {
     saveStudent,
     resetPass,
     detailStudent,
+    importStudent
 }

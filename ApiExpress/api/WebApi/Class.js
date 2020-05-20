@@ -296,7 +296,7 @@ const addStuInclass = async(req, res, next) => {
                 mssv
             }
         })
-        console.log(student.count)
+        // console.log(student.count)
         if (student.count < 1) {
             res.send({
                 result: 0
@@ -341,19 +341,19 @@ const addStuInclass = async(req, res, next) => {
                 },
 
             })
-            // console.log(new_class_stu[0].Student_classes.length)
+            // console.log(new_class_stu[0].Student_classes[0].class_id)
         var urlTable = `${process.cwd()}/table/TableDetailClass.pug`;
         var htmlTable = await pug.renderFile(urlTable, {
             student_classes: new_class_stu[0].Student_classes
         });
-        // console.log(htmlTable)
+        // console.log(new_class_stu[0].Schedule_classes[0])
         res.send({
             result: 2,
             htmlTable
         })
         return;
     } catch (error) {
-        // console.log(error)
+        console.log(error)
         res.status(404).send()
         return;
     }
@@ -512,11 +512,63 @@ const saveClass = async(req, res, next) => {
         })
         return;
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         res.status(404).send()
         return;
     }
 }
+
+const deleteStuInclass=async(req,res,next)=>{
+    const{student_id,class_id}=req.body
+
+    try {
+        const stuInClass= await StudentClassModel.findAndCountAll({
+            where:{
+                student_id,
+                class_id
+            }
+        })
+        if(stuInClass.count>0){
+            await StudentClassModel.destroy({
+                where:{
+                    id:stuInClass.rows[0].id
+                }
+            })
+            const new_class_stu = await ClassModel.findAll({
+                include: [{
+                    model: StudentClassModel,
+                    include: [{
+                        model: StudentModel
+                    }]
+                }],
+                where: {
+                    id: class_id
+                },
+
+            })
+            // console.log(new_class_stu[0].Student_classes[0].class_id)
+        var urlTable = `${process.cwd()}/table/TableDetailClass.pug`;
+        var htmlTable = await pug.renderFile(urlTable, {
+            student_classes: new_class_stu[0].Student_classes
+        });
+        // console.log(new_class_stu[0].Schedule_classes[0])
+        res.send({
+            result: 1,
+            htmlTable
+        })
+        }else{
+            res.send({
+                result:0
+            })
+        }
+        
+    } catch (error) {
+          console.log(error)
+          res.status(404).send()
+          return;
+    }
+}
+
 const checkSchedule = (room1, room2, day1, timeStart1, timeEnd1, day2, timeStart2, timeEnd2) => {
     if (day1 == '' || timeStart1 == '' || timeEnd1 == '' || room1 == '') {
         return 1;
@@ -555,6 +607,7 @@ const createSchedule = (class_id, day, timeStart, timeEnd, room) => {
         room_name: room
     })
 }
+
 export default {
     getClass,
     searchClass,
@@ -563,4 +616,5 @@ export default {
     searchStuInclass,
     editClass,
     saveClass,
+    deleteStuInclass
 }

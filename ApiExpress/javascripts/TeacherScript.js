@@ -138,7 +138,7 @@ function addTeacher() {
         fileData.append(files[i].name, files[i]);
         fileName = files[i].name;
     }
-    var srcImg = window.location.origin + "/upload/avatarStudent/" + fileName
+    var srcImg = window.location.origin + "/upload/" + fileName
 
     $.ajax({
         url: "/teacher/add",
@@ -232,15 +232,15 @@ function deleteTeacher(id) {
                     // console.log(res.result)
                     if (res.result == 1) {
                         swal({
-                            title: "",
-                            text: "Xóa thành công!",
+                            title: "Xóa thành công!",
+                            text: "",
                             icon: "success"
                         });
                         getTeacher(1)
                     } else {
                         swal({
-                            title: "",
-                            text: "Không tồn tại giáo viên này",
+                            title: "Không tồn tại giáo viên này",
+                            text: "",
                             icon: "warning"
                         });
                     }
@@ -278,8 +278,8 @@ function editTeacher(id) {
         // console.log(res)
         if (res.result == 0) {
             swal({
-                title: "",
-                text: "Không tồn tại sinh viên này",
+                title: "Không tồn tại giáo viên này",
+                text: "",
                 icon: "warning"
             });
         } else {
@@ -320,7 +320,7 @@ function resetPass(id) {
         if (res.result == 0) {
             swal({
                 title: "",
-                text: "Không tồn tại sinh viên này",
+                text: "Không tồn tại giáo viên này",
                 icon: "warning"
             });
         } else {

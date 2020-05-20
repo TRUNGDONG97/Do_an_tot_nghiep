@@ -8,10 +8,11 @@ table.table.table-bordered.table-hover
             th Số điện thoại
             th Điểm giữa kì         
             th Điểm cuối kì
+            th
     tbody
         if student_classes.length <=0        
             tr
-                td(colspan='9' style='text-align: center;') Chưa có sinh viên nào.
+                td(colspan='8' style='text-align: center;') Chưa có sinh viên nào.
         else
             - var STT=0
             each item in student_classes
@@ -23,4 +24,6 @@ table.table.table-bordered.table-hover
                     td #{item.Student.phone}
                     td #{item.mid_semester?item.mid_semester:''}
                     td #{item.mid_semester?item.mid_semester:''}
-
+                    td
+                        button#deleteStuInCla.btn.btn-danger(type='button' title='Xóa Danh Mục' onclick='deleteStuInClass('+item.Student.id+','+item.class_id+')')
+                            i.far.fa-trash-alt

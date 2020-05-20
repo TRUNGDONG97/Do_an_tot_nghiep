@@ -51,7 +51,7 @@ style
             .row(style='margin-top:100px;margin-bottom:20px;')
               label.col-md-4.col-sm-4.col-4(style='padding-top:6px;padding-right:10px;') Ảnh đại diện:
               .col-md-8.col-sm-8.col-8
-                input#ImageTeacher.dropify(type='file' name="avatar" data-max-file-size="10M")      
+                input#ImageTeacher.dropify(type='file' name="avatar" data-max-file-size="10M" accept="image/x-png,image/gif,image/jpeg")      
       .modal-footer
         button.btn.btn-secondary(type='button' data-dismiss='modal') Đóng
         button.btn.btn-danger(type='button' onclick="addTeacher()") Thêm giáo viên 

@@ -29,7 +29,7 @@ function addStudentInclass(class_id) {
         // dataType: "json",
         cache: false,
         timeout: 50000,
-    }).done(function(res) {
+    }).done(function (res) {
         // console.log(res.result)
         if (res.result == 0) {
             swal({
@@ -48,22 +48,22 @@ function addStudentInclass(class_id) {
             return;
         }
         swal({
-                title: "Sinh viên đã được thêm vào danh sách",
-                text: "",
-                icon: "success"
-            })
-            // console.log(res.htmlTable, 'htmlTable')
+            title: "Sinh viên đã được thêm vào danh sách",
+            text: "",
+            icon: "success"
+        })
+        // console.log(res.htmlTable, 'htmlTable')
         $('#tableDetailClass').html(res.htmlTable)
         return;
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
-                title: "Đã có lỗi xảy ra",
-                text: "",
-                icon: "warning",
-                dangerMode: true,
-            })
-            // console.log(textStatus + ': ' + errorThrown);
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown);
         return;
     });
 }
@@ -93,22 +93,78 @@ function searchStudentInclass(class_id) {
         // dataType: "json",
         cache: false,
         timeout: 50000,
-    }).done(function(res) {
+    }).done(function (res) {
         $('#tableDetailClass').html(res.htmlTable)
         return;
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
-                title: "Đã có lỗi xảy ra",
-                text: "",
-                icon: "warning",
-                dangerMode: true,
-            })
-            // console.log(textStatus + ': ' + errorThrown);
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown);
         return;
     });
 }
-
+function deleteStuInClass(student_id, class_id) {
+    if (!navigator.onLine) {
+        swal({
+            title: "Kiểm tra kết nối internet!",
+            text: "",
+            icon: "warning"
+        })
+        return;
+    }
+    console.log(student_id, class_id)
+    swal({
+        title: "Bạn chắc chắn xóa chứ?",
+        text: "",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true
+    })
+        .then((isConFirm) => {
+            if (isConFirm) {
+                $.ajax({
+                    url: '/class/deleteStuInclass',
+                    type: 'POST',
+                    data: {
+                        student_id,class_id
+                    },
+                    cache: false,
+                    timeout: 50000,
+                }).done(function (res) {
+                    // console.log(res.result)
+                    if (res.result == 1) {
+                        swal({
+                            title: "Xóa thành công!",
+                            text: "",
+                            icon: "success"
+                        });
+                        $('#tableDetailClass').html(res.htmlTable)
+                    } else {
+                        swal({
+                            title: "Lớp không có sinh viên này",
+                            text: "",
+                            icon: "warning"
+                        });
+                    }
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    // If fail
+                    swal({
+                        title: "Đã có lỗi xảy ra",
+                        text: "",
+                        icon: "warning",
+                        dangerMode: true,
+                    })
+                    // console.log(textStatus + ': ' + errorThrown);
+                    return;
+                })
+            }
+        });
+}
 
 function checkedPhone(phone) {
     var vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g;

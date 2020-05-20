@@ -14,7 +14,7 @@ import fs from 'fs'
 const uploadAvatar = async(req, res, next) => {
     var form = new formidable.IncomingForm();
     form.maxFieldsSize = 10 * 1024 * 1024; // file size 15mb
-    form.uploadDir = "./public/upload/avatarStudent/"
+    form.uploadDir = "./public/upload/"
     form.parse(req);
     form.once('error', function(error) {
         res.send({
@@ -28,6 +28,7 @@ const uploadAvatar = async(req, res, next) => {
             // console.log("\nFile Renamed!\n");
         });
     });
+    console.log()
     form.once('end', () => {
         res.send({
             result: 1,

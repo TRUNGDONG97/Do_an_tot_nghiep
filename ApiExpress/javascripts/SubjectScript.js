@@ -184,15 +184,15 @@ function deleteSubject(id) {
                     // console.log(res.result)
                     if (res.result == 1) {
                         swal({
-                            title: "",
-                            text: "Xóa thành công!",
+                            title: "Xóa thành công!",
+                            text: "",
                             icon: "success"
                         });
                         getSubject(1)
                     } else {
                         swal({
-                            title: "",
-                            text: "Không tồn tại giáo viên này",
+                            title: "Không tồn tại môn  này",
+                            text: "",
                             icon: "warning"
                         });
                     }

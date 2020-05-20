@@ -23,6 +23,7 @@ $(document).ready(function() {
 
 });
 
+
 function getStudent(currentPage) {
     if (!navigator.onLine) {
         swal({
@@ -71,7 +72,6 @@ function searchStudent(currentPage) {
         return;
     }
     checkedMssv(mssv)
-
     $.ajax({
         url: '/student/search',
         type: 'POST',
@@ -168,32 +168,32 @@ const addStudent = async() => {
         })
         return;
     }
-    var name = $.trim($("#txtAddName").val());
-    var mssv = $.trim($("#txtAddMssv").val());
-    var phone = $.trim($("#txtAddPhone").val());
-    var birthday = $.trim($("#txtAddBirthday").val());
-    var address = $.trim($("#txtAddAddress").val());
-    var email = $.trim($("#txtAddEmail").val());
-    var sex = $('#addSexFemale').prop('checked')
-        //get file image
+    // var name = $.trim($("#txtAddName").val());
+    // var mssv = $.trim($("#txtAddMssv").val());
+    // var phone = $.trim($("#txtAddPhone").val());
+    // var birthday = $.trim($("#txtAddBirthday").val());
+    // var address = $.trim($("#txtAddAddress").val());
+    // var email = $.trim($("#txtAddEmail").val());
+    // var sex = $('#addSexFemale').prop('checked')
+    //     //get file image
     var fileUpload = $("#ImageStudent").get(0);
     var files = fileUpload.files;
 
-    if (name == '' || mssv == '' || phone == '' || birthday == '' || address == '') {
-        swal({
-            title: "Chưa nhập đầy đủ thông tin",
-            text: "",
-            icon: "warning"
-        })
-        return;
-    }
-    checkedMssv(mssv)
-    checkedPhone(phone)
-    checkedMail(email)
-        // console.log(files.length);
+    // if (name == '' || mssv == '' || phone == '' || birthday == '' || address == '') {
+    //     swal({
+    //         title: "Chưa nhập đầy đủ thông tin",
+    //         text: "",
+    //         icon: "warning"
+    //     })
+    //     return;
+    // }
+    // checkedMssv(mssv)
+    // checkedPhone(phone)
+    // checkedMail(email)
+    // console.log(files.length);
     if (files.length <= 0) {
         swal({
-            title: "Chưa thêm ảnh ",
+            title: "Chưa thêm ảnh sinh viên",
             text: "",
             icon: "warning"
         })
@@ -206,8 +206,8 @@ const addStudent = async() => {
         fileData.append(files[i].name, files[i]);
         fileName = files[i].name;
     }
-    var srcImg = window.location.origin + "/upload/avatarStudent/" + fileName
-
+    var srcImg = window.location.origin + "/upload/" + fileName
+        // console.log(typeof files)
     $.ajax({
         url: '/student/add',
         type: 'POST',
@@ -298,8 +298,8 @@ function editStudent(id) {
         // console.log(res)
         if (res.result == 0) {
             swal({
-                title: "",
-                text: "Không tồn tại sinh viên này",
+                title: "Không tồn tại sinh viên này",
+                text: "",
                 icon: "warning"
             });
         } else {
@@ -360,7 +360,7 @@ function saveStudent(id) {
             fileData.append(files[i].name, files[i]);
             fileName = files[i].name;
         }
-        srcImg = window.location.origin + "/upload/avatarStudent/" + fileName
+        srcImg = window.location.origin + "/upload/" + fileName
     }
     if (srcImg == null) {
         swal({
@@ -459,8 +459,8 @@ function resetPass(id) {
         // console.log(res)
         if (res.result == 0) {
             swal({
-                title: "",
-                text: "Không tồn tại sinh viên này",
+                title: "Không tồn tại sinh viên này",
+                text: "",
                 icon: "warning"
             });
         } else {
@@ -503,8 +503,8 @@ function resetPass(id) {
 //         // console.log(res)
 //         if (res.result == 0) {
 //             swal({
-//                 title: "",
-//                 text: "Không tồn tại sinh viên này",
+//                 title: "Không tồn tại sinh viên này",
+//                 text: "",
 //                 icon: "warning"
 //             });
 //         } else {
@@ -524,9 +524,97 @@ function resetPass(id) {
 //         return;
 //     })
 // }
-function clickItem(id) {
-    alert(id)
+function importStudent() {
+    var fileUpload = $("#txtFile").get(0);
+    var files = fileUpload.files;
+    if (files.length <= 0) {
+        swal({
+            title: "Chưa chọn file ",
+            text: "",
+            icon: "warning"
+        })
+        return;
+    }
+    if (typeof(FileReader) != "undefined") {
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+
+            // var data = e.target.result;
+            // var workbook = XLSX.read(data, { type: 'binary', cellDates: true, cellStyles: true });
+            var binary = "";
+            var bytes = new Uint8Array(e.target.result);
+            var length = bytes.byteLength;
+            for (var i = 0; i < length; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            // call 'xlsx' to read the file
+            var workbook = XLSX.read(binary, { type: 'binary', cellDates: true, cellStyles: true });
+            var firstSheet = workbook.SheetNames[0];
+            var excelRows = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[firstSheet]);
+            // var json = JSON.stringify(excelRows)
+
+            var fileData = new FormData();
+            var fileName = "";
+            for (var i = 0; i < excelRows[1].__proto__.length; i++) {
+                fileData.append(excelRows[1].__proto__[i].name, excelRows[1].__proto__[i], 'test.jpg');
+                // fileName = excelRows[1].__proto__[i].name;
+            }
+            // console.log(fileData)
+            // console.log(fileName)
+            uploadImage(fileData)
+        };
+        reader.readAsArrayBuffer(fileUpload.files[0]);
+    } else {
+        alert("Please upload a valid Excel file.");
+    }
+    // var fileUpload = $("#txtFile")[0];
+    // var reader = new FileReader();
+    // reader.readAsArrayBuffer(e.target.files[0]);
+    // var data = new Uint8Array(reader.result);
+    // console.log(data)
+
+
+    // console.log('dsdsd')
+    // // var fileData = new FormData();
+    // // var fileName = "";
+    // // for (var i = 0; i < files.length; i++) {
+    // //     fileData.append(files[i].name, files[i]);
+    // //     fileName = files[i].name;
+    // // }
+    // $.ajax({
+    //     url: '/student/import',
+    //     data: { formData },
+    //     type: 'POST',
+    //     cache: false,
+    //     timeout: 50000
+    // }).done(function(res) {
+    //     console.log(res.result)
+    //         // if (res.result == 0) {
+    //         //     swal({
+    //         //         title: "",
+    //         //         text: "Không tồn tại sinh viên này",
+    //         //         icon: "warning"
+    //         //     });
+    //         // } else {
+    //         //     $('#divModalDetailStudent').html(res.htmlModalDetailStudent)
+    //         //     $('#detailStudentModal').modal('show');
+    //         // }
+    //     return;
+    // }).fail(function(jqXHR, textStatus, errorThrown) {
+    //     // If fail
+    //     swal({
+    //         title: "Đã có lỗi xảy ra",
+    //         text: "",
+    //         icon: "warning",
+    //         dangerMode: true,
+    //     })
+    //     console.log(textStatus + ': ' + errorThrown);
+    //     return;
+    // })
 }
+
+
 
 function checkedMail(email) {
     var email_regex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
@@ -578,8 +666,7 @@ function uploadImage(fileData) {
             swal({
                 title: "Không thể upload ảnh",
                 text: "",
-                icon: "warning",
-                dangerMode: true,
+                icon: "warning"
             })
         }
     }).fail(function(jqXHR, textStatus, errorThrown) {

@@ -36,3 +36,10 @@ body {
     margin-top: 20px;
     margin-bottom: 50px;
 }
+#deleteStuInCla{
+    background-color: #f3f5f9;
+    border-color: #f3f5f9;
+    color: red;
+    padding: 0px;
+    margin-left: 2px;
+}

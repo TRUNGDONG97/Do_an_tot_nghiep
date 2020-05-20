@@ -15,77 +15,89 @@ body {
 .container-tab {
     margin-left: 240px;
 }
-.container-tab .div-title h4{
+
+.container-tab .div-title h4 {
     margin-top: 10px;
-    color:rgb(74, 99, 104);
-    margin-left:5px ;
+    color: rgb(74, 99, 104);
+    margin-left: 5px;
 }
-.container-tab .container-fluid th{
+
+.container-tab .container-fluid th {
     text-align: center;
 }
-.container-tab .container-fluid .table{
-    margin-top:20px ;
+
+.container-tab .container-fluid .table {
+    margin-top: 20px;
     margin-bottom: 50px;
 }
-#editStu{
-    background-color: #f3f5f9 ;
+
+#editStu {
+    background-color: #f3f5f9;
     border-color: #f3f5f9;
     color: #28a745;
     padding: 0px;
     margin-left: 2px;
     margin-right: 2px;
 }
-#deleteStu{
-    background-color: #f3f5f9 ;
+
+#deleteStu {
+    background-color: #f3f5f9;
     border-color: #f3f5f9;
     color: red;
     padding: 0px;
     margin-left: 2px;
 }
-.container-tab .container-fluid .table tr{
+
+.container-tab .container-fluid .table tr {
     font-size: 15px;
     /* background-color: #f3f5f9 ;  */
 }
-.container-tab .container-fluid .table tr i{
+
+.container-tab .container-fluid .table tr i {
     height: 20px;
     width: 20px;
 }
-.container-tab .container-fluid .table tr:hover{
+
+.container-tab .container-fluid .table tr:hover {
     background-color: #b9fafa;
 }
-.div-search .col-md-12{
-    display: flex;
-    flex-direction: row;
-    height: 50px;
-    align-items: center ;
+
+#btnSearch {
+    margin-left: 10px;
 }
-#btnSearch{
+
+#txtMssv {
     margin-left: 20px;
 }
-#txtMssv{
-    margin-left: 20px;
+
+#btnImport {
+    margin-right: 10px;
 }
-#tableStudent thead tr{
+
+#tableStudent thead tr {
     background-color: #56e2e2;
 }
 
-#paginateStudent{
+#paginateStudent {
     margin-left: 20px;
     margin-bottom: 20px;
     margin-right: 20px;
 }
 
-#addStudent{
-    margin-left: 40px;
+#addStudent {
+    margin-left: 10px;
+    margin-right: 10px;
 }
-#detailStu{
-    background-color: #f3f5f9 ;
+
+#detailStu {
+    background-color: #f3f5f9;
     border-color: #f3f5f9;
     color: #007bff;
     padding: 0px;
     margin-right: 2px;
 }
-#avatar{
-   height: 200px;
-   width: 170px; 
+
+#avatar {
+    height: 200px;
+    width: 170px;
 }

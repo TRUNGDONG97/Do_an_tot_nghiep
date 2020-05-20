@@ -13,21 +13,68 @@ html
           i.fas.fa-user-graduate
             |  &nbsp;  Sinh viên
       .div-search
-        .col-md-12.col-sm-12.col-12
-          //- h6 Nhập MSSV : &nbsp;  
-          input#txtName.form-control.col-md-3.col-sm-3.col-3(type="text" placeholder="Nhập tên sinh viên")
-          input#txtMssv.form-control.col-md-2.col-sm-2.col-2(type="number" placeholder="Nhập mã số sinh viên")
-          button#btnSearch.btn.btn-primary(type="button")
-            i.fas.fa-search
-              | &nbsp;  Tìm kiếm
-          button#addStudent.btn.btn-danger(type="button" data-toggle='modal' data-target='#addStudentModal')
-            i.fas.fa-user-plus
-              | &nbsp;  Thêm sinh viên
+
+        .col-md-10.col-sm-10.col-10.offset-md-1
+          .row 
+            .col-md-6.col-sm-6.col-6
+              .row
+                label.col-md-5.col-sm-5.col-5(style='margin-top:6px') Nhập tên sinh viên:
+                .col-md-6.col-sm-6.col-6
+                  input#txtName.form-control(type="text" placeholder="Nhập tên sinh viên")
+            .col-md-6.col-sm-6.col-6
+              .row
+                label.col-md-5.col-sm-5.col-5(style='margin-top:6px') Nhập mã số sinh viên:
+                .col-md-6.col-sm-6.col-6
+                  input#txtMssv.form-control(type="number" placeholder="Nhập mã số sinh viên")  
+        .col-md-12.col-sm-12.col-12(style='margin-top:20px;')
+          .row.float-right(style='margin-right:20px;margin-bottom:20px;')
+            button#btnSearch.btn.btn-primary(type="button")
+              i.fas.fa-search
+                | &nbsp;  Tìm kiếm
+            button#addStudent.btn.btn-danger(type="button" data-toggle='modal' data-target='#addStudentModal')
+              i.fas.fa-user-plus
+                | &nbsp;  Thêm sinh viên
+            button#btnImport.btn.btn-success(data-target='#mdImport' data-toggle='modal')
+              i.fa.fa-upload
+              |  Import sinh viên
+            button.btn.btn-outline-success(onclick="window.location = 'exportFormImport'")
+              i.fa.fa-download
+              |  Mẫu import
       .container-fluid
         #tableStudent
     include ../modals/AddStudentModal
     #divModalEditStudent
-    //- #divModalDetailStudent
+    #mdImport.modal.fade(tabindex='-1', role='dialog')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header(style='background-color: #28a745;color: white;')
+            h5.modal-title
+              i.fa.fa-upload(aria-hidden='false')
+                | &nbsp Import danh sách sinh viên
+            button.close(type='button', data-dismiss='modal', aria-label='Close')
+              span(aria-hidden='true') &times;
+          .modal-body(id='')
+            form#frmImport(method='post', enctype='multipart/form-data')
+              .row.mt-2
+                .col-md-12
+                  .input-group
+                    .input-group-prepend
+                      span#inputGroupFileAddon01.input-group-text Tải lên
+                    .custom-file
+                      input#txtFile.custom-file-input(type='file', name='txtFile', aria-describedby='inputGroupFileAddon01'  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel")
+                      label.custom-file-label(for='inputGroupFile01') chọn file
+              .row.mt-2
+                .modal-footer
+                  button.btn.btn-success(type='button', onclick='importStudent()') Import
+                  button.btn.btn-secondary(type='button', data-dismiss='modal') đóng
+            script.
+              $('#mdImport #txtFile').on('change', function () {
+              //get the file name
+                var fileName = $(this).val();
+                //replace the "Choose a file" label
+                $(this).next('#mdImport .custom-file-label').html(fileName);
+              });
+
 
 
 
