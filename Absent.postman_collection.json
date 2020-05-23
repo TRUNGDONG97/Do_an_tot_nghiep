@@ -1,0 +1,216 @@
+{
+	"info": {
+		"_postman_id": "4655e1a5-48cc-4bfa-8fd2-ee3259b157a9",
+		"name": "Absent",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user\": \"20150959\",\n    \"password\": \"20150959\",\n    \"type\": 1,\n    \"deviceID\": \"\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{sever}}login",
+					"host": [
+						"{{sever}}login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logout",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{sever}}logout",
+					"host": [
+						"{{sever}}logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "studentGetClass",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{sever}}student/getClass",
+					"host": [
+						"{{sever}}student"
+					],
+					"path": [
+						"getClass"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "studentGetUserInfo",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{sever}}student/getUserInfo",
+					"host": [
+						"{{sever}}student"
+					],
+					"path": [
+						"getUserInfo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "studenChangeUserInfo",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"phone\": \"0329563942\",\n    \"birthday\": \"04/03/1997\",\n    \"address\": \"280 , đường Bảo Ngọc  , phường Đa Mai , tp Bắc Giang , tỉnh Bắc Giang\",\n    \"password\": \"20150959\",\n    \"sex\":1,\n    \"email\":\"donglt20150959@gmail.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{sever}}student/changeUserInfo",
+					"host": [
+						"{{sever}}student"
+					],
+					"path": [
+						"changeUserInfo"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "teacherGetClass",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "teacherGetUserInfo",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "teacherhangeUserInfo",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "U2FsdGVkX1+rk8ML1uV/2I6JvbESy7ngLoP49ZiTCL8=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "abc",
+							"value": "avv",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "32bfc351-5ec5-4d59-a3ed-c56e209bc8ab",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "9b8e4017-b2ad-4391-81bf-8965a8d86643",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
