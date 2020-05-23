@@ -131,15 +131,15 @@ function deleteStudent(id) {
                     // console.log(res.result)
                     if (res.result == 1) {
                         swal({
-                            title: "",
-                            text: "Xóa thành công!",
+                            title: "Xóa thành công!",
+                            text: "",
                             icon: "success"
                         });
                         getStudent(1)
                     } else {
                         swal({
-                            title: "",
-                            text: "Không tồn tại sinh viên này",
+                            title: "Không tồn tại sinh viên này",
+                            text: "",
                             icon: "warning"
                         });
                     }
@@ -168,25 +168,25 @@ const addStudent = async() => {
         })
         return;
     }
-    // var name = $.trim($("#txtAddName").val());
-    // var mssv = $.trim($("#txtAddMssv").val());
-    // var phone = $.trim($("#txtAddPhone").val());
-    // var birthday = $.trim($("#txtAddBirthday").val());
-    // var address = $.trim($("#txtAddAddress").val());
-    // var email = $.trim($("#txtAddEmail").val());
-    // var sex = $('#addSexFemale').prop('checked')
-    //     //get file image
+    var name = $.trim($("#txtAddName").val());
+    var mssv = $.trim($("#txtAddMssv").val());
+    var phone = $.trim($("#txtAddPhone").val());
+    var birthday = $.trim($("#txtAddBirthday").val());
+    var address = $.trim($("#txtAddAddress").val());
+    var email = $.trim($("#txtAddEmail").val());
+    var sex = $('#addSexFemale').prop('checked')
+        //get file image
     var fileUpload = $("#ImageStudent").get(0);
     var files = fileUpload.files;
 
-    // if (name == '' || mssv == '' || phone == '' || birthday == '' || address == '') {
-    //     swal({
-    //         title: "Chưa nhập đầy đủ thông tin",
-    //         text: "",
-    //         icon: "warning"
-    //     })
-    //     return;
-    // }
+    if (name == '' || mssv == '' || phone == '' || birthday == '' || address == '') {
+        swal({
+            title: "Chưa nhập đầy đủ thông tin",
+            text: "",
+            icon: "warning"
+        })
+        return;
+    }
     // checkedMssv(mssv)
     // checkedPhone(phone)
     // checkedMail(email)
@@ -469,6 +469,7 @@ function resetPass(id) {
                 text: "",
                 icon: "success"
             })
+            $('#EditStudentModal').modal('hide');
         }
         return;
     }).fail(function(jqXHR, textStatus, errorThrown) {
@@ -629,7 +630,7 @@ function checkedMail(email) {
 }
 
 function checkedPhone(phone) {
-    var vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
+    var vnf_regex = /(03|07|08|09|01[2|6|8|9])+([0-9]{8})\b/g;
     if (!vnf_regex.test(phone)) {
         swal({
             title: "Số điện thoại không hợp lệ ",

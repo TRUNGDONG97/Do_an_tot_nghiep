@@ -329,6 +329,7 @@ function resetPass(id) {
                 text: "",
                 icon: "success"
             })
+            $('#editTeacherModal').modal('hide');
         }
         return;
     }).fail(function(jqXHR, textStatus, errorThrown) {
@@ -479,7 +480,7 @@ function checkedMail(email) {
 }
 
 function checkedPhone(phone) {
-    var vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
+    var vnf_regex = /(03|07|08|09|01[2|6|8|9])+([0-9]{8})\b/g;
     if (!vnf_regex.test(phone)) {
         swal({
             title: "Số điện thoại không hợp lệ ",

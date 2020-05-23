@@ -11,6 +11,7 @@
         "body-parser": "^1.19.0",
         "bootstrap-timepicker": "^0.5.2",
         "cookie-parser": "~1.4.4",
+        "crypto-js": "^4.0.0",
         "debug": "~2.6.9",
         "dropify": "^0.2.2",
         "express": "~4.16.1",

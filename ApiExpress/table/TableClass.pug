@@ -36,8 +36,8 @@ table.table.table-bordered.table-hover
                             i.fas.fa-info-circle
                         button#editCla.btn.btn-success(type='button' onclick='editClass('+item.id+')')
                             i.far.fa-edit 
-                        //- button#deleteCla.btn.btn-danger(type='button' title='Xóa Danh Mục' onclick='deleteClass('+item.id+')')
-                        //-     i.far.fa-trash-alt
+                        button#deleteCla.btn.btn-danger(type='button' title='Xóa Danh Mục' onclick='deleteClass('+item.id+')')
+                            i.far.fa-trash-alt
 #paginateClass.row.float-right(style='margin-right:20px')
     if pageCount>=1
         if !search

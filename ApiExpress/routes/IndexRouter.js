@@ -42,6 +42,7 @@ router.post('/class/addStuInclass', Class.addStuInclass)
 router.post('/class/searchStuInclass', Class.searchStuInclass)
 router.post('/class/edit', Class.editClass)
 router.post('/class/save', Class.saveClass)
+router.post('/class/delete', Class.deleteClass)
 router.post('/class/deleteStuInclass', Class.deleteStuInclass)
 
 router.post('/getSubject', Subject.getSubject)

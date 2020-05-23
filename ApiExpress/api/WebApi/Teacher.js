@@ -1,14 +1,10 @@
 import { Op } from 'sequelize'
 import sequelize from 'sequelize'
 import Constants from '../../constants/Constants'
-// import UserModel from '../../models/UserModel'
-// import StudentModel from '../../models/StudentModel'
-// import ClassModel from '../../models/ClassModel'
 import TeacherModel from '../../models/TeacherModel'
 import pug from 'pug'
 import { getArrayPages, PageCount } from '../../constants/Funtions'
-// import formidable from 'formidable'
-// import fs from 'fs'
+import md5 from 'md5'
 const getTeacher = async(req, res, next) => {
     const { currentPage } = req.body
     try {
@@ -163,7 +159,7 @@ const addTeacher = async(req, res, next) => {
         const newTeacher = await TeacherModel.create({
                 name,
                 phone,
-                password: phone,
+                password: md5(phone),
                 birthday,
                 address,
                 email,
@@ -336,7 +332,7 @@ const resetPassTeacher = async(req, res, next) => {
             return;
         } else {
             const updatePass = await TeacherModel.update({
-                password: teacher[0].phone
+                password: md5(teacher[0].phone)
             }, {
                 where: {
                     id

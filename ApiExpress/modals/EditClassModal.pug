@@ -3,7 +3,7 @@
         .modal-content(style='color: #007bff')
             .modal-header(style='background-color: #17a2b8')
                 h5.modal-title(style='color: white;')
-                    i.far.fa-edit (aria-hidden='false')
+                    i.far.fa-edit(aria-hidden='false')
                     |   Chỉnh sửa lớp học
                 button.close(type='button' data-dismiss='modal' aria-label='Close' style='color: white;' )
                     span(aria-hidden='true') &times;
@@ -16,7 +16,7 @@
                                 input.form-control(type=type id=id maxlength="50" value=value)   
                     .col-md-6.col-sm-6.col-6
                         +propEditClass('txtEditSubjectCode','Mã môn học','text',classes.Subject.subject_code)
-                        +propEditClass('txtEditTeacherPhone','Số điện thoại giáo viên','text',classes.Teacher.phone)
+                        +propEditClass('txtEditTeacherPhone','Số điện thoại giáo viên','text',classes.Teacher!=null?classes.Teacher.phone:'')
                     .col-md-6.col-sm-6.col-6
                         .row(style='margin-top:20px;margin-bottom:50px;')   
                             label.col-md-4.col-sm-4.col-4(style='padding-top:6px;padding-right:10px;') Trạng thái:

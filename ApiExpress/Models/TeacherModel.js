@@ -30,10 +30,10 @@ const Teacher = sequelize.define('Teacher', {
     note: {
         type: Sequelize.STRING
     },
-    deviceid: {
+    device_id: {
         type: Sequelize.STRING
     },
-    tocken: {
+    token: {
         type: Sequelize.STRING
     },
     url_avatar: {

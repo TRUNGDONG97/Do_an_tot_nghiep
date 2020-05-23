@@ -42,7 +42,7 @@ const detailClass = async(req, res, next) => {
             }
         })
 
-        // console.log(classes.rows[0].Student_classes[0].Student)
+        // console.log(classes[0].Teacher) 
         // console.log(classes.length)
         if (classes.length < 1) {
             res.redirect('index')

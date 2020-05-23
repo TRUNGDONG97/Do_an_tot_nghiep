@@ -27,7 +27,7 @@ html
                             .row
                                 label.col-md-5(style='padding-right:10px;') Tên giáo viên:
                                 .col-md-6.col-sm-6.col-6
-                                    p #{classes.Teacher.name}
+                                    p #{classes.Teacher==null?'Chưa có giáo viên':classes.Teacher.name}
                         .col-md-6
                             .row
                                 label.col-md-5.col-sm-5.col-5(style='padding-right:10px;') Trạng thái:
@@ -40,7 +40,7 @@ html
                             .row       
                                 label.col-md-5.col-sm-5.col-5(style='padding-right:10px;') Số điện thoại:
                                 .col-md-6.col-sm-6.col-6
-                                    p #{classes.Teacher.phone}
+                                    p #{classes.Teacher==null?'Chưa có giáo viên':classes.Teacher.phone}
                     .row
                         label.col-md-2 Lịch học :
                         .col-md-10
@@ -50,7 +50,7 @@ html
                 .row(style='margin-left:10px')
                     input#txtNameStudent.form-control.col-md-2.col-sm-2.col-2(type="text" placeholder="Nhập tên sinh viên" style='margin-left:20px') 
                     input#txtMssvStudent.form-control.col-md-2.col-sm-2.col-2(type="number" placeholder="Nhập mã số sinh viên" style='margin-left:20px')
-                    button#btnSearchInClass.btn.btn-primary(type="button"  style='margin-left:20px' onclick='searchStudentInclass('+classes.id+')')
+                    button#btnSearchInClass.btn.btn-primary(type="button" style='margin-left:20px' onclick='searchStudentInclass('+classes.id+')')
                         i.fas.fa-search
                         | &nbsp;  Tìm kiếm
                     button.btn.btn-danger(type="button" style='margin-left:20px' onclick='addStudentInclass('+classes.id+')')
@@ -62,5 +62,4 @@ html
             .container-fluid
                 #tableDetailClass
                     include ../table/TableDetailClass.pug
-        
-        
+

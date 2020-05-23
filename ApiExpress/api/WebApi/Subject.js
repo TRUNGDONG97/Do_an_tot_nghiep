@@ -4,6 +4,7 @@ import Constants from '../../constants/Constants'
 import SubjectModel from '../../models/SubjectModel'
 import pug from 'pug'
 import { getArrayPages, PageCount } from '../../constants/Funtions'
+import ClassModel from '../../models/ClassModel'
 const getSubject = async(req, res, next) => {
     const { currentPage } = req.body
     try {
@@ -127,6 +128,11 @@ const deleteSubject = async(req, res, next) => {
             })
             // console.log(students.length)
         if (subject.length > 0) {
+            await ClassModel.destroy({
+                where:{
+                    subject_id:id
+                }
+            })
             await SubjectModel.destroy({
                 where: {
                     id

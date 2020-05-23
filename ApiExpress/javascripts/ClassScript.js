@@ -1,9 +1,9 @@
-$(document).ready(function() {
+$(document).ready(function () {
     $('#tabClass a').css({ "background-color": "#17a2b8", "color": "#fff" })
     getClass(1)
-    $('#btnSearchClass').click(function() {
+    $('#btnSearchClass').click(function () {
         searchClass(1)
-            // alert('đá')
+        // alert('đá')
     })
 });
 
@@ -22,19 +22,19 @@ function getClass(currentPage) {
         data: { currentPage },
         cache: false,
         timeout: 50000,
-    }).done(function(res) {
+    }).done(function (res) {
         $('#tableClass').html(res.htmlTable)
-            // $('#paginateActive').css({ "background-color": "#17a2b8", "color": "#fff" })
+        // $('#paginateActive').css({ "background-color": "#17a2b8", "color": "#fff" })
         return
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
-                title: "Đã có lỗi xảy ra",
-                text: "",
-                icon: "warning",
-                dangerMode: true,
-            })
-            // console.log(textStatus + ': ' + errorThrown);
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown);
         return;
     })
 }
@@ -68,19 +68,19 @@ function searchClass(currentPage) {
         // dataType: "json",
         cache: false,
         timeout: 50000,
-    }).done(function(res) {
+    }).done(function (res) {
         // console.log(res.result)
         $('#tableClass').html(res.htmlTable)
         return
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
-                title: "Đã có lỗi xảy ra",
-                text: "",
-                icon: "warning",
-                dangerMode: true,
-            })
-            // console.log(textStatus + ': ' + errorThrown);
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown);
         return;
     });
 }
@@ -116,7 +116,7 @@ function addClass() {
     // console.log(day2)
     // console.log(timeStart2)
     // console.log(timeEnd2)
-    if (subCode == "" || teaPhone == "" || claCode == '') {
+    if (subCode == "" || claCode == '') {
         swal({
             title: "Chưa nhập đầy đủ thông tin",
             text: "",
@@ -133,7 +133,9 @@ function addClass() {
         })
         return;
     }
-    checkedPhone(teaPhone)
+    if (teaPhone != '') {
+        checkedPhone(teaPhone)
+    }
     $.ajax({
         url: '/class/add',
         type: 'POST',
@@ -152,7 +154,7 @@ function addClass() {
         },
         cache: false,
         timeout: 50000,
-    }).done(function(res) {
+    }).done(function (res) {
         // console.log(res.result)
         if (res.result == 0) {
             swal({
@@ -229,15 +231,15 @@ function addClass() {
         $("#timeEnd2").val("");
         getClass(1)
         return;
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
-                title: "Đã có lỗi xảy ra",
-                text: "",
-                icon: "warning",
-                dangerMode: true,
-            })
-            // console.log(textStatus + ': ' + errorThrown);
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown);
         return;
     });
 }
@@ -261,7 +263,7 @@ function editClass(id) {
         type: 'POST',
         cache: false,
         timeout: 50000
-    }).done(function(res) {
+    }).done(function (res) {
         // console.log(res)
         if (res.result == 0) {
             swal({
@@ -275,15 +277,15 @@ function editClass(id) {
         }
 
         return;
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
-                title: "Đã có lỗi xảy ra",
-                text: "",
-                icon: "warning",
-                dangerMode: true,
-            })
-            // console.log(textStatus + ': ' + errorThrown);
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown);
         return;
     })
 }
@@ -320,7 +322,7 @@ function saveClass(class_id) {
     // console.log(timeEnd2)
     // console.log(status)
     // console.log(class_id)
-    if (subCode == "" || teaPhone == "" || status == '') {
+    if (subCode == "" || status == '') {
         swal({
             title: "Chưa nhập đầy đủ thông tin",
             text: "",
@@ -336,11 +338,14 @@ function saveClass(class_id) {
         })
         return;
     }
-    checkedPhone(teaPhone)
+    if (teaPhone != ''){
+        checkedPhone(teaPhone)
+    }
     $.ajax({
         url: '/class/save',
         type: 'POST',
         data: {
+            status,
             class_id,
             subCode,
             teaPhone,
@@ -355,7 +360,7 @@ function saveClass(class_id) {
         },
         cache: false,
         timeout: 50000,
-    }).done(function(res) {
+    }).done(function (res) {
         console.log(res.result)
         if (res.result == 0) {
             swal({
@@ -374,30 +379,86 @@ function saveClass(class_id) {
             return;
         }
         swal({
-                title: "Chỉnh sửa thành công",
-                text: "",
-                icon: "success"
-            })
-            // $('#tableClass').html(res.htmlTable)
+            title: "Chỉnh sửa thành công",
+            text: "",
+            icon: "success"
+        })
+        // $('#tableClass').html(res.htmlTable)
         getClass(1)
         $('#editClassModal').modal('hide');
         return;
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
-                title: "Đã có lỗi xảy ra",
-                text: "",
-                icon: "warning",
-                dangerMode: true,
-            })
-            // console.log(textStatus + ': ' + errorThrown);
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown);
         return;
     });
 }
 
+function deleteClass(id){
+    if (!navigator.onLine) {
+        swal({
+            title: "Kiểm tra kết nối internet!",
+            text: "",
+            icon: "warning"
+        })
+        return;
+    }
+    swal({
+            title: "Bạn chắc chắn xóa chứ?",
+            text: "",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true
+        })
+        .then((isConFirm) => {
+            if (isConFirm) {
+                $.ajax({
+                    url: '/class/delete',
+                    type: 'POST',
+                    data: {
+                        id
+                    },
+                    cache: false,
+                    timeout: 50000,
+                }).done(function(res) {
+                    // console.log(res.result)
+                    if (res.result == 1) {
+                        swal({
+                            title: "Xóa thành công!",
+                            text: "",
+                            icon: "success"
+                        });
+                        getClass(1)
+                    } else {
+                        swal({
+                            title: "Không tồn tại lớp này",
+                            text: "",
+                            icon: "warning"
+                        });
+                    }
 
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    // If fail
+                    swal({
+                            title: "Đã có lỗi xảy ra",
+                            text: "",
+                            icon: "warning",
+                            dangerMode: true,
+                        })
+                        // console.log(textStatus + ': ' + errorThrown);
+                    return;
+                })
+            }
+        });
+}
 function checkedPhone(phone) {
-    var vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
+    var vnf_regex = /(03|07|08|09|01[2|6|8|9])+([0-9]{8})\b/g;
     if (!vnf_regex.test(phone)) {
         swal({
             title: "Số điện thoại không hợp lệ ",

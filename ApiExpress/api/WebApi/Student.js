@@ -5,6 +5,8 @@ import StudentModel from '../../models/StudentModel'
 import pug from 'pug'
 import { getArrayPages, PageCount } from '../../constants/Funtions'
 import xlsx from 'xlsx'
+import StudentClassModel from '../../models/StudentClassModel';
+import md5 from 'md5'
 const getStudent = async(req, res, next) => {
 
     try {
@@ -133,6 +135,11 @@ const deleteStudent = async(req, res, next) => {
             })
             // console.log(students.length)
         if (students.length > 0) {
+            await StudentClassModel.destroy({
+                where:{
+                    student_id:id
+                }
+            })
             await StudentModel.destroy({
                 where: {
                     id
@@ -195,7 +202,7 @@ const addStudent = async(req, res, next) => {
         const newStudent = await StudentModel.create({
                 name,
                 phone,
-                password: mssv,
+                password: md5(mssv),
                 birthday,
                 address,
                 email,
@@ -342,7 +349,7 @@ const resetPass = async(req, res, next) => {
             return;
         } else {
             const updatePass = await StudentModel.update({
-                password: student[0].mssv
+                password: md5(student[0].mssv)
             }, {
                 where: {
                     id

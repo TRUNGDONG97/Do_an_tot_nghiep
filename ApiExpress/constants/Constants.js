@@ -5,8 +5,13 @@ const OPTION = {
 }
 const PER_PAGE=20;
 const PAGE_SIZE=10;
+const TYPE_LOGIN={
+    STUDENT:1,
+    TEACHER:2
+}
 export default{
     OPTION,
     PER_PAGE,
-    PAGE_SIZE
+    PAGE_SIZE,
+    TYPE_LOGIN
 }

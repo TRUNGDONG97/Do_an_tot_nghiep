@@ -11,35 +11,35 @@ import { getArrayPages, PageCount } from '../../constants/Funtions'
 import { Op } from 'sequelize'
 import sequelize from 'sequelize'
 
-const getClass = async(req, res, next) => {
+const getClass = async (req, res, next) => {
     const { currentPage } = req.body
     try {
         const classes = await ClassModel.findAndCountAll({
+            include: [{
+                model: StudentClassModel,
                 include: [{
-                        model: StudentClassModel,
-                        include: [{
-                            model: StudentModel
-                        }]
-                    },
-                    {
-                        model: SubjectModel
-                    },
-                    {
-                        model: ScheduleClassModel,
-                        // required: true
-                    },
-                ],
-                offset: Constants.PER_PAGE * (currentPage - 1),
-                limit: Constants.PER_PAGE,
-                order: [
-                    ['Schedule_classes', 'day_of_week', 'ASC']
-                ],
-                distinct: true
-            })
-            // const count = await ClassModel.count()
-            // console.log(classes.rows.length)
-            // console.log(classes.count)
-            // console.log(classes.count)
+                    model: StudentModel
+                }]
+            },
+            {
+                model: SubjectModel
+            },
+            {
+                model: ScheduleClassModel,
+                // required: true
+            },
+            ],
+            offset: Constants.PER_PAGE * (currentPage - 1),
+            limit: Constants.PER_PAGE,
+            order: [
+                ['Schedule_classes', 'day_of_week', 'ASC']
+            ],
+            distinct: true
+        })
+        // const count = await ClassModel.count()
+        // console.log(classes.rows.length)
+        // console.log(classes.count)
+        // console.log(classes.count)
         const pageCount = PageCount(classes.count)
         var urlTable = `${process.cwd()}/table/TableClass.pug`;
         var htmlTable = await pug.renderFile(urlTable, {
@@ -55,13 +55,13 @@ const getClass = async(req, res, next) => {
         })
         return;
     } catch (error) {
-        // console.log(error)
+        console.log(error)
         res.status(404).send()
         return;
     }
 
 }
-const searchClass = async(req, res, next) => {
+const searchClass = async (req, res, next) => {
     const {
         subCode,
         claStatus,
@@ -75,23 +75,23 @@ const searchClass = async(req, res, next) => {
         if (claStatus == '') {
             classes = await ClassModel.findAndCountAll({
                 include: [{
-                        model: StudentClassModel,
-                        include: [{
-                            model: StudentModel
-                        }]
-                    },
-                    {
-                        model: SubjectModel,
-                        where: sequelize.where(sequelize.fn('lower', sequelize.col('subject_code')), {
-                            [Op.like]: '%' + subCode + '%'
-                        }),
-                    },
-                    {
-                        model: TeacherModel
-                    },
-                    {
-                        model: ScheduleClassModel,
-                    },
+                    model: StudentClassModel,
+                    include: [{
+                        model: StudentModel
+                    }]
+                },
+                {
+                    model: SubjectModel,
+                    where: sequelize.where(sequelize.fn('lower', sequelize.col('subject_code')), {
+                        [Op.like]: '%' + subCode + '%'
+                    }),
+                },
+                {
+                    model: TeacherModel
+                },
+                {
+                    model: ScheduleClassModel,
+                },
                 ],
                 offset: Constants.PER_PAGE * (currentPage - 1),
                 limit: Constants.PER_PAGE,
@@ -106,23 +106,23 @@ const searchClass = async(req, res, next) => {
         } else {
             classes = await ClassModel.findAndCountAll({
                 include: [{
-                        model: StudentClassModel,
-                        include: [{
-                            model: StudentModel
-                        }]
-                    },
-                    {
-                        model: SubjectModel,
-                        where: sequelize.where(sequelize.fn('lower', sequelize.col('subject_code')), {
-                            [Op.like]: '%' + subCode + '%'
-                        })
-                    },
-                    {
-                        model: TeacherModel
-                    },
-                    {
-                        model: ScheduleClassModel
-                    },
+                    model: StudentClassModel,
+                    include: [{
+                        model: StudentModel
+                    }]
+                },
+                {
+                    model: SubjectModel,
+                    where: sequelize.where(sequelize.fn('lower', sequelize.col('subject_code')), {
+                        [Op.like]: '%' + subCode + '%'
+                    })
+                },
+                {
+                    model: TeacherModel
+                },
+                {
+                    model: ScheduleClassModel
+                },
                 ],
                 offset: Constants.PER_PAGE * (currentPage - 1),
                 limit: Constants.PER_PAGE,
@@ -163,7 +163,7 @@ const searchClass = async(req, res, next) => {
         return;
     }
 }
-const addClass = async(req, res, next) => {
+const addClass = async (req, res, next) => {
     const {
         subCode,
         claCode,
@@ -178,34 +178,39 @@ const addClass = async(req, res, next) => {
         timeEnd2
     } = req.body
     try {
+        var teacher ;
         const classes = await ClassModel.findAndCountAll({
             where: {
                 class_code: claCode
             }
         })
-        const teacher = await TeacherModel.findAndCountAll({
-            where: {
-                phone: teaPhone
-            }
-        })
+
+
         const subject = await SubjectModel.findAndCountAll({
             where: {
                 subject_code: subCode
             }
         })
-        if (classes.count > 0 && (teacher.count < 0 || subject.count < 0)) {
+        if (classes.count > 0 && subject.count < 0) {
             res.send({
                 result: 0
             })
             return;
         }
-
-        if (teacher.count < 1) {
-            res.send({
-                result: 1
+        if (teaPhone != '') {
+            teacher = await TeacherModel.findAndCountAll({
+                where: {
+                    phone: teaPhone
+                }
             })
-            return;
+            if (teacher.count < 1) {
+                res.send({
+                    result: 1
+                })
+                return;
+            }
         }
+
 
         if (subject.count < 1) {
             res.send({
@@ -213,7 +218,7 @@ const addClass = async(req, res, next) => {
             })
             return;
         }
-        if (classes.count > 0 && teacher.count > 0 && subject.count > 0) {
+        if (classes.count > 0 && subject.count > 0) {
             const countScheduleClass = await ScheduleClassModel.count({
                 where: {
                     class_id: classes.rows[0].id
@@ -225,7 +230,7 @@ const addClass = async(req, res, next) => {
                 })
                 return;
             }
-            console.log(countScheduleClass, 'đá')
+            // console.log(countScheduleClass, 'đá')
             if (day1 == '' || timeStart1 == '' || timeEnd1 == '' || room1 == '') {
                 await ScheduleClassModel.create({
                     class_id: classes.row[0].id,
@@ -254,7 +259,7 @@ const addClass = async(req, res, next) => {
         // console.log(subject.rows[0])
         const newClass = await ClassModel.create({
             class_code: claCode,
-            teacher_id: teacher.rows[0].id,
+            teacher_id: teacher ? teacher.rows[0].id : null,
             status: 1, // đang học
             subject_id: subject.rows[0].id
         })
@@ -286,10 +291,10 @@ const addClass = async(req, res, next) => {
         return;
     }
 }
-const addStuInclass = async(req, res, next) => {
+const addStuInclass = async (req, res, next) => {
     const { mssv, class_id } = req.body
-        // console.log(mssv)
-        // console.log(class_id)
+    // console.log(mssv)
+    // console.log(class_id)
     try {
         const student = await StudentModel.findAndCountAll({
             where: {
@@ -330,18 +335,18 @@ const addStuInclass = async(req, res, next) => {
             class_id
         })
         const new_class_stu = await ClassModel.findAll({
+            include: [{
+                model: StudentClassModel,
                 include: [{
-                    model: StudentClassModel,
-                    include: [{
-                        model: StudentModel
-                    }]
-                }],
-                where: {
-                    id: class_id
-                },
+                    model: StudentModel
+                }]
+            }],
+            where: {
+                id: class_id
+            },
 
-            })
-            // console.log(new_class_stu[0].Student_classes[0].class_id)
+        })
+        // console.log(new_class_stu[0].Student_classes[0].class_id)
         var urlTable = `${process.cwd()}/table/TableDetailClass.pug`;
         var htmlTable = await pug.renderFile(urlTable, {
             student_classes: new_class_stu[0].Student_classes
@@ -359,7 +364,7 @@ const addStuInclass = async(req, res, next) => {
     }
 
 }
-const searchStuInclass = async(req, res, next) => {
+const searchStuInclass = async (req, res, next) => {
     const { mssv, name, class_id } = req.body
     try {
         const class_student = await ClassModel.findAll({
@@ -396,26 +401,26 @@ const searchStuInclass = async(req, res, next) => {
         return;
     }
 }
-const editClass = async(req, res, next) => {
+const editClass = async (req, res, next) => {
     const id = parseInt(req.body.id)
     const urlModalEditClass = `${process.cwd()}/modals/EditClassModal.pug`;
     try {
         const classes = await ClassModel.findAll({
-                include: [{
-                        model: SubjectModel
-                    },
-                    {
-                        model: ScheduleClassModel,
-                        // required: true
-                    }, {
-                        model: TeacherModel
-                    }
-                ],
-                where: {
-                    id
-                }
-            })
-            // console.log(classes[0].Subject.subject_code)
+            include: [{
+                model: SubjectModel
+            },
+            {
+                model: ScheduleClassModel,
+                // required: true
+            }, {
+                model: TeacherModel
+            }
+            ],
+            where: {
+                id
+            }
+        })
+        // console.log(classes[0].Subject.subject_code)
         if (classes.length > 0) {
             const htmlModalEditClass = await pug.renderFile(urlModalEditClass, {
                 classes: classes[0]
@@ -436,10 +441,10 @@ const editClass = async(req, res, next) => {
         return;
     }
 }
-const saveClass = async(req, res, next) => {
+const saveClass = async (req, res, next) => {
     const {
         class_id,
-        class_status,
+        status,
         subCode,
         room1,
         room2,
@@ -452,7 +457,7 @@ const saveClass = async(req, res, next) => {
         timeEnd2
     } = req.body
     try {
-
+        var teacher;
         const classes = await ClassModel.findAll({
             include: [{
                 model: ScheduleClassModel
@@ -461,24 +466,27 @@ const saveClass = async(req, res, next) => {
                 id: class_id
             }
         })
-        const countScheduleClass = classes[0].Schedule_classes.length
-            // console.log(classes[0].Schedule_classes.length)
-        const countTeacher = await TeacherModel.count({
-            where: {
-                phone: teaPhone
-            }
-        })
-        if (countTeacher < 0) {
-            res.send({
-                result: 0
+        const countScheduleClass = classes[0].Schedule_classes.length;
+        // console.log(classes[0].Schedule_classes.length)
+        if (teaPhone != '') {
+            teacher = await TeacherModel.findAndCountAll({
+                where: {
+                    phone: teaPhone
+                }
             })
+            if (teacher.count < 0) {
+                res.send({
+                    result: 0
+                })
+            }
         }
-        const countSubject = await SubjectModel.count({
+
+        const subject = await SubjectModel.findAndCountAll({
             where: {
                 subject_code: subCode
             }
         })
-        if (countSubject < 0) {
+        if (subject.count < 0) {
             res.send({
                 result: 1
             })
@@ -506,7 +514,16 @@ const saveClass = async(req, res, next) => {
             await updateSchedule(classes[0].Schedule_classes[1].id, class_id, day2, timeStart2, timeEnd2, room2)
 
         }
-
+        await ClassModel.update({
+            // class_code:class_code,
+            teacher_id:teacher?teacher.rows[0].id:null,
+            subject_id:subject.rows[0].id,
+            status
+        },{
+            where:{
+                id:class_id
+            }
+        })  
         res.send({
             result: 2,
         })
@@ -518,20 +535,20 @@ const saveClass = async(req, res, next) => {
     }
 }
 
-const deleteStuInclass=async(req,res,next)=>{
-    const{student_id,class_id}=req.body
+const deleteStuInclass = async (req, res, next) => {
+    const { student_id, class_id } = req.body
 
     try {
-        const stuInClass= await StudentClassModel.findAndCountAll({
-            where:{
+        const stuInClass = await StudentClassModel.findAndCountAll({
+            where: {
                 student_id,
                 class_id
             }
         })
-        if(stuInClass.count>0){
+        if (stuInClass.count > 0) {
             await StudentClassModel.destroy({
-                where:{
-                    id:stuInClass.rows[0].id
+                where: {
+                    id: stuInClass.rows[0].id
                 }
             })
             const new_class_stu = await ClassModel.findAll({
@@ -547,27 +564,70 @@ const deleteStuInclass=async(req,res,next)=>{
 
             })
             // console.log(new_class_stu[0].Student_classes[0].class_id)
-        var urlTable = `${process.cwd()}/table/TableDetailClass.pug`;
-        var htmlTable = await pug.renderFile(urlTable, {
-            student_classes: new_class_stu[0].Student_classes
-        });
-        // console.log(new_class_stu[0].Schedule_classes[0])
-        res.send({
-            result: 1,
-            htmlTable
-        })
-        }else{
+            var urlTable = `${process.cwd()}/table/TableDetailClass.pug`;
+            var htmlTable = await pug.renderFile(urlTable, {
+                student_classes: new_class_stu[0].Student_classes
+            });
+            // console.log(new_class_stu[0].Schedule_classes[0])
             res.send({
-                result:0
+                result: 1,
+                htmlTable
+            })
+        } else {
+            res.send({
+                result: 0
             })
         }
-        
+
     } catch (error) {
-          console.log(error)
-          res.status(404).send()
-          return;
+        // console.log(error)
+        res.status(404).send()
+        return;
     }
 }
+
+const deleteClass=async(req,res,next)=>{
+    const id = parseInt(req.body.id)
+        // console.log(id)
+    try {
+        const classes = await ClassModel.findAll({
+                where: {
+                    id
+                }
+            })
+            // console.log(students.length)
+        if (classes.length > 0) {
+            await StudentClassModel.destroy({
+                where:{
+                    class_id:id
+                }
+            })
+            await ScheduleClassModel.destroy({
+                where:{
+                    class_id:id
+                }
+            })
+            await ClassModel.destroy({
+                where:{
+                    id
+                }
+            })
+            res.send({
+                result: 1
+            })
+        } else {
+            res.send({
+                result: 0 //Notfound
+            })
+        }
+        return;
+    } catch (error) {
+        res.status(404).send()
+        return;
+    }
+}
+
+
 
 const checkSchedule = (room1, room2, day1, timeStart1, timeEnd1, day2, timeStart2, timeEnd2) => {
     if (day1 == '' || timeStart1 == '' || timeEnd1 == '' || room1 == '') {
@@ -616,5 +676,6 @@ export default {
     searchStuInclass,
     editClass,
     saveClass,
-    deleteStuInclass
+    deleteStuInclass,
+    deleteClass
 }

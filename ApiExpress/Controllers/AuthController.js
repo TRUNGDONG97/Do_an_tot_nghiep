@@ -2,10 +2,19 @@ import UserModel from '../models/UserModel'
 import { isNumeric, isEmpty } from 'validator'
 import md5 from 'md5'
 import Constants from '../constants/Constants'
+import crypto from 'crypto-js';
 const login = async (req, res, next) => {
     res.render('LoginView')
 }
 const logout = async (req, res, next) => {
+    var token = req.signedCookies.token
+    await UserModel.update({
+        token:null
+    }, {
+        where: {
+            token
+        }
+    })
     res.cookie('token', "")
     res.cookie('password', "")
     res.cookie('username', "")
@@ -38,7 +47,6 @@ const postLogin = async (req, res, next) => {
     try {
 
         const user = await UserModel.findAll({
-            attribute: ["id", "user_name", "password", "email", "name", "token"],
             where: {
                 user_name,
                 password
@@ -48,11 +56,21 @@ const postLogin = async (req, res, next) => {
         // console.log(isEmpty(password))
         if (user.length > 0) {
             // console.log()
-
-            res.cookie('token', user[0].token, Constants.OPTION)
-            res.cookie('password', user[0].password, Constants.OPTION)
+            var timeNow=new Date().getTime()
+            var token =await crypto.AES.encrypt(timeNow.toString(), password).toString();
+            console.log(token)
+            await UserModel.update({
+                token
+            }, {
+                where: {
+                    id: user[0].id
+                }
+            })
+            res.cookie('token', token, Constants.OPTION)
+            // res.cookie('password', user[0].password, Constants.OPTION)
             res.cookie('username', user[0].user_name, Constants.OPTION)
             res.redirect('home/index')
+            console.log('sadasdas')
             return
         } else {
             // console.log("tk ko tồn tại")
@@ -63,12 +81,7 @@ const postLogin = async (req, res, next) => {
             return;
         }
     } catch (error) {
-        console.log(error, "error")
-        // res.json({
-        //     result: 'that bai',
-        //     data: {},
-        //     error: error
-        // })
+        // console.log(error, "error")
         res.render('error',{
             error:error
         })

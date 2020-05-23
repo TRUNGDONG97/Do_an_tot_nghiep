@@ -8,6 +8,7 @@ import indexRouter from './routes/IndexRouter'
 import authRouter from './routes/AuthRouter'
 import authMiddleware from './middlewares/AuthMiddleware'
 import adminRouter from './routes/AdminRouter'
+import appRouter from './routes/AppRouter'
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/admin', authRouter);
 app.use('/admin', authMiddleware.requireAuth, adminRouter);
+app.use('/app', appRouter);
 
 
 

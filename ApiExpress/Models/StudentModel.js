@@ -29,10 +29,10 @@ const Student= sequelize.define('Students', {
         type: Sequelize.STRING,
         unique: 'compositeIndex'
     },
-    deviceid: {
+    device_id: {
         type: Sequelize.STRING
     },
-    tocken: {
+    token: {
         type: Sequelize.STRING
     },
     url_avatar: {
