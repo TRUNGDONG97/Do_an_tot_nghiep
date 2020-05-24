@@ -1,0 +1,7 @@
+<resources>
+	<string moduleConfig="true" name="reactNativeCodePush_androidDeploymentKey">14G78s0Tii6oJXkWD9khpJArW7aWIVFj9JTMZ</string>
+    <string name="app_name">App Teacher</string>
+    <string name="appCenterCrashes_whenToSendCrashes" moduleConfig="true" translatable="false">DO_NOT_ASK_JAVASCRIPT</string>
+    <string name="appCenterAnalytics_whenToEnableAnalytics" moduleConfig="true" translatable="false">ALWAYS_SEND</string>
+    <string name="facebook_app_id">2449712991815530</string>
+</resources>

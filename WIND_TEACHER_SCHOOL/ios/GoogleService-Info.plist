@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>777141683282-ua2c1mjgtlduhqq6mb3vc2bol5ktl2nq.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.777141683282-ua2c1mjgtlduhqq6mb3vc2bol5ktl2nq</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>777141683282-aib92t858o8l1i5lj17lt0d49e06lacb.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDqhYhPXTMMch8yophVH3JgpHN--8jhUmA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>777141683282</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>winds.vn.rnbase</string>
+	<key>PROJECT_ID</key>
+	<string>winds-12268</string>
+	<key>STORAGE_BUCKET</key>
+	<string>winds-12268.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:777141683282:ios:f5c9f84766c954adc84b8b</string>
+	<key>DATABASE_URL</key>
+	<string>https://winds-12268.firebaseio.com</string>
+</dict>
+</plist>
