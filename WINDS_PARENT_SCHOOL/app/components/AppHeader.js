@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Platform, StatusBar } from 'react-native';
 import { Header } from 'react-native-elements';
 import NavigationUtil from '../navigation/NavigationUtil';
 import Icon from './Icon';
@@ -22,7 +22,8 @@ class AppHeader extends Component {
     render() {
 
         const { title, hideBackButton, backAction,
-            rightComponent, navigation,
+            rightComponent, navigation, searchButton, onPressSearch,
+            textRight,onPressRight,
             ...props
         } = this.props;
         const parent = navigation.dangerouslyGetParent();
@@ -32,34 +33,55 @@ class AppHeader extends Component {
             <Header
                 placement="left"
                 containerStyle={{
-                    backgroundColor: theme.colors.white
+                    backgroundColor: theme.colors.backgroundHeader,
+                    marginTop: Platform.OS == "ios" ? 0 : -StatusBar.currentHeight,
                 }}
 
                 leftComponent={showBackButton &&
-                    <TouchableOpacity
+                    <View
                         style={{
                             // flex: 1,
-                            height: '100%',
+                            // height: '100%',
                             flexDirection: 'row',
                             justifyContent: 'center',
                             alignItems: 'center',
-                            // backgroundColor: theme.colors.active
-                        }}
-                        onPress={
+                            // backgroundColor: theme.colors.active,
+                            // marginLeft:
+                        }}>
+                        <TouchableOpacity onPress={
                             NavigationUtil.goBack
                         }>
-                        <Icon.Ionicons
-                            name="ios-arrow-round-back"
-                            size={35}
-                            color="#000"
-                        />
-                        <Text style={[theme.fonts.bold23, { marginLeft: 10 }]}>{title}</Text>
-                    </TouchableOpacity>
+                            <Icon.AntDesign
+                                name="left"
+                                size={25}
+                                color={theme.colors.white}
+                            />
+                        </TouchableOpacity>
+                        <Text style={[theme.fonts.bold20, { marginLeft: 20, color: theme.colors.white }]}>{title}</Text>
+                    </View>
                 }
-                centerComponent={
-                    <Text style={theme.fonts.bold23}>{title}</Text>
+                // centerComponent={
+                //     <Text style={theme.fonts.bold23}>{title}</Text>
+                // }
+                rightComponent={
+                    <View>
+                        {searchButton && (
+                            <TouchableOpacity
+                                style={{ marginRight: 20 }}
+                                onPress={onPressSearch}
+                            >
+                                <Icon.Feather name="filter" size={25} color="#fff" />
+                            </TouchableOpacity>
+                        )}
+                        {textRight &&
+                            <TouchableOpacity 
+                                onPress={onPressRight}
+                            >
+                                <Text style={[theme.fonts.bold16, { color: '#fff' }]}>{textRight}</Text>
+                            </TouchableOpacity>}
+                    </View>
                 }
-                rightComponent={rightComponent}
+
                 {...props}
             />
         )

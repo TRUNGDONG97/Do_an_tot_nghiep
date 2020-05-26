@@ -12,6 +12,7 @@ import sequelize from 'sequelize'
 import md5 from 'md5';
 import crypto from 'crypto-js';
 import Subject from '../../models/SubjectModel'
+import request from 'request'
 
 const getClass = async (req, res, next) => {
     const { token } = req.headers
@@ -115,8 +116,8 @@ const getUserInfo = async (req, res, next) => {
                     token: data.token,
                     url_avatar: data.url_avatar,
                     sex: data.sex,
-                    status:data.status,
-                    salary:data.salary
+                    status: data.status,
+                    salary: data.salary
                 }
             })
             return;
@@ -164,7 +165,7 @@ const changeUserInfo = async (req, res, next) => {
             }
         })
         if (count > 0) {
-            const updateTea= await TeacherModel.update(
+            const updateTea = await TeacherModel.update(
                 {
                     phone,
                     address,
@@ -201,9 +202,9 @@ const changeUserInfo = async (req, res, next) => {
                     device_id: data.device_id,
                     token: data.token,
                     url_avatar: data.url_avatar,
-                    sex: data.sex, 
-                    status:data.status,
-                    salary:data.salary
+                    sex: data.sex,
+                    status: data.status,
+                    salary: data.salary
                 }
             })
             return;
@@ -227,8 +228,71 @@ const changeUserInfo = async (req, res, next) => {
 
     }
 }
+const changePass = async (req, res, next) => {
+    const { token } = req.headers;
+    if (token == '') {
+        res.json({
+            "status": 0,
+            "code": 404,
+            "message": 'thất bại',
+            "data": ""
+        })
+        return;
+    }
+    const { oldPassword, newPassword } = req.body
+    try {
+        const teacher = await TeacherModel.findAndCountAll({
+            where: {
+                token
+            }
+        })
+        if (teacher.count > 0) {
+            if (teacher.rows[0].password.trim() != md5(oldPassword.strim())) {
+                res.json({
+                    "status": 0,
+                    "code": 404,
+                    "message": 'Mật khẩu cũ không đúng',
+                    "data": {}
+                })
+                return;
+            }
+            const updatePass = await TeacherModel.update(
+                {
+                    password: md5(newPassword),
+                }, {
+                where: {
+                    token
+                }
+            })
+            res.json({
+                "status": 1,
+                "code": 200,
+                "message": 'thành công',
+                "data": {}
+            })
+            return;
+        }
+        res.json({
+            "status": 0,
+            "code": 403,
+            "message": 'Chưa đăng nhập',
+            "data": ""
+        })
+        return;
+    } catch (error) {
+        // console.log(error)
+        res.json({
+            "status": 0,
+            "code": 404,
+            "message": "Đã có lỗi xảy ra",
+            "data": ''
+        })
+        return;
+    }
+}
 export default {
     getClass,
     getUserInfo,
-    changeUserInfo
+    changeUserInfo,
+    changePass
 }

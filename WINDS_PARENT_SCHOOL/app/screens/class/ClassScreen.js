@@ -9,7 +9,7 @@ import {
     FlatList
 } from 'react-native'
 import { connect } from 'react-redux'
-import { getListClass } from '@app/redux/actions'
+import { getListClassAction } from '@app/redux/actions'
 import {
     Block, WindsHeader,
     BackgroundHeader, Loading,
@@ -23,12 +23,16 @@ import Ripple from 'react-native-material-ripple';
 import { SCREEN_ROUTER } from '@app/constants/Constant'
 import NavigationUtil from '@app/navigation/NavigationUtil'
 import Mockup from '@app/constants/Mockup'
+import reactotron from 'reactotron-react-native'
 class ClassScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isRefresh: false,
         };
+    }
+    async componentDidMount() {
+       await this.props.getListClassAction();
     }
     render() {
         return (
@@ -43,21 +47,33 @@ class ClassScreen extends Component {
     }
 
     renderBody() {
+        const { classListState } = this.props
+        reactotron.log('classListState', classListState)
+        if (classListState.isLoading) return <Loading />;
+        if (classListState.error)
+            return (
+                <Error
+                    onPress={() => {
+                        this.props.getListClassAction();
+                    }}
+                />
+            );
+            // reactotron.log('room_name', classListState.data[0].Schedule_classes[0].room_name)
         return (
-            <Block style={theme.styles.androidSafeView}>
+            <Block flex={1} style={{marginTop:20}}>
                 <FlatList
                     showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ paddingHorizontal: 10, marginTop: 20 }}
+                    contentContainerStyle={{ paddingHorizontal: 10,paddingBottom:20}}
                     refreshControl={
                         <RefreshControl
                             refreshing={this.state.isRefresh}
                             onRefresh={() => {
-                                // this._onRefresh();
+                                this.props.getListClassAction();
                             }}
                         />
                     }
                     keyExtractor={(item, index) => index.toString()}
-                    data={Mockup.listClass}
+                    data={classListState.data}
                     renderItem={({ item, pos }) => {
                         return <ClassItem item={item} pos={pos} />;
                     }}
@@ -68,11 +84,11 @@ class ClassScreen extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    classListState: state.classListReducer,
+    classListState: state.listClassReducer,
 })
 
 const mapDispatchToProps = {
-
+    getListClassAction
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClassScreen)

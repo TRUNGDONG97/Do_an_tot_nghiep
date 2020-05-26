@@ -16,9 +16,10 @@ import theme from '@theme'
 import R from '@R'
 import NavigationUtil from '@app/navigation/NavigationUtil';
 import { SCREEN_ROUTER } from '@app/constants/Constant';
-import DropdownAlertUtil from '@app/components/DropdownAlertUtil';
-import OneSignal from "react-native-onesignal";
+// import OneSignal from "react-native-onesignal";
 import reactotron from 'reactotron-react-native';
+import AsyncStorage from "@react-native-community/async-storage"
+import { requestLogout } from "@app/constants/Api";
 import {
     WindsHeader,
     Block,
@@ -30,18 +31,34 @@ import {
 } from '@app/components'
 import { Avatar } from "react-native-elements";
 import { showConfirm } from '@app/utils/Alert';
+import { getUserInfo } from "../../redux/actions";
+import { connect } from 'react-redux'
 
-export default class UserScreen extends Component {
-
+export class UserScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
             refreshing: false,
-            test: null
+            // isLoading: false,
         };
     }
-    async componentDidMount() {
 
+    async componentDidMount() {
+        this.props.getUserInfo();
+    }
+
+    render() {
+        return (
+            <Block >
+                <SafeAreaView style={theme.styles.containter}>
+                    <BackgroundHeader />
+                    <WindsHeader
+                        title={R.strings.user}
+                    />
+                    {this._renderBody()}
+                </SafeAreaView>
+            </Block>
+        )
     }
     _renderInfo(field, info) {
         return (
@@ -77,6 +94,17 @@ export default class UserScreen extends Component {
         )
     }
     _renderBody() {
+        const { UserInfoState } = this.props
+        // reactotron.log('UserInfoState',UserInfoState)
+        if (UserInfoState.isLoading) return <Loading />;
+        if (UserInfoState.error)
+            return (
+                <Error
+                    onPress={() => {
+                        this.props.getUserInfo();
+                    }}
+                />
+            );
         return (
             <Block style={{
                 marginHorizontal: 15,
@@ -89,7 +117,7 @@ export default class UserScreen extends Component {
                     refreshControl={
                         <RefreshControl
                             refreshing={this.state.refreshing}
-                        // onRefresh={() => this._onRefresh()}
+                            onRefresh={() => this.props.getUserInfo()}
                         />
                     }
                 >
@@ -99,7 +127,8 @@ export default class UserScreen extends Component {
                         <Avatar
                             rounded
                             source={{
-                                uri: "https://zicxa.com/hinh-anh/wp-content/uploads/2019/09/T%E1%BB%95ng-h%E1%BB%A3p-h%C3%ACnh-%E1%BA%A3nh-Luffy-m%C5%A9-r%C6%A1m-%C4%91%E1%BA%B9p-nh%E1%BA%A5t-24.jpg"
+                                uri: 'http://5f7ff762.ngrok.io/upload/avatarStudent/donglt20150959.jpg'
+                                // uri:
                             }}
                             size={65}
                             renderPlaceholderContent={<ActivityIndicator />}
@@ -107,22 +136,29 @@ export default class UserScreen extends Component {
                         />
 
                         <Block style={{ flex: 1, marginLeft: 15 }}>
-                            <Text
-                                style={[theme.fonts.bold18, { flex: 1, color: theme.colors.primaryText }]}
-                                numberOfLines={1}
-                            >
-                                Erik
+                            <View style={{ flexDirection: "row", alignItems: "center",marginTop:10 }}>
+                                <Text
+                                    style={[theme.fonts.bold18, { flex: 1, color: theme.colors.primaryText }]}
+                                    numberOfLines={1}
+                                >
+                                    {UserInfoState.data.name}
+                                </Text>
+                                <FastImage
+                                    style={{ width: 20, height: 20, marginRight: 5 }}
+                                    source={UserInfoState.data.sex==1? R.images.ic_male:R.images.ic_female}
+                                />
+                            </View>
+                            <Text style={[theme.fonts.bold16, { color: theme.colors.black2, flex: 1,marginTop:5 }]}>
+                                {UserInfoState.data.phone}
                             </Text>
-
-                            <Text style={[theme.fonts.bold16, { color: theme.colors.black2, flex: 1 }]}>
-                                0329563942
-                        </Text>
                         </Block>
                     </View>
                     <View style={styles._viewInfo}>
                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                             <Text style={[theme.fonts.bold16, { color: theme.colors.primaryText }]}>{R.strings.user_info}</Text>
-                            <TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => NavigationUtil.navigate(SCREEN_ROUTER.CHANGE_USER_INFO)}
+                            >
                                 <Icon.FontAwesome size={20}
                                     name='edit'
                                     type='feathericons'
@@ -130,88 +166,46 @@ export default class UserScreen extends Component {
                                     size={30} />
                             </TouchableOpacity>
                         </View>
-                        {/* {this._renderInfo(R.strings.user_info, null)} */}
-                        {this._renderInfo(R.strings.name, 'Nguyễn Tú')}
-                        {this._renderInfo('Email', 'tund@gmail.com')}
-                        {this._renderInfo(R.strings.phone, '0329563942')}
-                        {this._renderInfo(R.strings.address, 'số 29,Khương Hạ,Thanh Xuân,Hà Nội')}
+
+                        {this._renderInfo('Email', UserInfoState.data.email)}
+                        {this._renderInfo('Mssv', UserInfoState.data.mssv)}
+                        {this._renderInfo('Ngày sinh', UserInfoState.data.birthday)}
+                        {/* {this._renderInfo(R.strings.phone,  UserInfoState.data.phone)} */}
+                        {this._renderInfo(R.strings.address, UserInfoState.data.address)}
                     </View>
+
                     <View style={styles._viewInfo}>
-                        <Text style={[theme.fonts.bold16, { color: theme.colors.primaryText, marginBottom: 5 }]}>{R.strings.forum}</Text>
-                        {this._renderOption(R.strings.forum, () => {
-                            NavigationUtil.navigate(SCREEN_ROUTER.FORUM)
-                        })}
-                        {this._renderOption(R.strings.my_post, () => {
-                            NavigationUtil.navigate(SCREEN_ROUTER.MY_POST)
-                        })}
-                    </View>
-                    <View style={styles._viewInfo}>
-                        <Text style={[theme.fonts.bold16, { color: theme.colors.primaryText, marginBottom: 5 }]}>{R.strings.study}</Text>
-                        {this._renderOption(R.strings.propose_ideas, () => {
-                            NavigationUtil.navigate(SCREEN_ROUTER.CREATE_REVIEW)
-                        })}
-                        {this._renderOption(R.strings.exam, () => { })}
-                    </View>
-                    <View style={{ marginTop: 15, paddingHorizontal: 15 }}>
                         {this._renderOption(R.strings.change_pass, () => {
                             NavigationUtil.navigate(SCREEN_ROUTER.CHANGE_PASSWORD)
                         })}
                         {this._renderOption(R.strings.logout, () => {
-                            showConfirm('Bạn có chắc chắn muốn đăng xuất không?')
+                            showConfirm('Thông báo', 'Bạn có chắc chắn muốn đăng xuất không?', this._logout)
                         })}
                     </View>
                 </ScrollView>
             </Block>
         )
     }
-    render() {
-        return (
-            <Block >
-                <SafeAreaView style={theme.styles.containter}>
-                    <BackgroundHeader />
-                    <WindsHeader
-                        style={{ backgroundColor: "red" }}
-                        title={R.strings.user}
-                    />
-                    {this._renderBody()}
-                </SafeAreaView>
-            </Block>
-            // <View style={{
-            //     flex: 1,
-            //     justifyContent: 'center',
-            //     alignItems: 'center'
-            // }}>
-            //     <TouchableOpacity
-            //         onPress={() => {
-
-            //             OneSignal.getPermissionSubscriptionState((status) => {
-            //                 userID = status.userId;
-            //                 DropdownAlertUtil.showAlert("Thông báo", "DeviceID của OneSignal là : " + userID,()=>{
-            //                     alert("tap action")
-            //                 })
-            //             });
-            //         }}>
-            //         <Text
-            //             style = {theme}
-            //         >{R.strings.update_user_info}</Text>
-            //         <Image
-            //             style={{
-            //                 width: 100,
-            //                 height: 100
-            //             }}
-            //             source={R.images.ic_home}
-            //         />
-            //     </TouchableOpacity>
-            // </View>
-        )
-    }
+    _logout = async () => {
+        try {
+            const response = await requestLogout();
+            if (response) {
+                await AsyncStorage.setItem("token", "");
+                AsyncStorage.clear();
+                NavigationUtil.navigate(SCREEN_ROUTER.AUTH_LOADING);
+            }
+        } catch (error) {
+            Toast.show("Vui lòng thử lại", BACKGROUND_TOAST.FAIL);
+            //showMessages(I18n.t("notification"), I18.t("error"));
+        }
+    };
 }
 
 const styles = StyleSheet.create({
     _viewUser: {
         alignItems: "center",
         flexDirection: "row",
-        // marginTop: 10,
+        marginTop: 20,
         // marginHorizontal: 15,
         paddingVertical: 10,
         backgroundColor: theme.colors.white,
@@ -230,3 +224,12 @@ const styles = StyleSheet.create({
         borderRadius: 5,
     }
 })
+const mapStateToProps = (state) => ({
+    UserInfoState: state.userReducer,
+})
+
+const mapDispatchToProps = {
+    getUserInfo
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserScreen)

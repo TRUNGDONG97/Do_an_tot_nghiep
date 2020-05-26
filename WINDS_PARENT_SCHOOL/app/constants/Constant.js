@@ -8,18 +8,10 @@ const SCREEN_ROUTER = {
   REGISTER: "Register",
   USER: 'User',
   CLASS: 'Class',
-  FEE: 'Fee',
-  PAY_FEE: 'PayFee',
   NOTIFICATION: 'Notification',
   STUDY: 'Study',
-  FORUM: 'Forum',
-  CREATE_POST: "CreatePost",
-  POST: "Post",
-  IMAGE_VIEWERS: 'ImageView',
-  DETAIL_POST: 'DetailPost',
-  MY_POST: 'MyPost',
-  CREATE_REVIEW: 'CreateReview',
   CHANGE_PASSWORD: 'ChangePassWord',
+  CHANGE_USER_INFO:'ChangeUserInfo'
 
 };
 const LIKE_STATE = {
@@ -37,11 +29,15 @@ const CATEGORY = {
   CATEGORY_2: 2,
   CATEGORY_2: 3
 }
-
+const GENDER = {
+  MALE: 1,
+  FEMALE: 0,
+}
 export {
   SCREEN_ROUTER,
   LIKE_STATE,
   TOPIC,
-  CATEGORY
+  CATEGORY,
+  GENDER
 };
 

@@ -27,7 +27,6 @@ export default class AuthLoadingScreen extends Component {
     handleActiveApp = async () => {
         let token = await AsyncStorage.getItem('token')
         if (!!token) {
-            reactotron.log(token);
             NavigationUtil.navigate(SCREEN_ROUTER.MAIN)
         } else {
             NavigationUtil.navigate(SCREEN_ROUTER.LOGIN)

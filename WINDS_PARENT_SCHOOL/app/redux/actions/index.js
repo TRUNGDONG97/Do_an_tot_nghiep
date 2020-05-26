@@ -1,11 +1,16 @@
-import { REQUEST_LOGIN, GET_LIST_ABSENT, GET_LIST_CLASS, GET_LIST_NOTIFICATION, GET_LIST_FEE } from "./type";
+import {
+  GET_LIST_ABSENT,
+  GET_LIST_CLASS,
+  GET_LIST_NOTIFICATION,
+  GET_LIST_FEE,
+  GET_USER_INFOR,
+  UPDATE_USER,
+  GET_CLASS
+} from "./type";
 
-export const getUserInfo = (username, password) => ({
-  type: REQUEST_LOGIN,
-  payload: {
-    username: username,
-    password: password
-  }
+export const getUserInfo = () => ({
+  type: GET_USER_INFOR,
+  payload: {}
 });
 
 export const getListAbsentAction = (month, classID, className, typeLoading) => ({
@@ -18,9 +23,9 @@ export const getListAbsentAction = (month, classID, className, typeLoading) => (
   typeLoading: typeLoading
 });
 
-export const getListClassAction = (deviceID) => ({
+export const getListClassAction = () => ({
   type: GET_LIST_CLASS,
-  payload: { deviceID: deviceID }
+  payload: {}
 });
 
 export const getListNotifyAction = () => ({
@@ -35,4 +40,8 @@ export const getListFeeAction = (dateTime) => ({
   payload: {
     dateTime: dateTime
   }
+});
+export const updateUser = payload => ({
+  type: UPDATE_USER,
+  payload: payload
 });

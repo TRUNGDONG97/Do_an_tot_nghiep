@@ -147,7 +147,7 @@ const changeUserInfo = async (req, res, next) => {
         })
         return;
     }
-    const { phone, address, sex, birthday, password, email } = req.body
+    const { phone, address, sex, birthday, email } = req.body
     // console.log(phone)
     // console.log(address)
     // console.log(sex)
@@ -167,7 +167,7 @@ const changeUserInfo = async (req, res, next) => {
                     address,
                     sex,
                     birthday: birthday.split("/").reverse().join("-"),
-                    password: md5(password),
+                    // password: md5(password),
                     email
                 }, {
                 where: {
@@ -221,8 +221,71 @@ const changeUserInfo = async (req, res, next) => {
 
     }
 }
+const changePass = async (req,res,next) => {
+    const { token } = req.headers;
+    if (token == '') {
+        res.json({
+            "status": 0,
+            "code": 404,
+            "message": 'thất bại',
+            "data": ""
+        })
+        return;
+    }
+    const { oldPassword, newPassword } = req.body
+    try {
+        const student = await StudentModel.findAndCountAll({
+            where: {
+                token
+            }
+        })
+        if (student.count > 0) {
+            if(student.rows[0].password.trim()!=md5(oldPassword.trim())){
+                res.json({
+                    "status": 0,
+                    "code": 404,
+                    "message": 'Mật khẩu cũ không đúng',
+                    "data": {}
+                })
+                return;
+            }
+            const updatePass = await StudentModel.update(
+                {
+                    password: md5(newPassword),
+                }, {
+                where: {
+                    token
+                }
+            })
+            res.json({
+                "status": 1,
+                "code": 200,
+                "message": 'thành công',
+                "data": {}
+            })
+            return;
+        }
+        res.json({
+            "status": 0,
+            "code": 403,
+            "message": 'Chưa đăng nhập',
+            "data": ""
+        })
+        return;
+    } catch (error) {
+         console.log(error)
+         res.json({
+            "status": 0,
+            "code": 404,
+            "message": "Đã có lỗi xảy ra",
+            "data": ''
+        })
+        return;
+    }
+}
 export default {
     getClass,
     getUserInfo,
-    changeUserInfo
+    changeUserInfo,
+    changePass,
 }

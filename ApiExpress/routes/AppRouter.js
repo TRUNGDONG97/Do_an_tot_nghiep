@@ -8,8 +8,11 @@ router.get('/logout', Auth.logout)
 router.get('/student/getClass', Student.getClass)
 router.get('/student/getUserInfo', Student.getUserInfo)
 router.post('/student/changeUserInfo', Student.changeUserInfo)
+router.post('/student/changePass', Student.changePass)
+
 router.get('/teacher/getClass', Teacher.getClass)
 router.get('/teacher/getUserInfo', Teacher.getUserInfo)
 router.post('/teacher/changeUserInfo', Teacher.changeUserInfo)
+router.post('/teacher/changePass', Teacher.changePass)
 
 module.exports = router;

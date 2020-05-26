@@ -7,9 +7,9 @@ import { SCREEN_ROUTER } from "@constant";
 
 // singleton  network client
 function createAxios() {
-  AsyncStorage.setItem("token", '2323226DADAD') //full
+  // AsyncStorage.setItem("token", '2323226DADAD') //full
   var axiosInstant = axios.create();
-  axiosInstant.defaults.baseURL = "http://sky.winds.vn/";
+  axiosInstant.defaults.baseURL = "http://3ee302b2.ngrok.io/app";
   axiosInstant.defaults.timeout = 20000;
   axiosInstant.defaults.headers = { "Content-Type": "application/json" };
 
@@ -72,19 +72,22 @@ function handleResult(api) {
 
 // Application api request
 export const requestLogin = payload => {
-  return handleResult(getAxios.post("api/Service/Login", payload));
+  return handleResult(getAxios.post("login", payload));
+};
+export const requestLogout = payload => {
+  return handleResult(getAxios.get("logout"));
 };
 
 //get list class
-export const getListClass = deviceID => {
+export const getListClass = () => {
   return handleResult(
-    getAxios.get(`api/Service/GetlistClass?deviceID=${deviceID}`)
+    getAxios.get(`student/getClass`)
   );
 };
 
 //get User infor
 export const getUserInfo = () => {
-  return handleResult(getAxios.get("api/Service/LoginDetail"));
+  return handleResult(getAxios.get("student/getUserInfo"));
 };
 
 //get list fee
@@ -94,7 +97,7 @@ export const getListFee = payload => {
 
 // change pass
 export const changePass = payload => {
-  return handleResult(getAxios.post("api/Service/ChangePassWord", payload));
+  return handleResult(getAxios.post("student/changePass", payload));
 };
 
 //get list bank
@@ -125,4 +128,7 @@ export const registerAcc = payload => {
 
 export const delNotify = payload => {
   return handleResult(getAxios.post("api/Service/DeleteNoti", payload));
+};
+export const updateUser = payload => {
+  return handleResult(getAxios.post(`student/changeUserInfo`, payload));
 };

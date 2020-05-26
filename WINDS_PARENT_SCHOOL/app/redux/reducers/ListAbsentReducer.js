@@ -1,4 +1,4 @@
-import { REQUEST_LOGIN,REQUEST_LOGIN_FAIL,REQUEST_LOGIN_SUCCESS, GET_LIST_ABSENT, GET_LIST_ABSENT_SUCCESS, GET_LIST_ABSENT_FAIL } from "../actions/type";
+import { GET_LIST_ABSENT, GET_LIST_ABSENT_SUCCESS, GET_LIST_ABSENT_FAIL } from "../actions/type";
 import ListClassReducer from './ListClassReducer';
 
 const initialState = {

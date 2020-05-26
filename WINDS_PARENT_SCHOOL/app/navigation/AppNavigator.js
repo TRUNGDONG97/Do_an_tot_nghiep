@@ -5,26 +5,18 @@ import { createBottomTabNavigator, BottomTabBar } from 'react-navigation-tabs'
 import AuthLoadingScreen from '../screens/auth/AuthLoadingScreen'
 import LoginScreen from '../screens/auth/LoginScreen'
 import RegisterScreen from '../screens/auth/RegisterScreen'
-import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen'
+// import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen'
 import HomeScreen from '@screen/HomeScreen'
 import UserScreen from '../screens/user/UserScreen'
-import ForumScreen from '../screens/user/forum/ForumScreen'
-import CreatePostScreen from '@screen/user/forum/CreatePostScreen'
-import PostScreen from '@screen/user/forum/PostScreen'
-import DetailPostScreen from '@screen/user/forum/DetailPostScreen'
-import MyPostScreen from '@screen/user/forum/MyPostScreen'
-import CreateReviewScreen from '@screen/user/CreateReviewScreen'
 import ChangePassWordScreen from '@screen/user/ChangePassWordScreen'
 import ClassScreen from '@screen/class/ClassScreen'
-import FeeScreen from '@screen/fee/FeeScreen'
-import PayFeeScreen from '@app/screens/fee/PayFeeScreen'
 import StudyScreen from '@screen/study/StudyScreen'
 import NotificationScreen from '@screen/notification/NotificationScreen'
 import { SCREEN_ROUTER } from '@constant'
 import R from '@R';
 import theme from "@theme";
 import { Icon, ImageViewerScreen } from '@component'
-
+import ChangeUserInfo from '@screen/user/ChangeUserInfo'
 import {
     Image
 } from "react-native";
@@ -33,7 +25,7 @@ const TabBarComponent = props => <BottomTabBar {...props} />;
 const Auth = createStackNavigator({
     [SCREEN_ROUTER.LOGIN]: LoginScreen,
     [SCREEN_ROUTER.REGISTER]: RegisterScreen,
-    [SCREEN_ROUTER.FORGOT_PASS]: ForgotPasswordScreen
+    // [SCREEN_ROUTER.FORGOT_PASS]: ForgotPasswordScreen
 })
 
 const getTabBarIcon = (navigation, focused, tintColor) => {
@@ -50,12 +42,6 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
                     color={tintColor}
                     outline
                 />
-            );
-        }
-        case SCREEN_ROUTER.FEE: {
-            iconName = "money";
-            return (
-                <Icon.FontAwesome name={iconName} size={iconSize} color={tintColor} outline />
             );
         }
         case SCREEN_ROUTER.STUDY: {
@@ -84,18 +70,11 @@ const Main = createBottomTabNavigator(
                 tabBarLabel: R.strings.class,
             },
         },
-        [SCREEN_ROUTER.STUDY]: {
-            screen: StudyScreen,
-            title: R.strings.study,
-            navigationOptions: {
-                tabBarLabel: R.strings.study,
-            },
-        },
-        // [SCREEN_ROUTER.FEE]: {
-        //     screen: FeeScreen,
-        //     title: R.strings.fee,
+        // [SCREEN_ROUTER.STUDY]: {
+        //     screen: StudyScreen,
+        //     title: R.strings.study,
         //     navigationOptions: {
-        //         tabBarLabel: R.strings.fee,
+        //         tabBarLabel: R.strings.study,
         //     },
         // },
         [SCREEN_ROUTER.NOTIFICATION]: {
@@ -142,15 +121,9 @@ const Main = createBottomTabNavigator(
 
 const MainStack = createStackNavigator({
     [SCREEN_ROUTER.MAIN]: Main,
-    [SCREEN_ROUTER.PAY_FEE]: PayFeeScreen,
-    [SCREEN_ROUTER.FORUM]: ForumScreen,
-    [SCREEN_ROUTER.CREATE_POST]: CreatePostScreen,
-    [SCREEN_ROUTER.POST]: PostScreen,
-    [SCREEN_ROUTER.IMAGE_VIEWERS]: ImageViewerScreen,
-    [SCREEN_ROUTER.DETAIL_POST]: DetailPostScreen,
-    [SCREEN_ROUTER.MY_POST]: MyPostScreen,
-    [SCREEN_ROUTER.CREATE_REVIEW]: CreateReviewScreen,
+    [SCREEN_ROUTER.STUDY]: StudyScreen,
     [SCREEN_ROUTER.CHANGE_PASSWORD]: ChangePassWordScreen,
+    [SCREEN_ROUTER.CHANGE_USER_INFO]: ChangeUserInfo,
 },
     {
         defaultNavigationOptions: {

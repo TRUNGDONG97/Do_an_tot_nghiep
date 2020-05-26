@@ -1,27 +1,39 @@
-import { REQUEST_LOGIN,REQUEST_LOGIN_FAIL,REQUEST_LOGIN_SUCCESS } from "../actions/type";
+import {
+    GET_USER_INFOR,
+    GET_USER_INFOR_SUCCESS,
+    GET_USER_INFOR_FAIL,
+    UPDATE_USER,
+    UPDATE_USER_FAIL,
+    UPDATE_USER_SUCCESS
+} from "../actions/type";
 
 const initialState = {
-    data :{},
+    data: {},
     isLoading: false,
     error: null
 }
 
 export default function (state = initialState, action) {
     switch (action.type) {
-        case REQUEST_LOGIN: {
+        case UPDATE_USER:
+        case GET_USER_INFOR: {
             return { ...state, isLoading: true }
         }
-        case REQUEST_LOGIN_SUCCESS: {
+        case UPDATE_USER_SUCCESS:
+        case GET_USER_INFOR_SUCCESS: {
             return {
                 ...state,
                 isLoading: false,
                 error: null,
-                data : action.payload
+                data: action.payload
             }
         }
-        case REQUEST_LOGIN_FAIL: {
+        case UPDATE_USER_FAIL:
+        case GET_USER_INFOR_FAIL: {
             return {
-                ...state, error: "Lỗi mạng", isLoading: false,
+                ...state,
+                error: action.payload,
+                isLoading: false
             }
         }
         default:

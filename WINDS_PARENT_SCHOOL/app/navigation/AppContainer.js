@@ -5,12 +5,13 @@ import { connect } from 'react-redux'
 import AppNavigator from './AppNavigator'
 import OneSignal from "react-native-onesignal";
 import reactotron from 'reactotron-react-native'
-
+import NavigationUtil from './NavigationUtil'
 export class AppContainer extends Component {
     constructor(properties) {
         super(properties);
         // OneSignal.init("6b13a5c4-571f-4244-b5f6-d220309f4f4d"); // android
-        OneSignal.init("195238a2-829c-47fc-a581-dfbfea31b822"); // ios
+        OneSignal.init("a3a7b8e7-3607-4ed1-9066-3a8e98e9ce86"); //  app id
+        // reactotron.log('sadasdasda')
         OneSignal.addEventListener("received", this.onReceived.bind(this));
         OneSignal.addEventListener("opened", this.onOpened.bind(this));
         OneSignal.addEventListener("ids", this.onIds.bind(this));
@@ -39,7 +40,13 @@ export class AppContainer extends Component {
         // reactotron.log('userID', userID)
 
     }
-
+    async onIds(device) {
+        if (device) {
+          if (!!device.userId)
+            await AsyncStorage.setItem("Device info: ", device.userId)
+        }
+        Reactotron.log("Device info: ", device);
+      }
     render() {
         return (
             <AppNavigator

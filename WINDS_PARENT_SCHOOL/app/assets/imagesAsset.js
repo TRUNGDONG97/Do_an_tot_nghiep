@@ -30,6 +30,9 @@ const images = {
     img_vcb: require("./images/img_vcb.png"),
     img_vtb: require("./images/img_vtb.jpg"),
     ic_tick: require("./images/ic_tick.png"),
+    ic_date: require("./images/ic_date.png"),
+    ic_male: require("./images/ic_male.png"),
+    ic_female: require("./images/ic_female.png"),
     ic_ball_poin: require("./images/icons8_ball_point_pen_filled_50px3x.png"),
 }
 export default images

@@ -42,17 +42,19 @@ export default class ClassItem extends Component {
                         NavigationUtil.navigate(SCREEN_ROUTER.STUDY)
                     }}>
                     <Block style={[theme.styles.styleBlockHeader, { alignItems: 'center' }]}>
-                        <Text style={(theme.fonts.bold16, { color: "white", fontWeight: 'bold', fontSize: 20 })}>{item.className}</Text>
+                        <Text style={(theme.fonts.bold16, { color: "white", fontWeight: 'bold', fontSize: 20 })}>{item.Subject.subject_name}</Text>
                     </Block>
                     <View style={{ flexDirection: 'row' }}>
                         <View style={{ paddingVertical: 10, paddingHorizontal: 16, flex: 1 }}>
                             <Content
                                 img={R.images.ic_calendar}
-                                title1={"Thứ 3 18:00- 20:00"}
-                                title2={"Thứ 3 18:00- 20:00"} />
+                                title1={"Thứ " + item.Schedule_classes[0].day_of_week + " " + item.Schedule_classes[0].time_start + " " + item.Schedule_classes[0].time_end}
+                                title2={item.Schedule_classes[1] ? "Thứ " + item.Schedule_classes[1].day_of_week + " " + item.Schedule_classes[1].time_start + " " + item.Schedule_classes[1].time_end : null} />
                             <Content
                                 img={R.images.ic_location}
-                                title1={"Phòng 2 tầng 2 - CS1"} />
+                                title1={item.Schedule_classes[0].room_name}
+                                title2={item.Schedule_classes[1] ? item.Schedule_classes[1].room_name : null}
+                            />
                         </View>
                         <View style={{ justifyContent: "center" }}>
                             <Icon.Entypo

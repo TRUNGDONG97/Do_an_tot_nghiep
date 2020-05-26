@@ -24,7 +24,7 @@ export default class ImageViewerScreen extends Component {
         url: item
       };
     });
-    reactotron.log(images);
+    // reactotron.log(images);
     return (
       <Modal
         visible={true}

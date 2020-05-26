@@ -15,10 +15,11 @@ import { connect } from 'react-redux'
 import theme from '@theme'
 import R from '@R'
 import NavigationUtil from '@app/navigation/NavigationUtil';
-import { SCREEN_ROUTER,STATUS_ACCESS } from '@app/constants/Constant';
+import { SCREEN_ROUTER, STATUS_ACCESS } from '@app/constants/Constant';
 import DropdownAlertUtil from '@app/components/DropdownAlertUtil';
 import OneSignal from "react-native-onesignal";
 import reactotron from 'reactotron-react-native';
+import { showConfirm } from '@app/utils/Alert';
 import {
     WindsHeader,
     Block,
@@ -29,7 +30,8 @@ import {
     Icon
 } from '@component'
 import { Avatar } from "react-native-elements";
-
+import AsyncStorage from "@react-native-community/async-storage"
+import {requestLogout} from '@api'
 export class UserScreen extends Component {
     constructor(props) {
         super(props);
@@ -105,20 +107,36 @@ export class UserScreen extends Component {
                         {this._renderInfo(R.strings.address, 'số 29,Khương Hạ,Thanh Xuân,Hà Nội')}
                     </View>
                     <View style={styles._viewInfo}>
-                        {this._renderOption(R.strings.update_user_info, () => { 
+                        {this._renderOption(R.strings.update_user_info, () => {
                         })}
                         {this._renderOption(R.strings.my_post, () => {
-                            NavigationUtil.navigate(SCREEN_ROUTER.MY_POST,{status:STATUS_ACCESS.USER})
-                         })}
-                        {this._renderOption(R.strings.change_pass, () => { 
+                            NavigationUtil.navigate(SCREEN_ROUTER.MY_POST, { status: STATUS_ACCESS.USER })
+                        })}
+                        {this._renderOption(R.strings.change_pass, () => {
                             NavigationUtil.navigate(SCREEN_ROUTER.CHANGE_PASS)
                         })}
-                        {this._renderOption(R.strings.logout, () => { })}
+                        {this._renderOption(R.strings.logout, () => {
+                            showConfirm('Thông báo', 'Bạn có chắc chắn muốn đăng xuất không?', this._logout)
+                        })}
                     </View>
                 </ScrollView>
             </Block>
         )
+
     }
+    _logout = async () => {
+        try {
+            const response = await requestLogout();
+            if (response) {
+                await AsyncStorage.setItem("token", "");
+                AsyncStorage.clear();
+                NavigationUtil.navigate(SCREEN_ROUTER.AUTH_LOADING);
+            }
+        } catch (error) {
+            Toast.show("Vui lòng thử lại", BACKGROUND_TOAST.FAIL);
+            //showMessages(I18n.t("notification"), I18.t("error"));
+        }
+    };
     _renderInfo(field, info) {
         return (
             <View style={{

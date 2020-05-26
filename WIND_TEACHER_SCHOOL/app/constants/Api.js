@@ -5,9 +5,9 @@ import I18n from "../i18n/i18n";
 import AsyncStorage from "@react-native-community/async-storage";
 
 function createAxios() {
-  AsyncStorage.setItem("token", '49FF532E930B0F4A67C279EBEB1867C7') //full
+  // AsyncStorage.setItem("token", '49FF532E930B0F4A67C279EBEB1867C7') //full
   var axiosInstant = axios.create();
-  axiosInstant.defaults.baseURL = "http://sky.winds.vn/";
+  axiosInstant.defaults.baseURL = "http://3ee302b2.ngrok.io/app/";
   axiosInstant.defaults.timeout = 20000;
   axiosInstant.defaults.headers = { "Content-Type": "application/json" };
 
@@ -19,8 +19,7 @@ function createAxios() {
         token = "";
       }
       config.headers = {
-        token: token,
-        role: 1
+        token: token
       };
       // config.headers.token = await AsyncStorage.getItem('token', '')
       return config;
@@ -71,17 +70,15 @@ function handleResult(api) {
 }
 
 // login
-export const requestLogin = ({ phone, password, deviceID }) => {
+export const requestLogin = (payload) => {
   // let deviceID = await AsyncStorage.getItem("deviceID");
   return handleResult(
-    getAxios.post("api/Service/Login", {
-      phone: phone,
-      password: password,
-      deviceID: deviceID
-    })
+    getAxios.post("login", payload)
   );
 };
-
+export const requestLogout= () => {
+  return handleResult(getAxios.get("logout"));
+};
 //get list class
 export const getListClass = deviceID => {
   return handleResult(
@@ -141,3 +138,4 @@ export const registerAcc = payload => {
 export const delNotify = payload => {
   return handleResult(getAxios.post("api/Service/DeleteNoti", payload));
 };
+

@@ -55,9 +55,10 @@ export default class LoginScreen extends Component {
     this.setState({ isLoading: true });
     try {
       const response = await requestLogin({
-        phone: this.state.username,
+        user: this.state.username,
         password: this.state.password,
-        deviceID: this.state.deviceID
+        deviceID: this.state.deviceID,
+        type:2
       });
 
       this.setState(
@@ -65,10 +66,10 @@ export default class LoginScreen extends Component {
           ...this.state,
           error: null,
           isLoading: false,
-          data: response.result
+          data: response.data
         },
         () => {
-          AsyncStorage.setItem("token", response.result.token, () =>
+          AsyncStorage.setItem("token", response.data.token, () =>
             NavigationUtil.navigate(SCREEN_ROUTER.MAIN)
           );
         }
@@ -113,12 +114,12 @@ export default class LoginScreen extends Component {
           style={styles.tvInput}
           onSubmitEditing={this.login}
         />
-        <TouchableOpacity style={{ width: "85%" }}>
+        {/* <TouchableOpacity style={{ width: "85%" }}>
           <Text style={[theme.fonts.bold15, styles.textForgotPassword]}>
             {R.strings.forgot_password}
           </Text>
-        </TouchableOpacity>
-        <Button title={R.strings.login} onPress={this.login} />
+        </TouchableOpacity> */}
+        <Button  style={{marginTop:50}} title={R.strings.login} onPress={this.login} />
       </KeyboardAvoidingView>
     );
   }

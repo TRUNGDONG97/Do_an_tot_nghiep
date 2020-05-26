@@ -272,7 +272,7 @@ function editClass(id) {
                 icon: "warning"
             });
         } else {
-            $('#divModalEditClass').html(res.htmlModalEditClass)
+            $('#divModalEditClass').html(res.htmlModalEditClass);
             $('#editClassModal').modal('show');
         }
 
