@@ -12,6 +12,7 @@ import theme from '@theme'
 import Icon from "@component/Icon";
 import Ripple from 'react-native-material-ripple';
 import Mockup from '@app/constants/Mockup'
+import reactotron from 'reactotron-react-native'
 
 
 class ClassScreen extends Component {
@@ -19,7 +20,9 @@ class ClassScreen extends Component {
         isRefresh: false,
         deviceID: ""
     };
-
+    componentDidMount(){
+        this.props.getListClass()
+    }
     render() {
         return (
             <Block>
@@ -32,7 +35,17 @@ class ClassScreen extends Component {
         );
     }
     _renderBody() {
-
+        const { classListState } = this.props
+        reactotron.log('classListState', classListState)
+        if (classListState.isLoading) return <Loading />;
+        if (classListState.error)
+            return (
+                <Error
+                    onPress={() => {
+                        this.props.getListClass();
+                    }}
+                />
+            );
         return (
             <Block flex={1} style={{marginTop:20}}>
                 {/* <Block style={{ marginTop: Platform.OS == "android" ? 0 : 15, paddingBottom: 15 }}> */}
@@ -43,12 +56,12 @@ class ClassScreen extends Component {
                         <RefreshControl
                             refreshing={this.state.isRefresh}
                             onRefresh={() => {
-                                // this._onRefresh();
+                                this.props.getListClass();
                             }}
                         />
                     }
                     keyExtractor={(item, index) => index.toString()}
-                    data={Mockup.Class}
+                    data={classListState.data}
                     renderItem={({ item, pos }) => {
                         return <ClassItem item={item} pos={pos} />;
                     }}
@@ -66,7 +79,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-
+    getListClass
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClassScreen)

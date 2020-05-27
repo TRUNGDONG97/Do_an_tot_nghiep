@@ -466,6 +466,32 @@ function saveTeacher(id) {
         return;
     })
 }
+function detailClassTeacher(id){
+    // var name =teacher.attr('data-name');
+    // const nameTeacher=name.split(' ').join('-')
+    // alert(id)
+    // window.location.href = '/admin/class?name=' + nameTeacher;
+    $.ajax({
+        url: '/getTeacherID',
+        data: { id },
+        type: 'POST',
+        cache: false,
+        timeout: 50000
+    }).done(function(res) {
+        const nameTeacher=res.teacher.name.split(' ').join('-')
+        window.location.href = '/admin/class?name=' + nameTeacher;
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        // If fail
+        swal({
+                title: "Đã có lỗi xảy ra",
+                text: "",
+                icon: "warning",
+                dangerMode: true,
+            })
+            // console.log(textStatus + ': ' + errorThrown);
+        return;
+    })
+}
 
 function checkedMail(email) {
     var email_regex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;

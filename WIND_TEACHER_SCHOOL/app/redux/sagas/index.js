@@ -1,18 +1,20 @@
 import { 
-  watchLogin,
   watchGetListCLass,
-  watchGetSalary,
+  // watchGetSalary,
   watchAbsentTeacher,
   watchSendAbsent,
-  watchGetListNotify
+  watchGetListNotify,
+  watchGetUserInfo,
+  watchUpdateUser
 } from './NetworkSaga'
 
 
 export default function* rootSaga() {
-  yield watchLogin
   yield watchGetListCLass
-  yield watchGetSalary,
-  yield watchAbsentTeacher,
-  yield watchSendAbsent,
+  // yield watchGetSalary
+  yield watchAbsentTeacher
+  yield watchSendAbsent
   yield watchGetListNotify
+  yield watchGetUserInfo
+  yield watchUpdateUser
 }

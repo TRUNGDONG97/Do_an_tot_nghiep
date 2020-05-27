@@ -1,12 +1,54 @@
 $(document).ready(function () {
     $('#tabClass a').css({ "background-color": "#17a2b8", "color": "#fff" })
-    getClass(1)
+    const url = window.location.search;
+    const urlParams = new URLSearchParams(url);
+    if (urlParams.get("name")) {
+        const name = urlParams.get("name")
+        const nameTeacher = name.split('-').join(' ')
+        // alert(nameTeacher)
+        $('#divSearch').html('');
+        getClassTeacher(nameTeacher.trim());
+        // $('#paginateClass').html('s');
+    } else {
+        getClass(1)
+    }
+
     $('#btnSearchClass').click(function () {
         searchClass(1)
         // alert('đá')
     })
 });
-
+function getClassTeacher(nameTeacher) {
+    if (!navigator.onLine) {
+        swal({
+            title: "Kiểm tra kết nối internet!",
+            text: "",
+            icon: "warning"
+        })
+        return;
+    }
+    $.ajax({
+        url: '/getClass/Teacher',
+        type: 'POST',
+        data: { nameTeacher },
+        cache: false,
+        timeout: 50000,
+    }).done(function (res) {
+        $('#tableClass').html(res.htmlTable)
+        // $('#paginateActive').css({ "background-color": "#17a2b8", "color": "#fff" })
+        return
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        // If fail
+        swal({
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown);
+        return;
+    })
+}
 function getClass(currentPage) {
     if (!navigator.onLine) {
         swal({
@@ -50,8 +92,10 @@ function searchClass(currentPage) {
     }
     var subCode = $.trim($("#txtSearchSubjectCode").val());
     var claCode = $.trim($("#txtSearchClassCode").val());
+    // var teacherName = $.trim($("#txtSearchClassTeacher").val());
+    // var mssv = $.trim($("#txtSearchSubjectMSSV").val());
     var claStatus = $("#seachClassStatus").val()
-
+    // alert(teacherName)
     if (subCode == "" && subName == "" && claStatus == '' && claCode == '' && roomName == '') {
         getClass(1)
         return;
@@ -63,7 +107,7 @@ function searchClass(currentPage) {
             subCode,
             claStatus,
             claCode,
-            currentPage
+            currentPage,
         },
         // dataType: "json",
         cache: false,
@@ -338,7 +382,7 @@ function saveClass(class_id) {
         })
         return;
     }
-    if (teaPhone != ''){
+    if (teaPhone != '') {
         checkedPhone(teaPhone)
     }
     $.ajax({
@@ -400,7 +444,7 @@ function saveClass(class_id) {
     });
 }
 
-function deleteClass(id){
+function deleteClass(id, class_code) {
     if (!navigator.onLine) {
         swal({
             title: "Kiểm tra kết nối internet!",
@@ -410,12 +454,12 @@ function deleteClass(id){
         return;
     }
     swal({
-            title: "Bạn chắc chắn xóa chứ?",
-            text: "",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true
-        })
+        title: "Bạn chắc chắn hủy lớp " + class_code + " ?",
+        text: "",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true
+    })
         .then((isConFirm) => {
             if (isConFirm) {
                 $.ajax({
@@ -426,11 +470,11 @@ function deleteClass(id){
                     },
                     cache: false,
                     timeout: 50000,
-                }).done(function(res) {
+                }).done(function (res) {
                     // console.log(res.result)
                     if (res.result == 1) {
                         swal({
-                            title: "Xóa thành công!",
+                            title: "Hủy thành công!",
                             text: "",
                             icon: "success"
                         });
@@ -443,15 +487,15 @@ function deleteClass(id){
                         });
                     }
 
-                }).fail(function(jqXHR, textStatus, errorThrown) {
+                }).fail(function (jqXHR, textStatus, errorThrown) {
                     // If fail
                     swal({
-                            title: "Đã có lỗi xảy ra",
-                            text: "",
-                            icon: "warning",
-                            dangerMode: true,
-                        })
-                        // console.log(textStatus + ': ' + errorThrown);
+                        title: "Đã có lỗi xảy ra",
+                        text: "",
+                        icon: "warning",
+                        dangerMode: true,
+                    })
+                    // console.log(textStatus + ': ' + errorThrown);
                     return;
                 })
             }

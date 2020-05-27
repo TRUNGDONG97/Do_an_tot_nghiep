@@ -151,7 +151,7 @@ const changeUserInfo = async (req, res, next) => {
         })
         return;
     }
-    const { phone, address, sex, birthday, password, email } = req.body
+    const { phone, address, sex, birthday, email } = req.body
     // console.log(abc)
     // console.log(address)
     // console.log(sex)
@@ -171,7 +171,7 @@ const changeUserInfo = async (req, res, next) => {
                     address,
                     sex,
                     birthday: birthday.split("/").reverse().join("-"),
-                    password: md5(password),
+                    // password: md5(password),
                     email
                 }, {
                 where: {
@@ -217,7 +217,7 @@ const changeUserInfo = async (req, res, next) => {
         })
         return;
     } catch (error) {
-        // console.log(error)
+        console.log(error)
         res.json({
             "status": 0,
             "code": 404,
@@ -247,7 +247,7 @@ const changePass = async (req, res, next) => {
             }
         })
         if (teacher.count > 0) {
-            if (teacher.rows[0].password.trim() != md5(oldPassword.strim())) {
+            if (teacher.rows[0].password.trim() != md5(oldPassword.trim())) {
                 res.json({
                     "status": 0,
                     "code": 404,

@@ -20,6 +20,7 @@ import NavigationUtil from '@app/navigation/NavigationUtil'
 import Mockup from '@app/constants/Mockup'
 import LinearGradient from 'react-native-linear-gradient'
 import FastImage from 'react-native-fast-image'
+import reactotron from 'reactotron-react-native'
 export class ClassDetailScreen extends Component {
     constructor(props) {
         super(props)
@@ -34,7 +35,7 @@ export class ClassDetailScreen extends Component {
             <Block>
                 <SafeAreaView style={theme.styles.containter}>
                     <BackgroundHeader />
-                    <WindsHeader title={item.nameClass} />
+                    <WindsHeader title={item.Subject.subject_name} />
                     {this._renderBody()}
                 </SafeAreaView>
             </Block>
@@ -42,15 +43,17 @@ export class ClassDetailScreen extends Component {
     }
     _renderBody() {
         const data = Mockup.ClassDetail
+        const item = this.props.navigation.getParam('class')
+        reactotron.log('Student_classes', item.Student_classes)
         return (
             <ScrollView
                 style={{ marginTop: 20, }}
                 showsVerticalScrollIndicator={false}
             >
                 <View style={styles._viewUser}>
-                    {this._renderUserItem(R.strings.teacher, data.nameTecher)}
-                    {this._renderUserItem(R.strings.number_of_people, data.liststudentInClass.length)}
-                    {this._renderUserItem(R.strings.date_start, data.startDate)}
+                    {this._renderUserItem('Mã lớp học', item.class_code)}
+                    {this._renderUserItem(R.strings.number_of_people, item.Student_classes.length)}
+                    {this._renderUserItem("Mã môn học", item.Subject.subject_code)}
                 </View>
                 <Button style={{
                     alignSelf: 'center',
@@ -60,10 +63,10 @@ export class ClassDetailScreen extends Component {
                     title={R.strings.absent} right
                     onPress={() => NavigationUtil.navigate(SCREEN_ROUTER.ABSENT)}
                 />
-                <View style={{ marginLeft: 40, flexDirection: 'row', marginTop: 10, alignItems: 'center', }}>
+                {/* <View style={{ marginLeft: 40, flexDirection: 'row', marginTop: 10, alignItems: 'center', }}>
                     <Text style={theme.fonts.regular14}>{R.strings.class_off} </Text>
                     <Checkbox status={this.state.status} size={22} />
-                </View>
+                </View> */}
 
                 <LinearGradient
                     style={styles._lgListClass}
@@ -73,40 +76,42 @@ export class ClassDetailScreen extends Component {
                     <Text style={[theme.fonts.regular20, { color: theme.colors.white }]}>
                         {R.strings.list_class}</Text>
                 </LinearGradient>
-                <View
-                    style={[styles._vColumn,
+                <View style={{paddingBottom:20}}>
+                    <View
+                        style={[styles._vColumn,
+                        {
+                            backgroundColor: theme.colors.backgroundBlue,
+                            borderTopWidth: 0.5,
+                            borderTopColor: theme.colors.gray,
+                            marginTop: 10,
+                        }
+                        ]}
+                    >
+                        <View style={[styles.rowTable, { flex: 1 }]}>
+                            <Text style={theme.fonts.regular14}>{R.strings.number}</Text>
+                        </View>
+                        <View style={[styles.rowTable, { flex: 5 }]}>
+                            <Text style={theme.fonts.regular14}>{R.strings.name}</Text>
+                        </View>
+                        <View style={[styles.rowTable, { flex: 3 }]}>
+                            <Text style={theme.fonts.regular14}>{R.strings.phone}</Text>
+                        </View>
+                    </View>
                     {
-                        backgroundColor: theme.colors.backgroundBlue,
-                        borderTopWidth: 0.5,
-                        borderTopColor: theme.colors.gray,
-                        marginTop: 10
-                    }
-                    ]}
-                >
-                    <View style={[styles.rowTable, { flex: 1 }]}>
-                        <Text style={theme.fonts.regular14}>{R.strings.number}</Text>
-                    </View>
-                    <View style={[styles.rowTable, { flex: 5 }]}>
-                        <Text style={theme.fonts.regular14}>{R.strings.name}</Text>
-                    </View>
-                    <View style={[styles.rowTable, { flex: 3 }]}>
-                        <Text style={theme.fonts.regular14}>{R.strings.phone}</Text>
-                    </View>
-                </View>
-                {
-                    data.liststudentInClass.length == 0 ? (
-                        <Empty description={'chưa có học sinh nào'}
-                        />
-                    ) : (
+                        item.Student_classes.length == 0 ? (
+                            <Empty description={'chưa có học sinh nào'}
+                            />
+                        ) : (
 
-                            data.liststudentInClass.map((item, index) => (
-                                <View key={index.toString()} style={{ width: "100%" }}>
-                                    {this._renderRowTable(item, index)}
-                                </View>
-                            ))
-                        )
-                }
-                <Button title='Chia sẻ vị trí' style={{ alignSelf: 'center', marginBottom: 100, marginTop: 50, }} />
+                            item.Student_classes.map((item, index) => (
+                                    <View key={index.toString()} style={{ width: "100%" }}>
+                                        {this._renderRowTable(item, index)}
+                                    </View>
+                                ))
+                            )
+                    }
+                </View>
+                {/* <Button title='Chia sẻ vị trí' style={{ alignSelf: 'center', marginBottom: 100, marginTop: 50, }} /> */}
             </ScrollView>
         )
     }
@@ -123,10 +128,10 @@ export class ClassDetailScreen extends Component {
                 <View style={[styles.rowTable, { flex: 5 }]}>
                     <Text style={theme.fonts.regular14}
                         numberOfLines={2}
-                    >{item.studentName}</Text>
+                    >{item.Student.name}</Text>
                 </View>
                 <View style={[styles.rowTable, { flex: 3 }]}>
-                    <Text style={theme.fonts.regular14}>{item.dobStr}</Text>
+                    <Text style={theme.fonts.regular14}>{item.Student.phone}</Text>
                 </View>
             </View>
         )
@@ -142,14 +147,14 @@ export class ClassDetailScreen extends Component {
                     color: theme.colors.backgroundHeader,
                     flex: 1,
                 }]}>:  {text}</Text>
-                
+
             </View>
         )
     }
 }
 
 const mapStateToProps = (state) => ({
-
+    classListState: state.classListReducer,
 })
 
 const mapDispatchToProps = {
@@ -174,14 +179,14 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
 
-        elevation: 5,shadowColor: "#000",
+        elevation: 5, shadowColor: "#000",
         shadowOffset: {
             width: 0,
             height: 2,
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        
+
         elevation: 5,
 
     },
@@ -203,10 +208,10 @@ const styles = StyleSheet.create({
     },
     _vColumn: {
         flexDirection: "row",
-        // borderBottomWidth: 0.5,
+        borderBottomWidth: 0.5,
         borderLeftWidth: 0.5,
         borderLeftColor: theme.colors.gray,
-        // borderBottomColor: theme.colors.gray,
+        borderBottomColor: theme.colors.gray,
         marginHorizontal: 20,
 
     },
@@ -227,7 +232,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 10,
+        marginTop: 30,
         paddingVertical: 10,
         borderRadius: 5
     }

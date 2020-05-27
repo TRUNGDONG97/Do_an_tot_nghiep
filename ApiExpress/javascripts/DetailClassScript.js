@@ -1,6 +1,8 @@
-// $(document).ready(function() {
-
-// });
+$(document).ready(function() {
+//    const url =window.location.search;
+//    const urlParams = new URLSearchParams(url);
+//    alert(urlParams.get('id'))
+});
 function addStudentInclass(class_id) {
     if (!navigator.onLine) {
         swal({

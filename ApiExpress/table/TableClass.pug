@@ -5,10 +5,10 @@ table.table.table-bordered.table-hover
             th Lịch học
             th Phòng học
             th Mã lớp 
-            th Mã học phần         
+            th Mã HP        
             th Tên môn học 
-            //- th Tên Giáo viên
-            th Số lượng
+            th Tên Giáo viên
+            th SL
             th Trạng thái     
             th
     tbody#tbodyTableClass
@@ -28,7 +28,7 @@ table.table.table-bordered.table-hover
                     td #{item.class_code}
                     td #{item.Subject.subject_code}
                     td #{item.Subject.subject_name}
-                    //- td #{item.Teacher.name}
+                    td #{item.Teacher?item.Teacher.name:"Chưa có"}
                     td #{item.Student_classes.length}
                     td #{item.status==0?'Bị hủy':(item.status==1?'Đang học':'Đã Hoàn thành')}
                     td
@@ -36,41 +36,42 @@ table.table.table-bordered.table-hover
                             i.fas.fa-info-circle
                         button#editCla.btn.btn-success(type='button' onclick='editClass('+item.id+')')
                             i.far.fa-edit 
-                        button#deleteCla.btn.btn-danger(type='button' title='Xóa Danh Mục' onclick='deleteClass('+item.id+')')
+                        button#deleteCla.btn.btn-danger(type='button' title='Xóa Danh Mục' onclick='deleteClass('+item.id+','+item.class_code+')')
                             i.far.fa-trash-alt
-#paginateClass.row.float-right(style='margin-right:20px')
-    if pageCount>=1
-        if !search
-            if  pages.prev>0
-                button.btn.page-item(onclick='getClass(1)')
-                    i.fas.fa-angle-double-left
-                button.btn.page-item(onclick='getClass('+pages.prev+')')
-                    i.fas.fa-chevron-left
-            if pages.pages
-                each page in pages.pages
-                    if(page==currentPage)
-                        button#paginateActive.btn.page-item(onclick='getClass('+page+')') #{page}
-                    else
-                        button.btn.page-item(onclick='getClass('+page+')') #{page}                        
-            if  pages.next <= pageCount
-                button.btn.page-item(onclick='getClass('+pages.next+')')
-                    i.fas.fa-chevron-right
-                button.btn.page-item(onclick='getClass('+pageCount+')')
-                    i.fas.fa-angle-double-right
-        else
-            if  pages.prev>0
-                button.btn.page-item(onclick='searchClass(1)')
-                    i.fas.fa-angle-double-left
-                button.btn.page-item(onclick='searchClass('+pages.prev+')')
-                    i.fas.fa-chevron-left
-            if pages
-                each page in pages.pages
-                    if page==currentPage
-                        button#paginateActive.btn.page-item(onclick='searchClass('+page+')') #{page}
-                    else
-                        button.btn.page-item(onclick='searchClass('+page+')') #{page}                    
-            if  pages.next <= pageCount
-                button.btn.page-item(onclick='searchClass('+pages.next+')')
-                    i.fas.fa-chevron-right
-                button.btn.page-item(onclick='searchClass('+pageCount+')')
-                    i.fas.fa-angle-double-right
+if(notPa) 
+    #paginateClass.row.float-right(style='margin-right:20px')
+        if pageCount>=1
+            if !search
+                if  pages.prev>0
+                    button.btn.page-item(onclick='getClass(1)')
+                        i.fas.fa-angle-double-left
+                    button.btn.page-item(onclick='getClass('+pages.prev+')')
+                        i.fas.fa-chevron-left
+                if pages.pages
+                    each page in pages.pages
+                        if(page==currentPage)
+                            button#paginateActive.btn.page-item(onclick='getClass('+page+')') #{page}
+                        else
+                            button.btn.page-item(onclick='getClass('+page+')') #{page}                        
+                if  pages.next <= pageCount
+                    button.btn.page-item(onclick='getClass('+pages.next+')')
+                        i.fas.fa-chevron-right
+                    button.btn.page-item(onclick='getClass('+pageCount+')')
+                        i.fas.fa-angle-double-right
+            else
+                if  pages.prev>0
+                    button.btn.page-item(onclick='searchClass(1)')
+                        i.fas.fa-angle-double-left
+                    button.btn.page-item(onclick='searchClass('+pages.prev+')')
+                        i.fas.fa-chevron-left
+                if pages
+                    each page in pages.pages
+                        if page==currentPage
+                            button#paginateActive.btn.page-item(onclick='searchClass('+page+')') #{page}
+                        else
+                            button.btn.page-item(onclick='searchClass('+page+')') #{page}                    
+                if  pages.next <= pageCount
+                    button.btn.page-item(onclick='searchClass('+pages.next+')')
+                        i.fas.fa-chevron-right
+                    button.btn.page-item(onclick='searchClass('+pageCount+')')
+                        i.fas.fa-angle-double-right

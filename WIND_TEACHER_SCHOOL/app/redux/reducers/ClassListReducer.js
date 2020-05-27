@@ -5,12 +5,10 @@ import {
 } from "../actions/type";
 const initialState = {
   data: {},
-  news: [],
-  mail: {},
-  promotion: [],
+  // mail: {},
+  // promotion: [],
   isLoading: false,
   error: null,
-  isErr: false,
 
 };
 export default function(state = initialState, action) {
@@ -20,8 +18,6 @@ export default function(state = initialState, action) {
         ...state,
         isLoading: true,
         error: null,
-        // username: action.payload.username,
-        // password: action.payload.password
       };
 
     case GET_CLASS_LIST_SUCCESS:
@@ -29,14 +25,11 @@ export default function(state = initialState, action) {
         ...state,
         isLoading: false,
         error: null,
-        // mail:action.payload.mail,
         data: action.payload
-        // news: action.payload.listNews,
-        // promotion: action.payload.listPromtoion
       };
 
     case GET_CLASS_LIST_FAIL:
-      return { ...state, error: action.payload, isErr: true, isLoading: false };
+      return { ...state, error: action.payload, isLoading: false };
     default:
       return state;
   }

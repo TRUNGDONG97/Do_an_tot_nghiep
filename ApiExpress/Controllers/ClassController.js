@@ -11,12 +11,13 @@ import { Op } from 'sequelize'
 import sequelize from 'sequelize'
 
 const getClass = async(req, res, next) => {
+    
     res.render('ClassView');
 }
 const detailClass = async(req, res, next) => {
     const id = req.query.id
     if (!id) {
-        res.redirect('index')
+        res.redirect('/admin/class')
         return;
     }
     try {
@@ -45,7 +46,7 @@ const detailClass = async(req, res, next) => {
         // console.log(classes[0].Teacher) 
         // console.log(classes.length)
         if (classes.length < 1) {
-            res.redirect('index')
+            res.redirect('/admin/class')
             return;
         }
         res.render('DetailClassView', {
@@ -62,7 +63,11 @@ const detailClass = async(req, res, next) => {
     }
 
 }
+// const getClassTeacher=async()=>{
+
+// }
 export default {
     getClass,
-    detailClass
+    detailClass,
+    // getClassTeacher
 }

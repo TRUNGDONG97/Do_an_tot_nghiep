@@ -37,16 +37,16 @@ $(document).ready(function() {
             "color": "#fff"
         }),
         $('#student-selection').click(function() {
-            window.location = '/admin/student/index';
+            window.location = '/admin/student';
         })
     $('#teacher-selection').click(function() {
-        window.location = '/admin/teacher/index';
+        window.location = '/admin/teacher';
     })
     $('#class-selection').click(function() {
-        window.location = '/admin/class/index';
+        window.location = '/admin/class';
     })
     $('#subject-selection').click(function() {
-        window.location = '/admin/subject/index';
+        window.location = '/admin/subject';
     })
     $.when(ajaxGetCountStudent, ajaxGetCountTeacher, ajaxGetCountClass, ajaxGetCountSubject).done(function(resStudent, resTeacher, resClass, resSubject) {
         $('#student-selection span').append(resStudent[0].countStudent)

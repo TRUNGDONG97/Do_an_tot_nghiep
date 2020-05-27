@@ -69,3 +69,10 @@ body {
     padding: 0px;
     margin-right: 2px;
 }
+#detailClassTeacher {
+    background-color: #f3f5f9;
+    border-color: #f3f5f9;
+    color: #007bff;
+    padding: 0px;
+    margin-right: 4px;
+}

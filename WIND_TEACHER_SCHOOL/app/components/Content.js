@@ -7,29 +7,33 @@ import AutoHeightImage from 'react-native-auto-height-image'
 
 export default class Content extends Component {
     render() {
-        const { img, title } = this.props
+        const { img, title1, title2 } = this.props
         return (
-            <Block row style={{
-                //width: width * 0.9,
-                alignItems: "center",
-                // paddingHorizontal: 16,
-                paddingTop: 5,
-                // marginBottom: 10
-            }}>
-                <AutoHeightImage source={img}
-                    width={30}
-                    style={{ tintColor: theme.colors.black2 }}
+            <Block row style={{ paddingTop: 5 }}>
+                <AutoHeightImage
+                    source={img}
+                    width={25}
+                    style={{ tintColor: theme.colors.primaryText }}
                 />
-                <Text style={
-                    [theme.fonts.regular16,
-                    {
-                        marginLeft: 10,
-                        flex: 1,
-                        color: theme.colors.primaryText
-                    }]}
-                >
-                    {title}
-                </Text>
+                <View style={{ flex: 1, marginLeft: 10, justifyContent: "center" }}>
+                    <Text style={
+                        [theme.fonts.regular16,
+                        {
+                            color: theme.colors.primaryText
+                        }]}
+                    >
+                        {title1}
+                    </Text>
+                    {title2 && <Text style={
+                        [theme.fonts.regular16,
+                        {
+                            color: theme.colors.primaryText,
+                            marginTop: 10,
+                        }]}
+                    >
+                        {title2}
+                    </Text>}
+                </View>
             </Block>
         )
     }

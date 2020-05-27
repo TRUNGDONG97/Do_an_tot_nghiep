@@ -23,6 +23,7 @@ import RadioButton from './RadioButton'
 import CommentItem from './CommentItem'
 import CategoryTopic from './CategoryTopic'
 import ClassItem from './ClassItem'
+import Checked from './Checked'
 
 export {
     Block, AppHeader, WindsHeader,
@@ -33,5 +34,5 @@ export {
     Content, DropdownAlertUtil, DropdownWindSky, Icon,
     PostItem, ImageViewerScreen, ActionSheet,
     Checkbox, RadioButton,CommentItem,
-    CategoryTopic,ClassItem
+    CategoryTopic,ClassItem,Checked
 }

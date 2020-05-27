@@ -1,9 +1,7 @@
 import { put, takeEvery, call } from "redux-saga/effects";
 import { Alert } from "react-native";
 import {
-  REQUEST_LOGIN_SUCCESS,
-  REQUEST_LOGIN_FAIL,
-  REQUEST_LOGIN,
+
   GET_CLASS_LIST,
   GET_CLASS_LIST_SUCCESS,
   GET_CLASS_LIST_FAIL,
@@ -18,7 +16,13 @@ import {
   SEND_ABSENT,
   GET_LIST_NOTIFICATION,
   GET_LIST_NOTIFICATION_FAIL,
-  GET_LIST_NOTIFICATION_SUCCESS
+  GET_LIST_NOTIFICATION_SUCCESS,
+  GET_USER_INFOR_FAIL,
+  GET_USER_INFOR_SUCCESS,
+  GET_USER_INFOR,
+  UPDATE_USER,
+  UPDATE_USER_SUCCESS,
+  UPDATE_USER_FAIL
 } from "../actions/type";
 
 import * as API from "../../constants/Api";
@@ -26,46 +30,31 @@ import reactotron from "reactotron-react-native";
 import NavigationUtil from "../../navigation/NavigationUtil";
 import { showMessages, _showDialogWaring } from "@app/utils/Alert";
 import AsyncStorage from "@react-native-community/async-storage"
-
+import Toast, { BACKGROUND_TOAST } from "@app/utils/Toast";
 // import ReactontronConfig from '.../ReactontronConfig'
-
-export function* requestLogin(action) {
-  try {
-    const response = yield call(API.requestLogin, action.payload);
-    yield call(AsyncStorage.setItem, "token", response.result.token);
-    yield call(AsyncStorage.setItem, "name", response.result.name);
-    yield put({ type: REQUEST_LOGIN_SUCCESS, payload: response.result });
-
-    NavigationUtil.navigate("Main");
-    // alert(response)
-  } catch (err) {
-    yield put({ type: REQUEST_LOGIN_FAIL, payload: err });
-    // alert(err+'lỗi')
-  }
-}
 
 export function* getListClass() {
   try {
     // console.tron = ReactontronConfig
     // console.tron.log
     const response = yield call(API.getListClass);
-    yield put({ type: GET_CLASS_LIST_SUCCESS, payload: response.result });
+    yield put({ type: GET_CLASS_LIST_SUCCESS, payload: response.data });
   } catch (err) {
     yield put({ type: GET_CLASS_LIST_FAIL, payload: err });
     // alert(err+'lỗi')
   }
 }
 
-export function* getSalary(action) {
-  try {
-    const response = yield call(API.getSalary, action.payload);
-    yield put({ type: GET_SALARY_SUCCESS, payload: response.result });
-    // alert(JSON.stringify(response))
-  } catch (err) {
-    yield put({ type: GET_SALARY_FAIL, payload: err });
-    // alert(err + "lỗi");
-  }
-}
+// export function* getSalary(action) {
+//   try {
+//     const response = yield call(API.getSalary, action.payload);
+//     yield put({ type: GET_SALARY_SUCCESS, payload: response.result });
+//     // alert(JSON.stringify(response))
+//   } catch (err) {
+//     yield put({ type: GET_SALARY_FAIL, payload: err });
+//     // alert(err + "lỗi");
+//   }
+// }
 
 handleEnableAbsent = (data, payload) => {
   if (data.dayLate !== 0) {
@@ -128,10 +117,34 @@ export function* getListNotify(action) {
 
   }
 }
-
-export const watchLogin = takeEvery(REQUEST_LOGIN, requestLogin);
+export function* getUserInfo() {
+  try {
+    const response = yield call(API.getUserInfo)
+    // reactotron.log(response)
+    yield put({ type: GET_USER_INFOR_SUCCESS, payload: response.data })
+    // alert(JSON.stringify(response))
+  } catch (err) {
+    yield put({ type: GET_USER_INFOR_FAIL, payload: err })
+    // alert(err)
+  }
+}
+export function* updateUser(action) {
+  try {
+    const response = yield call(API.updateUser, action.payload);
+    yield put({ type: UPDATE_USER_SUCCESS, payload: response.data });
+    Toast.show("Cập nhật thông tin thành công", BACKGROUND_TOAST.SUCCESS);
+    NavigationUtil.goBack();
+  } catch (err) {
+    yield put({ type: UPDATE_USER_FAIL, payload: err });
+    if (err.message == "Network Error") {
+      Toast.show("Cập nhật thông tin thất bại", BACKGROUND_TOAST.FAIL);
+    }
+  }
+}
 export const watchGetListCLass = takeEvery(GET_CLASS_LIST, getListClass);
-export const watchGetSalary = takeEvery(GET_SALARY, getSalary);
+// export const watchGetSalary = takeEvery(GET_SALARY, getSalary);
 export const watchAbsentTeacher = takeEvery(REQUEST_ABSENT, absentByTeacher);
 export const watchSendAbsent = takeEvery(SEND_ABSENT, sendAbsent);
 export const watchGetListNotify = takeEvery(GET_LIST_NOTIFICATION, getListNotify);
+export const watchGetUserInfo = takeEvery(GET_USER_INFOR, getUserInfo);
+export const watchUpdateUser = takeEvery(UPDATE_USER, updateUser);

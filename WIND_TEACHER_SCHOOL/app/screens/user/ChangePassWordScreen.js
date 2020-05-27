@@ -29,6 +29,10 @@ import Ripple from 'react-native-material-ripple';
 import { SCREEN_ROUTER } from '@app/constants/Constant'
 import NavigationUtil from '@app/navigation/NavigationUtil'
 import Mockup from '@app/constants/Mockup'
+import Toast, { BACKGROUND_TOAST } from '@app/utils/Toast'
+import { changePass } from "@app/constants/Api";
+import { showMessages } from "@app/utils/Alert";
+import reactotron from 'reactotron-react-native'
 
 export class ChangePassWordScreen extends Component {
     state = {
@@ -88,13 +92,55 @@ export class ChangePassWordScreen extends Component {
                     <Button
                         title="Đổi mật khẩu"
                         onPress={() => {
-                            alert('Thành công!')
+                            if (this.state.oldPass == "") {
+                                showMessages("", 'Chưa nhập mật khẩu cũ');
+                            } else if (this.state.newPass == "") {
+                                showMessages("", 'Chưa nhập mật khẩu mới');
+                            } else if (this.state.confirmPass == "") {
+                                showMessages("", 'Chưa nhập lại mật khẩu mới');
+                            } else if (this.state.newPass != this.state.confirmPass) {
+                                showMessages("", 'Nhập lại mật khẩu không đúng');
+                            } else {
+                                this._changePass();
+                            }
                         }}
                     />
                 </View>
             </View>
         )
     }
+    _changePass = async () => {
+        const { oldPass, newPass } = this.state;
+        this.setState({
+            ...this.state,
+            isLoading: true
+        });
+        try {
+            const response = await changePass({
+                oldPassword: oldPass,
+                newPassword: newPass
+            });
+            
+            reactotron.log(response, "response");
+            Toast.show('Đổi mật khẩu thành công', BACKGROUND_TOAST.SUCCESS);
+
+            this.setState({
+                ...this.state,
+                isLoading: false
+            });
+            NavigationUtil.goBack();
+        } catch (error) {
+            if (error.message == "Network Error") {
+                Toast.show('Lỗi mạng', BACKGROUND_TOAST.FAIL);
+            }
+              reactotron.log(error, "error");
+            this.setState({
+                ...this.state,
+                isLoading: false
+            });
+            //Toast.show('Vui lòng thử lại', BACKGROUND_TOAST.FAIL)
+        }
+    };
 }
 
 const mapStateToProps = (state) => ({

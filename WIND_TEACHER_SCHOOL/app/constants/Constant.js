@@ -19,7 +19,8 @@ const SCREEN_ROUTER = {
   CLASS_DETAIL: 'ClassDetail',
   ABSENT: 'Absent',
   CHANGE_PASS:'change_password',
-  REVIEW:'Create_review'
+  REVIEW:'Create_review',
+  CHANGE_USER_INFO:'change_user_info'
 };
 const LIKE_STATE = {
   LIKE: 1,
@@ -42,5 +43,9 @@ const TYPE = {
   CREATE_POST: 1,
   EDIT_POST: 2
 }
-export { SCREEN_ROUTER, LIKE_STATE, TOPIC, CATEGORY, STATUS_ACCESS, TYPE };
+const GENDER = {
+  MALE: 1,
+  FEMALE: 0,
+}
+export { SCREEN_ROUTER, LIKE_STATE, TOPIC, CATEGORY, STATUS_ACCESS, TYPE,GENDER };
 

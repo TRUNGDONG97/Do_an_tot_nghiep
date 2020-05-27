@@ -300,7 +300,17 @@ const styles = StyleSheet.create({
 	rowBasicInfo: {
 		flexDirection: "row",
 		marginBottom: 25
-	}
+	},
+	styleBlockHeader: {
+		flex: 1,
+		backgroundColor: "#F58634",
+		paddingVertical: 10,
+		paddingHorizontal: 8,
+		borderTopLeftRadius: 4,
+		borderTopRightRadius: 4,
+		elevation: 2
+	  },
+
 });
 
 export { colors, sizes, fonts, styles, dimension };

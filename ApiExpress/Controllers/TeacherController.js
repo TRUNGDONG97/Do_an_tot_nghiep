@@ -48,7 +48,7 @@ const getTeacher = async(req, res, next) => {
 
 }
 
+
 export default {
-    //  addTeacher,
-     getTeacher
+     getTeacher,
 }

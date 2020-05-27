@@ -1,5 +1,4 @@
 import {
-  REQUEST_LOGIN,
   GET_CLASS_LIST,
   GET_CLASS_LIST_SUCCESS,
   GET_CLASS_LIST_FAIL,
@@ -7,17 +6,11 @@ import {
   REQUEST_ABSENT,
   CHANGE_STATUS,
   SEND_ABSENT,
-  GET_LIST_NOTIFICATION
+  GET_LIST_NOTIFICATION,
+  GET_USER_INFOR,
+  UPDATE_USER
 } from "./type";
 
-export const requestLogin = (username, password, deviceID) => ({
-  type: REQUEST_LOGIN,
-  payload: {
-    phone: username,
-    password: password,
-    deviceID: deviceID
-  }
-});
 
 export const getListClass = () => ({
   type: GET_CLASS_LIST,
@@ -77,5 +70,13 @@ export const getListNotifyAction = (checkFirst) => ({
   payload: {
     notiID: 0,
   },
-  checkFirst:checkFirst
+  checkFirst: checkFirst
+});
+export const getUserInfo = () => ({
+  type: GET_USER_INFOR,
+  payload: {}
+});
+export const updateUser = payload => ({
+  type: UPDATE_USER,
+  payload: payload
 });

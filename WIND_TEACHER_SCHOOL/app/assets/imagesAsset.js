@@ -67,6 +67,9 @@ const images = {
     logoWindSky_trang: require("./images/logoWindSky_trang.png"),
     message_filled: require("./images/message_filled.png"),
     pass: require("./images/pass.png"),
-    room: require("./images/room.png")
+    room: require("./images/room.png"),
+    ic_date: require("./images/ic_date.png"),
+    ic_male: require("./images/ic_male.png"),
+    ic_female: require("./images/ic_female.png"),
     }
 export default images

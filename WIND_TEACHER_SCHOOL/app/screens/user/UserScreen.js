@@ -31,16 +31,17 @@ import {
 } from '@component'
 import { Avatar } from "react-native-elements";
 import AsyncStorage from "@react-native-community/async-storage"
-import {requestLogout} from '@api'
+import { requestLogout } from '@api'
+import { getUserInfo } from '@app/redux/actions'
 export class UserScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            refreshing: false
+            refreshing: false,
         };
     }
     componentDidMount() {
-
+        this.props.getUserInfo()
     }
 
     render() {
@@ -57,6 +58,17 @@ export class UserScreen extends Component {
         )
     }
     _renderBody() {
+        const { UserInfoState } = this.props
+        // reactotron.log('UserInfoState',UserInfoState)
+        if (UserInfoState.isLoading) return <Loading />;
+        if (UserInfoState.error)
+            return (
+                <Error
+                    onPress={() => {
+                        this.props.getUserInfo();
+                    }}
+                />
+            );
         return (
             <Block style={{
                 backgroundColor: theme.colors.primary,
@@ -70,7 +82,7 @@ export class UserScreen extends Component {
                     refreshControl={
                         <RefreshControl
                             refreshing={this.state.refreshing}
-                        // onRefresh={() => this._onRefresh()}
+                            onRefresh={() => this.props.getUserInfo()}
                         />
                     }
                 >
@@ -80,38 +92,55 @@ export class UserScreen extends Component {
                         <Avatar
                             rounded
                             source={{
-                                uri: "https://zicxa.com/hinh-anh/wp-content/uploads/2019/09/T%E1%BB%95ng-h%E1%BB%A3p-h%C3%ACnh-%E1%BA%A3nh-Luffy-m%C5%A9-r%C6%A1m-%C4%91%E1%BA%B9p-nh%E1%BA%A5t-24.jpg"
+                                uri: "http://ca2db027.ngrok.io/upload/avatarStudent/vuilb0323456789.jpg"
                             }}
                             size={65}
                             renderPlaceholderContent={<ActivityIndicator />}
                             placeholderStyle={{ backgroundColor: "white" }}
                         />
 
-                        <Block style={{ flex: 1, marginLeft: 15 }}>
+                        {/* <Block style={{ flex: 1, marginLeft: 15 }}>
                             <Text
                                 style={[theme.fonts.bold18, { flex: 1 }]}
                                 numberOfLines={1}
                             >
-                                Lê Trung Đông
+                                {UserInfoState.data.name}
                             </Text>
 
                             <Text style={[theme.fonts.bold16, { color: theme.colors.black2, flex: 1 }]}>
-                                0329563942
-                        </Text>
+                                {UserInfoState.data.phone}
+                            </Text>
+                        </Block> */}
+                        <Block style={{ flex: 1, marginLeft: 15 }}>
+                            <View style={{ flexDirection: "row", alignItems: "center", marginTop: 10 }}>
+                                <Text
+                                    style={[theme.fonts.bold18, { flex: 1, color: theme.colors.primaryText }]}
+                                    numberOfLines={1}
+                                >
+                                    {UserInfoState.data.name}
+                                </Text>
+                                <FastImage
+                                    style={{ width: 20, height: 20, marginRight: 5 }}
+                                    source={UserInfoState.data.sex == 1 ? R.images.ic_male : R.images.ic_female}
+                                />
+                            </View>
+                            <Text style={[theme.fonts.bold16, { color: theme.colors.black2, flex: 1, marginTop: 5 }]}>
+                                {UserInfoState.data.phone}
+                            </Text>
                         </Block>
                     </View>
                     <View style={styles._viewInfo}>
-                        {this._renderInfo(R.strings.name, 'Lê Trung Đông')}
-                        {this._renderInfo('Email', 'letrungdong1997.bg@gmail.com')}
-                        {this._renderInfo(R.strings.phone, '0329563942')}
-                        {this._renderInfo(R.strings.address, 'số 29,Khương Hạ,Thanh Xuân,Hà Nội')}
+                        {this._renderInfo('Email', UserInfoState.data.email)}
+                        {this._renderInfo("Ngày sinh", UserInfoState.data.birthday)}
+                        {this._renderInfo(R.strings.address, UserInfoState.data.address)}
                     </View>
                     <View style={styles._viewInfo}>
                         {this._renderOption(R.strings.update_user_info, () => {
+                            NavigationUtil.navigate(SCREEN_ROUTER.CHANGE_USER_INFO)
                         })}
-                        {this._renderOption(R.strings.my_post, () => {
+                        {/* {this._renderOption(R.strings.my_post, () => {
                             NavigationUtil.navigate(SCREEN_ROUTER.MY_POST, { status: STATUS_ACCESS.USER })
-                        })}
+                        })} */}
                         {this._renderOption(R.strings.change_pass, () => {
                             NavigationUtil.navigate(SCREEN_ROUTER.CHANGE_PASS)
                         })}
@@ -172,11 +201,11 @@ export class UserScreen extends Component {
 }
 
 const mapStateToProps = (state) => ({
-
+    UserInfoState: state.userReducer
 })
 
 const mapDispatchToProps = {
-
+    getUserInfo
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserScreen)

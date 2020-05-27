@@ -23,6 +23,7 @@ import { Icon, ImageViewerScreen } from "@component";
 import ClassDetailScreen from '@screen/class/ClassDetailScreen';
 import ChangePassWordScreen from '@screen/user/ChangePassWordScreen';
 import CreateReviewScreen from '@screen/class/CreateReviewScreen'
+import ChangeUserInfo from '@screen/user/ChangeUserInfo'
 import {
     Image
 } from "react-native";
@@ -54,23 +55,23 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
                 />
             );
         }
-        case SCREEN_ROUTER.SALARY: {
-            iconName = "money";
-            return (
-                <Icon.FontAwesome name={iconName} size={iconSize} color={tintColor} outline />
-            );
-        }
-        case SCREEN_ROUTER.FORUM: {
-            iconName = "earth";
-            return (
-                <Icon.Fontisto
-                    name={iconName}
-                    size={iconSize}
-                    color={tintColor}
-                    outline
-                />
-            );
-        }
+        // case SCREEN_ROUTER.SALARY: {
+        //     iconName = "money";
+        //     return (
+        //         <Icon.FontAwesome name={iconName} size={iconSize} color={tintColor} outline />
+        //     );
+        // }
+        // case SCREEN_ROUTER.FORUM: {
+        //     iconName = "earth";
+        //     return (
+        //         <Icon.Fontisto
+        //             name={iconName}
+        //             size={iconSize}
+        //             color={tintColor}
+        //             outline
+        //         />
+        //     );
+        // }
         case SCREEN_ROUTER.NOTIFICATION: {
             iconName = "bell"
             break
@@ -99,13 +100,13 @@ const Main = createBottomTabNavigator(
         //         tabBarLabel: R.strings.salary,
         //     },
         // },
-        [SCREEN_ROUTER.FORUM]: {
-            screen: ForumScreen,
-            title: R.strings.forum,
-            navigationOptions: {
-                tabBarLabel: R.strings.forum,
-            },
-        },
+        // [SCREEN_ROUTER.FORUM]: {
+        //     screen: ForumScreen,
+        //     title: R.strings.forum,
+        //     navigationOptions: {
+        //         tabBarLabel: R.strings.forum,
+        //     },
+        // },
         [SCREEN_ROUTER.NOTIFICATION]: {
             screen: NotificationScreen,
             title: R.strings.notification,
@@ -160,6 +161,7 @@ const MainStack = createStackNavigator({
     [SCREEN_ROUTER.ABSENT]: AbsentScreen,
     [SCREEN_ROUTER.CHANGE_PASS]: ChangePassWordScreen,
     [SCREEN_ROUTER.REVIEW]: CreateReviewScreen,
+    [SCREEN_ROUTER.CHANGE_USER_INFO]: ChangeUserInfo,
 
 },
     {

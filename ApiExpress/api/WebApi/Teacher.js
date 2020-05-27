@@ -5,6 +5,27 @@ import TeacherModel from '../../models/TeacherModel'
 import pug from 'pug'
 import { getArrayPages, PageCount } from '../../constants/Funtions'
 import md5 from 'md5'
+
+
+const getTeacherID=async(req, res, next) => {
+    const { id } = req.body
+    try {
+      
+        const teachers = await TeacherModel.findAll({
+            where:{
+                id
+            }
+        })
+        res.send({
+            teacher:teachers[0],
+        })
+        return;
+    } catch (error) {
+        // console.log(error)
+        res.status(404).send()
+        return;
+    }
+}
 const getTeacher = async(req, res, next) => {
     const { currentPage } = req.body
     try {
@@ -356,5 +377,6 @@ export default {
     deleteTeacher,
     editTeacher,
     resetPassTeacher,
-    saveTeacher
+    saveTeacher,
+    getTeacherID
 }

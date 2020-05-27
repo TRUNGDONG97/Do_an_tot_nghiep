@@ -69,8 +69,8 @@ const postLogin = async (req, res, next) => {
             res.cookie('token', token, Constants.OPTION)
             // res.cookie('password', user[0].password, Constants.OPTION)
             res.cookie('username', user[0].user_name, Constants.OPTION)
-            res.redirect('home/index')
-            console.log('sadasdas')
+            res.redirect('home')
+            // console.log('sadasdas')
             return
         } else {
             // console.log("tk ko tồn tại")

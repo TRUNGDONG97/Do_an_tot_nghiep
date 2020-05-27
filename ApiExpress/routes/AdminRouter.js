@@ -7,10 +7,11 @@ import TeacherController from '../controllers/TeacherController'
 import SubjectController from '../controllers/SubjectController'
 const router = express.Router();
 
-router.get('/home/index', HomeController.home);
-router.get('/student/index', StudentController.getStudent);
-router.get('/teacher/index', TeacherController.getTeacher);
-router.get('/subject/index', SubjectController.getSubject);
-router.get('/class/index', ClassController.getClass);
+router.get('/home', HomeController.home);
+router.get('/student', StudentController.getStudent);
+router.get('/teacher', TeacherController.getTeacher);
+// router.get('/teacher/class', TeacherController.getTeacherClass);
+router.get('/subject', SubjectController.getSubject);
+router.get('/class', ClassController.getClass);
 router.get('/class/detail', ClassController.detailClass);
 module.exports = router;

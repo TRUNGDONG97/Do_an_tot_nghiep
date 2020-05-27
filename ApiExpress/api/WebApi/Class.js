@@ -28,8 +28,64 @@ const getClass = async (req, res, next) => {
                 model: ScheduleClassModel,
                 // required: true
             },
+            {
+                model: TeacherModel
+            }
             ],
             offset: Constants.PER_PAGE * (currentPage - 1),
+            limit: Constants.PER_PAGE,
+            order: [
+                ['Schedule_classes', 'day_of_week', 'ASC']
+            ],
+            distinct: true
+        })
+        const pageCount = PageCount(classes.count)
+        var urlTable = `${process.cwd()}/table/TableClass.pug`;
+        var htmlTable = await pug.renderFile(urlTable, {
+            classes: classes.rows,
+            STT: (currentPage - 1) * Constants.PER_PAGE,
+            currentPage,
+            pageCount: pageCount,
+            search: false,
+            pages: getArrayPages(req)(pageCount, currentPage),
+            notPa:true
+        });
+        res.send({
+            htmlTable,
+        })
+        return;
+    } catch (error) {
+        console.log(error)
+        res.status(404).send()
+        return;
+    }
+
+}
+const getClassTeacher = async (req, res, next) => {
+    const { nameTeacher } = req.body
+    try {
+        const classes = await ClassModel.findAndCountAll({
+            include: [{
+                model: StudentClassModel,
+                include: [{
+                    model: StudentModel
+                }]
+            },
+            {
+                model: SubjectModel
+            },
+            {
+                model: ScheduleClassModel,
+                // required: true
+            },
+            {
+                model: TeacherModel,
+                where:{
+                    name:nameTeacher
+                }
+            }
+            ],
+            offset: Constants.PER_PAGE * (1 - 1),
             limit: Constants.PER_PAGE,
             order: [
                 ['Schedule_classes', 'day_of_week', 'ASC']
@@ -44,14 +100,15 @@ const getClass = async (req, res, next) => {
         var urlTable = `${process.cwd()}/table/TableClass.pug`;
         var htmlTable = await pug.renderFile(urlTable, {
             classes: classes.rows,
-            STT: (currentPage - 1) * Constants.PER_PAGE,
-            currentPage,
+            STT: (1 - 1) * Constants.PER_PAGE,
+            currentPage:1,
             pageCount: pageCount,
             search: false,
-            pages: getArrayPages(req)(pageCount, currentPage)
+            pages: getArrayPages(req)(pageCount, 1),
+            notPa:false,
         });
         res.send({
-            htmlTable,
+            htmlTable
         })
         return;
     } catch (error) {
@@ -61,14 +118,14 @@ const getClass = async (req, res, next) => {
     }
 
 }
+
 const searchClass = async (req, res, next) => {
     const {
         subCode,
         claStatus,
         claCode,
-        currentPage
+        currentPage,
     } = req.body
-
     try {
         var classes;
         // var count;
@@ -151,7 +208,8 @@ const searchClass = async (req, res, next) => {
             currentPage,
             pageCount: pageCount,
             search: true,
-            pages: getArrayPages(req)(pageCount, currentPage)
+            pages: getArrayPages(req)(pageCount, currentPage),
+            notPa:true
         });
         res.send({
             htmlTable,
@@ -178,7 +236,7 @@ const addClass = async (req, res, next) => {
         timeEnd2
     } = req.body
     try {
-        var teacher ;
+        var teacher;
         const classes = await ClassModel.findAndCountAll({
             where: {
                 class_code: claCode
@@ -467,7 +525,7 @@ const saveClass = async (req, res, next) => {
             }
         })
         const countScheduleClass = classes[0].Schedule_classes.length;
-        // console.log(classes[0].Schedule_classes.length)
+        console.log(countScheduleClass)
         if (teaPhone != '') {
             teacher = await TeacherModel.findAndCountAll({
                 where: {
@@ -516,14 +574,14 @@ const saveClass = async (req, res, next) => {
         }
         await ClassModel.update({
             // class_code:class_code,
-            teacher_id:teacher?teacher.rows[0].id:null,
-            subject_id:subject.rows[0].id,
+            teacher_id: teacher ? teacher.rows[0].id : null,
+            subject_id: subject.rows[0].id,
             status
-        },{
-            where:{
-                id:class_id
+        }, {
+            where: {
+                id: class_id
             }
-        })  
+        })
         res.send({
             result: 2,
         })
@@ -586,29 +644,31 @@ const deleteStuInclass = async (req, res, next) => {
     }
 }
 
-const deleteClass=async(req,res,next)=>{
+const deleteClass = async (req, res, next) => {
     const id = parseInt(req.body.id)
-        // console.log(id)
+    // console.log(id)
     try {
         const classes = await ClassModel.findAll({
-                where: {
-                    id
-                }
-            })
-            // console.log(students.length)
+            where: {
+                id
+            }
+        })
+        // console.log(students.length)
         if (classes.length > 0) {
-            await StudentClassModel.destroy({
-                where:{
-                    class_id:id
-                }
-            })
-            await ScheduleClassModel.destroy({
-                where:{
-                    class_id:id
-                }
-            })
-            await ClassModel.destroy({
-                where:{
+            // await StudentClassModel.destroy({
+            //     where:{
+            //         class_id:id
+            //     }
+            // })
+            // await ScheduleClassModel.destroy({
+            //     where:{
+            //         class_id:id
+            //     }
+            // })
+            await ClassModel.update({
+                status: 0
+            }, {
+                where: {
                     id
                 }
             })
@@ -677,5 +737,6 @@ export default {
     editClass,
     saveClass,
     deleteStuInclass,
-    deleteClass
+    deleteClass,
+    getClassTeacher
 }

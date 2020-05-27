@@ -7,7 +7,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 function createAxios() {
   // AsyncStorage.setItem("token", '49FF532E930B0F4A67C279EBEB1867C7') //full
   var axiosInstant = axios.create();
-  axiosInstant.defaults.baseURL = "http://3ee302b2.ngrok.io/app/";
+  axiosInstant.defaults.baseURL = "http://ca2db027.ngrok.io/app/";
   axiosInstant.defaults.timeout = 20000;
   axiosInstant.defaults.headers = { "Content-Type": "application/json" };
 
@@ -80,21 +80,21 @@ export const requestLogout= () => {
   return handleResult(getAxios.get("logout"));
 };
 //get list class
-export const getListClass = deviceID => {
+export const getListClass = () => {
   return handleResult(
-    getAxios.get(`api/Service/GetlistClass?deviceID=${deviceID}`)
+    getAxios.get(`teacher/getClass`)
   );
 };
 
 //get User infor
 export const getUserInfo = () => {
-  return handleResult(getAxios.get("api/Service/LoginDetail"));
+  return handleResult(getAxios.get("teacher/getUserInfo"));
 };
 
 // get salary
-export const getSalary = payload => {
-  return handleResult(getAxios.post("api/Service/GetSalary", payload));
-};
+// export const getSalary = payload => {
+//   return handleResult(getAxios.post("api/Service/GetSalary", payload));
+// };
 //get notify screen
 
 export const getNotify = payload => {
@@ -122,7 +122,7 @@ export const sendAbsent = payload => {
 
 // change pass
 export const changePass = payload => {
-  return handleResult(getAxios.post("api/Service/ChangePassWord", payload));
+  return handleResult(getAxios.post("teacher/changePass", payload));
 };
 
 // get comment
@@ -139,3 +139,6 @@ export const delNotify = payload => {
   return handleResult(getAxios.post("api/Service/DeleteNoti", payload));
 };
 
+export const updateUser = payload => {
+  return handleResult(getAxios.post(`teacher/changeUserInfo`, payload));
+};

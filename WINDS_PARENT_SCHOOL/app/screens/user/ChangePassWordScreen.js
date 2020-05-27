@@ -52,7 +52,7 @@ export class ChangePassWordScreen extends Component {
                 oldPassword: oldPass,
                 newPassword: newPass
             });
-            reactotron.log(response, "response");
+            // reactotron.log(response, "response");
             Toast.show('Đổi mật khẩu thành công', BACKGROUND_TOAST.SUCCESS);
 
             this.setState({
@@ -132,7 +132,7 @@ export class ChangePassWordScreen extends Component {
                             } else if (this.state.newPass != this.state.confirmPass) {
                                 showMessages("", 'Nhập lại mật khẩu không đúng');
                             } else {
-                                reactotron.log()
+                                // reactotron.log()
                                 this._changePass();
                             }
                         }}
