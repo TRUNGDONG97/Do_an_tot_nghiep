@@ -26,3 +26,11 @@ export const GET_USER_INFOR_FAIL = 'daotao/get_user_infor_fail';
 export const UPDATE_USER = 'daotao/update_user';
 export const UPDATE_USER_SUCCESS = 'daotao/update_user_success';
 export const UPDATE_USER_FAIL = 'daotao/update_user_fail';
+
+export const GET_LIST_ABSENT = 'daotao/get_list_absent';
+export const GET_LIST_ABSENT_SUCCESS = 'daotao/get_list_absent_success';
+export const GET_LIST_ABSENT_FAIL = 'daotao/get_list_absent_fail';
+
+export const GET_DETAIL_ABSENT = 'daotao/get_detail_absent';
+export const GET_DETAIL_ABSENT_SUCCESS = 'daotao/get_detail_absent_success';
+export const GET_DETAIL_ABSENT_FAIL = 'daotao/get_detail_absent_fail';

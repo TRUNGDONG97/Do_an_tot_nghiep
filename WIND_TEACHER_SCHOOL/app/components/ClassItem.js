@@ -43,6 +43,7 @@ export default class ClassItem extends Component {
                     }}>
                     <Block style={[theme.styles.styleBlockHeader, { alignItems: 'center' }]}>
                         <Text style={(theme.fonts.bold16, { color: "white", fontWeight: 'bold', fontSize: 20 })}>{item.Subject.subject_name}</Text>
+                        <Text style={(theme.fonts.bold16, { color: "white", fontWeight: 'bold', fontSize: 16 })}>{item.class_code}</Text>
                     </Block>
                     <View style={{ flexDirection: 'row' }}>
                         <View style={{ paddingVertical: 10, paddingHorizontal: 16, flex: 1 }}>

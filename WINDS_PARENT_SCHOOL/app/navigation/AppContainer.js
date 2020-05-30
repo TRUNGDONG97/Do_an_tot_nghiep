@@ -5,6 +5,7 @@ import AppNavigator from './AppNavigator'
 import OneSignal from "react-native-onesignal";
 import reactotron from 'reactotron-react-native'
 import NavigationUtil from './NavigationUtil'
+import AsyncStorage from "@react-native-community/async-storage";
 export class AppContainer extends Component {
     constructor(properties) {
         super(properties);
@@ -24,14 +25,14 @@ export class AppContainer extends Component {
     }
 
     onReceived(notification) {
-        Reactotron.log("Notification received: ", notification);
+        reactotron.log("Notification received: ", notification);
     }
 
     onOpened(openResult) {
-        Reactotron.log("Message: ", openResult.notification.payload.body);
-        Reactotron.log("Data: ", openResult.notification.payload.additionalData);
-        Reactotron.log("isActive: ", openResult.notification.isAppInFocus);
-        Reactotron.log("openResult: ", openResult);
+        reactotron.log("Message: ", openResult.notification.payload.body);
+        reactotron.log("Data: ", openResult.notification.payload.additionalData);
+        reactotron.log("isActive: ", openResult.notification.isAppInFocus);
+        reactotron.log("openResult: ", openResult);
     }
 
     componentDidMount() {
@@ -44,7 +45,7 @@ export class AppContainer extends Component {
           if (!!device.userId)
             await AsyncStorage.setItem("Device info: ", device.userId)
         }
-        Reactotron.log("Device info: ", device);
+        reactotron.log("Device info: ", device);
       }
     render() {
         return (

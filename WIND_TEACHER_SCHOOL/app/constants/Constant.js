@@ -8,7 +8,7 @@ const SCREEN_ROUTER = {
   REGISTER: "Register",
   USER: 'User',
   CLASS: 'Class',
-  SALARY: 'Salary',
+  LIST_ABSENT_CLASS: 'ListAbsentClass',
   NOTIFICATION: 'Notification',
   FORUM: 'forum',
   IMAGE_VIEWERS: 'ImageView',
@@ -20,7 +20,8 @@ const SCREEN_ROUTER = {
   ABSENT: 'Absent',
   CHANGE_PASS:'change_password',
   REVIEW:'Create_review',
-  CHANGE_USER_INFO:'change_user_info'
+  CHANGE_USER_INFO:'change_user_info',
+  DETAIL_ABSENT:'detail_absent'
 };
 const LIKE_STATE = {
   LIKE: 1,

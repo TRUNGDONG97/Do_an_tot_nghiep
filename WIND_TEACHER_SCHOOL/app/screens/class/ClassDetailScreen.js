@@ -14,7 +14,7 @@ import R from '@R'
 import { SCREEN_ROUTER } from '@constant'
 import {
     AppHeader, Block, Button,
-    Empty, Checkbox, BackgroundHeader, WindsHeader
+    Empty, Checkbox, BackgroundHeader, WindsHeader,Icon
 } from '@component'
 import NavigationUtil from '@app/navigation/NavigationUtil'
 import Mockup from '@app/constants/Mockup'
@@ -42,9 +42,8 @@ export class ClassDetailScreen extends Component {
         )
     }
     _renderBody() {
-        const data = Mockup.ClassDetail
         const item = this.props.navigation.getParam('class')
-        reactotron.log('Student_classes', item.Student_classes)
+        // reactotron.log('Student_classes', item.Student_classes)
         return (
             <ScrollView
                 style={{ marginTop: 20, }}
@@ -90,12 +89,14 @@ export class ClassDetailScreen extends Component {
                         <View style={[styles.rowTable, { flex: 1 }]}>
                             <Text style={theme.fonts.regular14}>{R.strings.number}</Text>
                         </View>
-                        <View style={[styles.rowTable, { flex: 5 }]}>
+                        <View style={[styles.rowTable, { flex: 6 }]}>
                             <Text style={theme.fonts.regular14}>{R.strings.name}</Text>
                         </View>
                         <View style={[styles.rowTable, { flex: 3 }]}>
-                            <Text style={theme.fonts.regular14}>{R.strings.phone}</Text>
+                            <Text style={theme.fonts.regular14}>MSSV</Text>
                         </View>
+                        {/* <View style={[styles.rowTable, { flex: 1 }]}>
+                        </View> */}
                     </View>
                     {
                         item.Student_classes.length == 0 ? (
@@ -125,14 +126,20 @@ export class ClassDetailScreen extends Component {
                 <View style={[styles.rowTable, { flex: 1 }]}>
                     <Text style={theme.fonts.regular14}>{index + 1}</Text>
                 </View>
-                <View style={[styles.rowTable, { flex: 5 }]}>
+                <View style={[styles.rowTable, { flex: 6 }]}>
                     <Text style={theme.fonts.regular14}
                         numberOfLines={2}
                     >{item.Student.name}</Text>
                 </View>
                 <View style={[styles.rowTable, { flex: 3 }]}>
-                    <Text style={theme.fonts.regular14}>{item.Student.phone}</Text>
+                    <Text style={theme.fonts.regular14}>{item.Student.mssv}</Text>
                 </View>
+                {/* <View style={[styles.rowTable, { flex: 1 }]}>
+                    <Icon.AntDesign
+                        name='infocirlce'
+                        color={theme.colors.blue}
+                        size={16} />
+                </View> */}
             </View>
         )
     }

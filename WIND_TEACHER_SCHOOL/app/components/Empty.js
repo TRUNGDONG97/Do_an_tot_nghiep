@@ -5,7 +5,7 @@ import R from "@app/assets/R";
 
 class Empty extends Component {
   render() {
-    const {  description, urlImage, onRefresh, isRefresh } = this.props
+    const {  description, urlImage, onRefresh, isRefresh,title } = this.props
 
     return (
       <ScrollView

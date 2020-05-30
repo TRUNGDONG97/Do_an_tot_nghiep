@@ -3,15 +3,17 @@ const OPTION = {
     httpOnly: true, // The cookie only accessible by the web server
     signed: true,
 }
-const PER_PAGE=20;
-const PAGE_SIZE=10;
-const TYPE_LOGIN={
-    STUDENT:1,
-    TEACHER:2
-}
-export default{
+const PER_PAGE = 20;
+const PAGE_SIZE = 10;
+// const TYPE_LOGIN = {
+//     STUDENT: 1,
+//     TEACHER: 2
+// }
+const TIME_ABSENT = 5;
+
+export default {
     OPTION,
     PER_PAGE,
     PAGE_SIZE,
-    TYPE_LOGIN
+    TIME_ABSENT
 }

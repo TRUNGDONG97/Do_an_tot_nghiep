@@ -7,7 +7,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 function createAxios() {
   // AsyncStorage.setItem("token", '49FF532E930B0F4A67C279EBEB1867C7') //full
   var axiosInstant = axios.create();
-  axiosInstant.defaults.baseURL = "http://ca2db027.ngrok.io/app/";
+  axiosInstant.defaults.baseURL = "http://648dae568a0c.ngrok.io/app";
   axiosInstant.defaults.timeout = 20000;
   axiosInstant.defaults.headers = { "Content-Type": "application/json" };
 
@@ -141,4 +141,10 @@ export const delNotify = payload => {
 
 export const updateUser = payload => {
   return handleResult(getAxios.post(`teacher/changeUserInfo`, payload));
+};
+export const getListAbsent = () => {
+  return handleResult(getAxios.get(`teacher/getListAbsent` ));
+};
+export const getDetailAbsent = (payload) => {
+  return handleResult(getAxios.get(`teacher/getDetailAbsent?absent_class_id=${payload.absent_class_id}` ));
 };

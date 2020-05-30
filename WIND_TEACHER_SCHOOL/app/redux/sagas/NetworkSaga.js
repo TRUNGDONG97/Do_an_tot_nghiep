@@ -22,7 +22,13 @@ import {
   GET_USER_INFOR,
   UPDATE_USER,
   UPDATE_USER_SUCCESS,
-  UPDATE_USER_FAIL
+  UPDATE_USER_FAIL,
+  GET_LIST_ABSENT_SUCCESS,
+  GET_LIST_ABSENT_FAIL,
+  GET_LIST_ABSENT,
+  GET_DETAIL_ABSENT_SUCCESS,
+  GET_DETAIL_ABSENT_FAIL,
+  GET_DETAIL_ABSENT
 } from "../actions/type";
 
 import * as API from "../../constants/Api";
@@ -141,6 +147,28 @@ export function* updateUser(action) {
     }
   }
 }
+export function* getListAbsent() {
+  try {
+    const response = yield call(API.getListAbsent)
+    // reactotron.log(response)
+    yield put({ type: GET_LIST_ABSENT_SUCCESS, payload: response.data })
+    // alert(JSON.stringify(response))
+  } catch (err) {
+    yield put({ type: GET_LIST_ABSENT_FAIL, payload: err })
+    // alert(err)
+  }
+}
+export function* getDetailAbsent(action) {
+  try {
+    const response = yield call(API.getDetailAbsent,action.payload)
+    // reactotron.log(response)
+    yield put({ type: GET_DETAIL_ABSENT_SUCCESS, payload: response.data })
+    // alert(JSON.stringify(response))
+  } catch (err) {
+    yield put({ type: GET_DETAIL_ABSENT_FAIL, payload: err })
+    // alert(err)
+  }
+}
 export const watchGetListCLass = takeEvery(GET_CLASS_LIST, getListClass);
 // export const watchGetSalary = takeEvery(GET_SALARY, getSalary);
 export const watchAbsentTeacher = takeEvery(REQUEST_ABSENT, absentByTeacher);
@@ -148,3 +176,5 @@ export const watchSendAbsent = takeEvery(SEND_ABSENT, sendAbsent);
 export const watchGetListNotify = takeEvery(GET_LIST_NOTIFICATION, getListNotify);
 export const watchGetUserInfo = takeEvery(GET_USER_INFOR, getUserInfo);
 export const watchUpdateUser = takeEvery(UPDATE_USER, updateUser);
+export const watchGetListAbsent = takeEvery(GET_LIST_ABSENT, getListAbsent);
+export const watchGetDetailAbsent = takeEvery(GET_DETAIL_ABSENT, getDetailAbsent);

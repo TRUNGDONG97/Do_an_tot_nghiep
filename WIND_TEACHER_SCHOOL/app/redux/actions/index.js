@@ -8,7 +8,9 @@ import {
   SEND_ABSENT,
   GET_LIST_NOTIFICATION,
   GET_USER_INFOR,
-  UPDATE_USER
+  UPDATE_USER,
+  GET_LIST_ABSENT,
+  GET_DETAIL_ABSENT
 } from "./type";
 
 
@@ -79,4 +81,14 @@ export const getUserInfo = () => ({
 export const updateUser = payload => ({
   type: UPDATE_USER,
   payload: payload
+});
+export const getListAbsent = () => ({
+  type: GET_LIST_ABSENT,
+  payload: {}
+});
+export const getDetailAbsent = (absent_class_id) => ({
+  type: GET_DETAIL_ABSENT,
+  payload: {
+    absent_class_id
+  }
 });

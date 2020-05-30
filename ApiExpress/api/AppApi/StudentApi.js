@@ -6,12 +6,11 @@ import SubjectModel from '../../models/SubjectModel'
 import StudentModel from '../../models/StudentModel'
 import StudentClassModel from '../../models/StudentClassModel'
 import pug from 'pug'
-import { getArrayPages, PageCount } from '../../constants/Funtions'
+import { getArrayPages, PageCount,pushNotificationAppStudent } from '../../constants/Funtions'
 import { Op } from 'sequelize'
 import sequelize from 'sequelize'
 import md5 from 'md5';
 import crypto from 'crypto-js';
-
 const getClass = async (req, res, next) => {
     const { token } = req.headers
     if (token == '') {
@@ -51,6 +50,7 @@ const getClass = async (req, res, next) => {
                 ],
                 // distinct: true
             })
+            // pushNotificationAppStudent('b372222c-146d-4710-a9c0-92e5e780f991','hell')
             res.json({
                 "status": 1,
                 "code": 200,

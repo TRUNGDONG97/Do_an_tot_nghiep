@@ -18,7 +18,6 @@ import reactotron from 'reactotron-react-native'
 class ClassScreen extends Component {
     state = {
         isRefresh: false,
-        deviceID: ""
     };
     componentDidMount(){
         this.props.getListClass()

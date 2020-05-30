@@ -9,7 +9,7 @@ import { SCREEN_ROUTER } from "@constant";
 function createAxios() {
   // AsyncStorage.setItem("token", '2323226DADAD') //full
   var axiosInstant = axios.create();
-  axiosInstant.defaults.baseURL = "http://3ee302b2.ngrok.io/app";
+  axiosInstant.defaults.baseURL = "http://00d7f3e80ff8.ngrok.io/app";
   axiosInstant.defaults.timeout = 20000;
   axiosInstant.defaults.headers = { "Content-Type": "application/json" };
 

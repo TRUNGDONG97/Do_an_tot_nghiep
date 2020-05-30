@@ -10,7 +10,7 @@ import UserScreen from '../screens/user/UserScreen'
 import ClassScreen from '@screen/class/ClassScreen'
 import AbsentScreen from '@screen/class/AbsentScreen'
 import NotificationScreen from '@screen/notification/NotificationScreen'
-import SalaryScreen from '@screen/salary/SalaryScreen'
+import ListAbsentClass from '@screen/Absent/ListClassAbsent'
 import ForumScreen from '@screen/forum/ForumScreen'
 import DetailPostScreen from '@screen/forum/DetailPostScreen'
 import MyPostScreen from '@screen/user/MyPostScreen'
@@ -24,6 +24,7 @@ import ClassDetailScreen from '@screen/class/ClassDetailScreen';
 import ChangePassWordScreen from '@screen/user/ChangePassWordScreen';
 import CreateReviewScreen from '@screen/class/CreateReviewScreen'
 import ChangeUserInfo from '@screen/user/ChangeUserInfo'
+import DetailAbsent from '@screen/Absent/DetailAbsent'
 import {
     Image
 } from "react-native";
@@ -55,12 +56,12 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
                 />
             );
         }
-        // case SCREEN_ROUTER.SALARY: {
-        //     iconName = "money";
-        //     return (
-        //         <Icon.FontAwesome name={iconName} size={iconSize} color={tintColor} outline />
-        //     );
-        // }
+        case SCREEN_ROUTER.LIST_ABSENT_CLASS: {
+            iconName = "earth";
+            return (
+                <Icon.Fontisto name={iconName} size={iconSize} color={tintColor} outline />
+            );
+        }
         // case SCREEN_ROUTER.FORUM: {
         //     iconName = "earth";
         //     return (
@@ -93,13 +94,13 @@ const Main = createBottomTabNavigator(
                 tabBarLabel: R.strings.class,
             },
         },
-        // [SCREEN_ROUTER.SALARY]: {
-        //     screen: SalaryScreen,
-        //     title: R.strings.salary,
-        //     navigationOptions: {
-        //         tabBarLabel: R.strings.salary,
-        //     },
-        // },
+        [SCREEN_ROUTER.LIST_ABSENT_CLASS]: {
+            screen: ListAbsentClass,
+            title:"Điểm danh",
+            navigationOptions: {
+                tabBarLabel: "Điểm danh",
+            },
+        },
         // [SCREEN_ROUTER.FORUM]: {
         //     screen: ForumScreen,
         //     title: R.strings.forum,
@@ -162,6 +163,7 @@ const MainStack = createStackNavigator({
     [SCREEN_ROUTER.CHANGE_PASS]: ChangePassWordScreen,
     [SCREEN_ROUTER.REVIEW]: CreateReviewScreen,
     [SCREEN_ROUTER.CHANGE_USER_INFO]: ChangeUserInfo,
+    [SCREEN_ROUTER.DETAIL_ABSENT]: DetailAbsent,
 
 },
     {

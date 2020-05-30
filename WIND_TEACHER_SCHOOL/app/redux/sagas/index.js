@@ -5,7 +5,9 @@ import {
   watchSendAbsent,
   watchGetListNotify,
   watchGetUserInfo,
-  watchUpdateUser
+  watchUpdateUser,
+  watchGetListAbsent,
+  watchGetDetailAbsent
 } from './NetworkSaga'
 
 
@@ -17,4 +19,6 @@ export default function* rootSaga() {
   yield watchGetListNotify
   yield watchGetUserInfo
   yield watchUpdateUser
+  yield watchGetListAbsent
+  yield watchGetDetailAbsent
 }
