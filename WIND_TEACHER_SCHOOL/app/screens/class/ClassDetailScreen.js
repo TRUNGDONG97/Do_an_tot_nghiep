@@ -6,7 +6,8 @@ import {
     ActivityIndicator,
     FlatList,
     ScrollView,
-    ImageBackground
+    ImageBackground,
+    TouchableOpacity
 } from 'react-native'
 import { connect } from 'react-redux'
 import theme from '@theme'
@@ -14,21 +15,114 @@ import R from '@R'
 import { SCREEN_ROUTER } from '@constant'
 import {
     AppHeader, Block, Button,
-    Empty, Checkbox, BackgroundHeader, WindsHeader,Icon
+    Empty, Checkbox, BackgroundHeader, WindsHeader, Icon, Loading
 } from '@component'
 import NavigationUtil from '@app/navigation/NavigationUtil'
 import Mockup from '@app/constants/Mockup'
 import LinearGradient from 'react-native-linear-gradient'
 import FastImage from 'react-native-fast-image'
 import reactotron from 'reactotron-react-native'
+import Geolocation from '@react-native-community/geolocation';
+import { showMessages } from '@app/utils/Alert'
+import { createAbsent,cancelAbsent} from '@app/constants/Api'
+import Toast, { BACKGROUND_TOAST } from "@app/utils/Toast";
 export class ClassDetailScreen extends Component {
     constructor(props) {
         super(props)
+        const item = this.props.navigation.getParam('class')
         this.state = {
-            status: false
+            class_id: item.id,
+            region: {
+                longitude: null,
+                latitude: null
+            },
+            isLoading: false
+
         }
     }
-
+    _startAbsent = async (gps_latitude, gps_longitude) => {
+        const { class_id } = this.state
+        const payload = {
+            class_id,
+            gps_latitude,
+            gps_longitude
+        }
+        this.setState({
+            ...this.state,
+            isLoading: true
+        });
+        try {
+            const response = await createAbsent(payload);
+            reactotron.log(response, 'res');
+            Toast.show(response.message, BACKGROUND_TOAST.SUCCESS);
+            this.setState({
+                ...this.state,
+                isLoading: false,
+            });
+            NavigationUtil.navigate(SCREEN_ROUTER.DETAIL_ABSENT, {
+                absent_class_id: response.data.classAbsent.id
+            })
+        } catch (error) {
+            if (error.message == "Network Error") {
+                Toast.show(I18n.t("network_err"), BACKGROUND_TOAST.FAIL);
+            }
+            //showMessages(I18n.t("notification"),I18n.t("error") );
+            Toast.show('Vui lòng thử lại', BACKGROUND_TOAST.FAIL)
+            this.setState({
+                ...this.state,
+                isLoading: false
+            });
+            reactotron.log(error);
+        }
+    }
+    getLocationUser = async () => {
+        await Geolocation.getCurrentPosition(
+            position => {
+                const { latitude, longitude } = position.coords;
+                //  this.setState({
+                //     ...this.state,
+                //     region: {
+                //         longitude: longitude,
+                //         latitude: latitude,
+                //       }
+                // });
+                this._startAbsent(latitude, longitude)
+                reactotron.log(latitude, longitude)
+                // return;
+            },
+            error => {
+                reactotron.log(error, 'error getCurrentPosition')
+                Toast.show("Đã có lỗi xảy ra", BACKGROUND_TOAST.FAIL);
+            },
+        );
+    }
+    _cancelAbsent=async()=>{
+        const { class_id } = this.state
+        this.setState({
+            ...this.state,
+            isLoading: true
+        });
+        try {
+            const response = await cancelAbsent({class_id});
+            reactotron.log(response, 'res');
+            Toast.show(response.message, BACKGROUND_TOAST.SUCCESS);
+            this.setState({
+                ...this.state,
+                isLoading: false,
+            });
+        } catch (error) {
+            if (error.message == "Network Error") {
+                Toast.show(I18n.t("network_err"), BACKGROUND_TOAST.FAIL);
+            }
+            //showMessages(I18n.t("notification"),I18n.t("error") );
+            Toast.show('Vui lòng thử lại', BACKGROUND_TOAST.FAIL)
+            this.setState({
+                ...this.state,
+                isLoading: false
+            });
+            reactotron.log(error);
+        }
+    }
     render() {
         const item = this.props.navigation.getParam('class')
         return (
@@ -43,6 +137,7 @@ export class ClassDetailScreen extends Component {
     }
     _renderBody() {
         const item = this.props.navigation.getParam('class')
+        if (this.state.isLoading) return <Loading />;
         // reactotron.log('Student_classes', item.Student_classes)
         return (
             <ScrollView
@@ -54,18 +149,53 @@ export class ClassDetailScreen extends Component {
                     {this._renderUserItem(R.strings.number_of_people, item.Student_classes.length)}
                     {this._renderUserItem("Mã môn học", item.Subject.subject_code)}
                 </View>
-                <Button style={{
-                    alignSelf: 'center',
-                    marginTop: 15,
+                <View style={{
+                    flexDirection: 'row',
+                    marginTop: 30,
+                }}>
+                    <TouchableOpacity style={{ flex: 1, marginHorizontal: 20, borderRadius: 5 }}
+                        onPress={() => {
+                            this.getLocationUser();
+                            // reactotron.log(this.state.region)
+                        }}>
+                        <LinearGradient
+                            style={styles.bgButton}
+                            colors={["#ff740d", "#F7D358"]}
+                            start={{ x: 0.7, y: 1 }} //transparent
+                            end={{ x: 0, y: 0.1 }}
+                        >
+                            <Text style={styles.text}>Điểm danh</Text>
+                        </LinearGradient>
+                    </TouchableOpacity>
 
-                }}
-                    title={R.strings.absent} right
-                    onPress={() => NavigationUtil.navigate(SCREEN_ROUTER.ABSENT)}
-                />
-                {/* <View style={{ marginLeft: 40, flexDirection: 'row', marginTop: 10, alignItems: 'center', }}>
-                    <Text style={theme.fonts.regular14}>{R.strings.class_off} </Text>
-                    <Checkbox status={this.state.status} size={22} />
-                </View> */}
+                    <TouchableOpacity style={{ flex: 1, marginHorizontal: 20, borderRadius: 5 }}
+                        onPress={()=>{
+                            this._cancelAbsent()
+                        }}
+                    >
+                        <LinearGradient
+                            style={styles.bgButton}
+                            colors={["#FE2E2E","#F5A9A9"]}
+                            start={{ x: 0.7, y: 1 }} //transparent
+                            end={{ x: 0, y: 0.1 }}
+                        >
+                            <Text style={styles.text}>Huỷ</Text>
+                        </LinearGradient>
+                    </TouchableOpacity>
+                    {/* <Button style={{
+                        alignSelf: 'center',
+                        flex: 1,
+                        marginHorizontal:20
+                    }}
+                        title={R.strings.absent} 
+                        onPress={() => {
+                            this.getLocationUser();
+                            // reactotron.log(this.state.region)
+                        }}
+                    /> */}
+                    
+                </View>
+             
 
                 <LinearGradient
                     style={styles._lgListClass}
@@ -75,7 +205,9 @@ export class ClassDetailScreen extends Component {
                     <Text style={[theme.fonts.regular20, { color: theme.colors.white }]}>
                         {R.strings.list_class}</Text>
                 </LinearGradient>
-                <View style={{paddingBottom:20}}>
+
+
+                <View style={{ paddingBottom: 20 }}>
                     <View
                         style={[styles._vColumn,
                         {
@@ -104,7 +236,7 @@ export class ClassDetailScreen extends Component {
                             />
                         ) : (
 
-                            item.Student_classes.map((item, index) => (
+                                item.Student_classes.map((item, index) => (
                                     <View key={index.toString()} style={{ width: "100%" }}>
                                         {this._renderRowTable(item, index)}
                                     </View>
@@ -116,12 +248,19 @@ export class ClassDetailScreen extends Component {
             </ScrollView>
         )
     }
+
     _renderRowTable(item, index) {
         return (
-            <View
+            <TouchableOpacity
                 style={[styles._vColumn, {
                     backgroundColor: index % 2 ? theme.colors.backgroundBlueItem : theme.colors.white
                 }]}
+                onPress={() => {
+                    NavigationUtil.navigate(SCREEN_ROUTER.ABSENT_STUDENT, {
+                        class_id: this.state.class_id,
+                        student_id: item.Student.id
+                    })
+                }}
             >
                 <View style={[styles.rowTable, { flex: 1 }]}>
                     <Text style={theme.fonts.regular14}>{index + 1}</Text>
@@ -140,12 +279,12 @@ export class ClassDetailScreen extends Component {
                         color={theme.colors.blue}
                         size={16} />
                 </View> */}
-            </View>
+            </TouchableOpacity>
         )
     }
     _renderUserItem(title, text) {
         return (
-            <View style={{ flexDirection: "row", paddingHorizontal: 10, paddingVertical: 5 }}>
+            <View style={{ flexDirection: "row", paddingHorizontal: 10, paddingVertical: 5 ,marginLeft:20}}>
                 <Text style={[theme.fonts.medium15, {
                     color: theme.colors.backgroundHeader,
                     width: 120
@@ -242,5 +381,17 @@ const styles = StyleSheet.create({
         marginTop: 30,
         paddingVertical: 10,
         borderRadius: 5
+    },
+    text: {
+        color: "white",
+        fontSize: 18,
+        fontWeight: "bold",
+    },
+    bgButton: {
+        height: 43,
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: 3,
+        flexDirection: 'row',
     }
 })

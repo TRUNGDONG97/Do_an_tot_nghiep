@@ -46,6 +46,8 @@ target 'WindsTeacherSchool' do
 
   pod 'FBSDKCoreKit', '~> 5.8', :modular_headers => true
 
+  pod 'react-native-geolocation', :path => '../node_modules/@react-native-community/geolocation'
+
   target 'WindsTeacherSchoolTests' do
     inherit! :search_paths
     # Pods for testing

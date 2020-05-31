@@ -21,7 +21,8 @@ const SCREEN_ROUTER = {
   CHANGE_PASS:'change_password',
   REVIEW:'Create_review',
   CHANGE_USER_INFO:'change_user_info',
-  DETAIL_ABSENT:'detail_absent'
+  DETAIL_ABSENT:'detail_absent',
+  ABSENT_STUDENT:'absent_student'
 };
 const LIKE_STATE = {
   LIKE: 1,

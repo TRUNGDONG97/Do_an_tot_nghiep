@@ -10,10 +10,15 @@ const PAGE_SIZE = 10;
 //     TEACHER: 2
 // }
 const TIME_ABSENT = 5;
-
+const TYPE_NOTIFICATION={
+    ABSENT_CLASS_END:1,
+    CANCEL_ABSENT:2,
+    ABSENT_STUDENT:3
+}
 export default {
     OPTION,
     PER_PAGE,
     PAGE_SIZE,
-    TIME_ABSENT
+    TIME_ABSENT,
+    TYPE_NOTIFICATION
 }

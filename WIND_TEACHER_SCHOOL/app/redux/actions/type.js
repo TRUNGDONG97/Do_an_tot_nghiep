@@ -34,3 +34,7 @@ export const GET_LIST_ABSENT_FAIL = 'daotao/get_list_absent_fail';
 export const GET_DETAIL_ABSENT = 'daotao/get_detail_absent';
 export const GET_DETAIL_ABSENT_SUCCESS = 'daotao/get_detail_absent_success';
 export const GET_DETAIL_ABSENT_FAIL = 'daotao/get_detail_absent_fail';
+
+export const GET_STUDENT_ABSENT = 'daotao/get_student_absent';
+export const GET_STUDENT_ABSENT_SUCCESS = 'daotao/get_student_absent_success';
+export const GET_STUDENT_ABSENT_FAIL = 'daotao/get_student_absent_fail';

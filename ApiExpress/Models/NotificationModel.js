@@ -21,6 +21,9 @@ const Notification = sequelize.define('Notification', {
     class_id: {
         type: Sequelize.INTEGER
     },
+    absent_class_id: {
+        type: Sequelize.INTEGER
+    },
     user_id:{
         type:Sequelize.INTEGER
     },

@@ -10,7 +10,7 @@ import UserScreen from '../screens/user/UserScreen'
 import ClassScreen from '@screen/class/ClassScreen'
 import AbsentScreen from '@screen/class/AbsentScreen'
 import NotificationScreen from '@screen/notification/NotificationScreen'
-import ListAbsentClass from '@screen/Absent/ListClassAbsent'
+import ListClassAbsentScreen from '@app/screens/Absent/ListClassAbsentScreen'
 import ForumScreen from '@screen/forum/ForumScreen'
 import DetailPostScreen from '@screen/forum/DetailPostScreen'
 import MyPostScreen from '@screen/user/MyPostScreen'
@@ -24,7 +24,8 @@ import ClassDetailScreen from '@screen/class/ClassDetailScreen';
 import ChangePassWordScreen from '@screen/user/ChangePassWordScreen';
 import CreateReviewScreen from '@screen/class/CreateReviewScreen'
 import ChangeUserInfo from '@screen/user/ChangeUserInfo'
-import DetailAbsent from '@screen/Absent/DetailAbsent'
+import DetailAbsentScreen from '@app/screens/Absent/DetailAbsentScreen'
+import AbsentStudentScreen from '@app/screens/Absent/AbsentStudentScreen'
 import {
     Image
 } from "react-native";
@@ -95,7 +96,7 @@ const Main = createBottomTabNavigator(
             },
         },
         [SCREEN_ROUTER.LIST_ABSENT_CLASS]: {
-            screen: ListAbsentClass,
+            screen: ListClassAbsentScreen,
             title:"Điểm danh",
             navigationOptions: {
                 tabBarLabel: "Điểm danh",
@@ -163,7 +164,8 @@ const MainStack = createStackNavigator({
     [SCREEN_ROUTER.CHANGE_PASS]: ChangePassWordScreen,
     [SCREEN_ROUTER.REVIEW]: CreateReviewScreen,
     [SCREEN_ROUTER.CHANGE_USER_INFO]: ChangeUserInfo,
-    [SCREEN_ROUTER.DETAIL_ABSENT]: DetailAbsent,
+    [SCREEN_ROUTER.DETAIL_ABSENT]: DetailAbsentScreen,
+    [SCREEN_ROUTER.ABSENT_STUDENT]: AbsentStudentScreen,
 
 },
     {

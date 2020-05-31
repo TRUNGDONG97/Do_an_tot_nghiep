@@ -10,7 +10,8 @@ import {
   GET_USER_INFOR,
   UPDATE_USER,
   GET_LIST_ABSENT,
-  GET_DETAIL_ABSENT
+  GET_DETAIL_ABSENT,
+  GET_STUDENT_ABSENT
 } from "./type";
 
 
@@ -67,12 +68,9 @@ export const sendAbsent = (
 });
 
 
-export const getListNotifyAction = (checkFirst) => ({
+export const getListNotifyAction = () => ({
   type: GET_LIST_NOTIFICATION,
-  payload: {
-    notiID: 0,
-  },
-  checkFirst: checkFirst
+  payload: { }
 });
 export const getUserInfo = () => ({
   type: GET_USER_INFOR,
@@ -90,5 +88,12 @@ export const getDetailAbsent = (absent_class_id) => ({
   type: GET_DETAIL_ABSENT,
   payload: {
     absent_class_id
+  }
+});
+export const getStudentAbsent = (class_id, student_id) => ({
+  type: GET_STUDENT_ABSENT,
+  payload: {
+    class_id: class_id,
+    student_id: student_id
   }
 });

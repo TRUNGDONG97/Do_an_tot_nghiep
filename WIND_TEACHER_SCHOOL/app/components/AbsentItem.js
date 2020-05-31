@@ -46,12 +46,12 @@ export class AbsentItem extends Component {
                     <Block style={[theme.styles.styleBlockHeader, { alignItems: 'center', justifyContent: "center" }]}>
                         <Text style={[theme.fonts.bold14, { color: "white", fontWeight: 'bold', fontSize: 16 }]}>{item.Subject.subject_name}</Text>
                         <Text style={[theme.fonts.bold14, { color: "white", fontWeight: 'bold', fontSize: 14 }]}>{item.class_code}</Text>
-                        <View style={{ position: "absolute", right: 5 }}>
+                        {/* <View style={{ position: "absolute", right: 5 }}>
                             <Icon.Entypo
                                 name='chevron-small-right'
                                 color={theme.colors.white}
                                 size={30} />
-                        </View>
+                        </View> */}
                     </Block>
                 </Ripple>
                 <View
@@ -75,11 +75,9 @@ export class AbsentItem extends Component {
                     <View style={[styles.rowTable, { flex: 1 }]}>
                         <Text style={theme.fonts.regular14}></Text>
                     </View>
-                    {/* <View style={[styles.rowTable, { flex: 1 }]}>
-                        <Text style={theme.fonts.regular14}></Text>
-                    </View> */}
+                
                 </View>
-                {/* <Text>{ item.Absent_Classes.length}</Text> */}
+               
                 {
                     item.Absent_Classes.length == 0 ? (
                         <View style={[styles.rowTable, { flex: 1 }]}>
@@ -106,9 +104,7 @@ export class AbsentItem extends Component {
                 }]}
                 onPress={() => {
                     NavigationUtil.navigate(SCREEN_ROUTER.DETAIL_ABSENT, {
-                        id:item.id,
-                        classes:this.state.classes,
-                        date_absent:item.date_absent.split("-").reverse().join("/")
+                        absent_class_id:item.id
                     })
                 }}
             >

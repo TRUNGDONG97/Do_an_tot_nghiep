@@ -3,11 +3,11 @@ import { Alert } from "react-native";
 import NavigationUtil from "../navigation/NavigationUtil";
 import I18n from "../i18n/i18n";
 import AsyncStorage from "@react-native-community/async-storage";
-
+import Toast, { BACKGROUND_TOAST } from "@app/utils/Toast";
 function createAxios() {
   // AsyncStorage.setItem("token", '49FF532E930B0F4A67C279EBEB1867C7') //full
   var axiosInstant = axios.create();
-  axiosInstant.defaults.baseURL = "http://648dae568a0c.ngrok.io/app";
+  axiosInstant.defaults.baseURL = " http://d783964c4607.ngrok.io/app";
   axiosInstant.defaults.timeout = 20000;
   axiosInstant.defaults.headers = { "Content-Type": "application/json" };
 
@@ -34,7 +34,8 @@ function createAxios() {
       // console.log("Response:", response.data);
       if (response.data && response.data.code == 403) {
         setTimeout(() => {
-          Alert.alert("Thông báo", I18n.t("relogin"));
+          Toast.show(I18n.t("relogin"), BACKGROUND_TOAST.FAIL);
+          // Alert.alert("Thông báo", I18n.t("relogin"));
         }, 100);
 
         AsyncStorage.setItem("token", "", () => {
@@ -42,14 +43,16 @@ function createAxios() {
         });
       } else if (response.data && response.data.status != 1) {
         setTimeout(() => {
-          Alert.alert("Thông báo", response.data.message);
+          // Alert.alert("Thông báo", response.data.message);
+          Toast.show(response.data.message, BACKGROUND_TOAST.FAIL);
         }, 100);
       }
       return response;
     },
     err => {
       setTimeout(() => {
-        Alert.alert("Thông báo", "Lỗi kết nối");
+        // Alert.alert("Thông báo", "Lỗi kết nối");
+        Toast.show("Lỗi kết nối", BACKGROUND_TOAST.FAIL);
       }, 100);
       return Promise.reject(err);
     }
@@ -99,7 +102,7 @@ export const getUserInfo = () => {
 
 export const getNotify = payload => {
   return handleResult(
-    getAxios.post("api/Service/GetListNotification", payload)
+    getAxios.get("teacher/getNotification")
   );
 };
 
@@ -147,4 +150,14 @@ export const getListAbsent = () => {
 };
 export const getDetailAbsent = (payload) => {
   return handleResult(getAxios.get(`teacher/getDetailAbsent?absent_class_id=${payload.absent_class_id}` ));
+};
+export const getStudentAbsent = (payload) => {
+  return handleResult(getAxios.get(`getAbsentStudent?class_id=${payload.class_id}&student_id=${payload.student_id}` ));
+};
+
+export const createAbsent = payload => {
+  return handleResult(getAxios.post(`teacher/createAbsent`, payload));
+};
+export const cancelAbsent = payload => {
+  return handleResult(getAxios.post(`teacher/cancelAbsent`, payload));
 };

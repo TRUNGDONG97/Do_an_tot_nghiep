@@ -13,7 +13,7 @@ import Ripple from 'react-native-material-ripple';
 import Mockup from '@app/constants/Mockup'
 import reactotron from 'reactotron-react-native'
 import { getListAbsent } from '@action'
-export class ListClassAbsent extends Component {
+export class ListClassAbsentScreen extends Component {
     state = {
         isRefresh: false,
     };
@@ -76,4 +76,4 @@ const mapDispatchToProps = {
     getListAbsent
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ListClassAbsent)
+export default connect(mapStateToProps, mapDispatchToProps)(ListClassAbsentScreen)

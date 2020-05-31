@@ -1,10 +1,9 @@
-import { GET_DETAIL_ABSENT, GET_DETAIL_ABSENT_SUCCESS, GET_DETAIL_ABSENT_FAIL } from "../actions/type";
+import { GET_STUDENT_ABSENT, GET_STUDENT_ABSENT_SUCCESS, GET_STUDENT_ABSENT_FAIL } from "../actions/type";
 const initialState = {
-  listStudent: [],
+  student: {},
   countAbsent: null,
   total: null,
-  absentClass:{},
-  class:{},
+  listAbsent:[],
   // mail: {},
   // promotion: [],
   isLoading: true,
@@ -13,29 +12,28 @@ const initialState = {
 };
 export default function (state = initialState, action) {
   switch (action.type) {
-    case GET_DETAIL_ABSENT:
+    case GET_STUDENT_ABSENT:
       return {
         ...state,
         isLoading: true,
-        error: null,
-        listStudent: []
+        error: null
+
       };
 
-    case GET_DETAIL_ABSENT_SUCCESS:
+    case GET_STUDENT_ABSENT_SUCCESS:
       return {
         ...state,
         isLoading: false,
         error: null,
         // data: action.payload,
-        listStudent: action.payload.listStudent,
+        student: action.payload.student,
         countAbsent: action.payload.countAbsent,
         total: action.payload.total,
-        absentClass: action.payload.absentClass,
-        classes: action.payload.classes,
+        listAbsent:action.payload.listAbsent
       };
 
-    case GET_DETAIL_ABSENT_FAIL:
-      return { ...state, error: action.payload, isLoading: false, listStudent: [] };
+    case GET_STUDENT_ABSENT_FAIL:
+      return { ...state, error: action.payload, isLoading: false};
     default:
       return state;
   }

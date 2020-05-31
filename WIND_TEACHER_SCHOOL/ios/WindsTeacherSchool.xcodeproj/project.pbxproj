@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* WindsTeacherSchoolTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* WindsTeacherSchoolTests.m */; };
 		0B382415F77BA57408E52BA8 /* libPods-WindsTeacherSchool-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D8F3772F903255FCEC6D3FD /* libPods-WindsTeacherSchool-tvOSTests.a */; };

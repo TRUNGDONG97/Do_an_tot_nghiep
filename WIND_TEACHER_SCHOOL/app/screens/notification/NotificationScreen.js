@@ -24,7 +24,11 @@ import R from "@R";
 import { connect } from "react-redux";
 import Mockup from "@app/constants/Mockup";
 import reactotron from "reactotron-react-native";
+import { getListNotifyAction } from '@action'
 export class NotificationScreen extends Component {
+  componentDidMount() {
+    this.props.getListNotifyAction();
+  }
   render() {
     return (
       <Block>
@@ -41,8 +45,18 @@ export class NotificationScreen extends Component {
   }
   _renderBody() {
     // reactotron.log(Mockup.Notification)
-    if (Mockup.Notification.length == 0) return <Empty />;
-
+    // if (Mockup.Notification.length == 0) return <Empty />;
+    const { notificationState } = this.props
+    reactotron.log('notificationState', notificationState)
+    if (notificationState.isLoading) return <Loading />;
+    if (notificationState.error)
+      return (
+        <Error
+          onPress={() => {
+            this.props.getListNotifyAction();
+          }}
+        />
+      );
     return (
       <Block
         style={{
@@ -57,11 +71,11 @@ export class NotificationScreen extends Component {
           refreshControl={
             <RefreshControl
               refreshing={false}
-              // onRefresh={() => this.props.getNotification()}
+              onRefresh={() => this.props.getListNotifyAction()}
             />
           }
           showsVerticalScrollIndicator={false}
-          data={Mockup.Notification}
+          data={notificationState.data}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => (
             <NotiItem item={item} index={index} />
@@ -87,19 +101,23 @@ export class NotiItem extends Component {
           <Icon.MaterialIcons size={40} name="notifications" color="#F17373" />
         </View>
         <Block style={{ marginLeft: 15 }}>
-          <Text style={[theme.fonts.bold16]}>{item.title}</Text>
+          <Text style={[theme.fonts.bold16]}>{item.content}</Text>
 
           <Text style={[theme.fonts.bold14, { color: theme.colors.black2 }]}>
-            {item.datetime}
+            {item.created_date.split("-").reverse().join("/")}
           </Text>
         </Block>
       </View>
     );
   }
 }
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+  notificationState: state.listNotifyReducer
+});
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  getListNotifyAction
+};
 
 export default connect(
   mapStateToProps,

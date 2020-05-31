@@ -18,5 +18,8 @@ router.post('/teacher/changePass', Teacher.changePass)
 router.post('/teacher/createAbsent', Teacher.createAbsent)
 router.get('/teacher/getListAbsent', Teacher.getListAbsent)
 router.get('/teacher/getDetailAbsent', Teacher.getDetailAbsent)
+router.get('/getAbsentStudent', Teacher.getAbsentStudent)
+router.get('/teacher/getNotification', Teacher.getNotification)
+router.post('/teacher/cancelAbsent', Teacher.cancelAbsent)
 
 module.exports = router;

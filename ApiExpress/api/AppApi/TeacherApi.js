@@ -337,7 +337,7 @@ const getListAbsent = async (req, res, next) => {
             //         teacher_id: teacher.rows[0].id
             //     }
             // })
-            
+
             res.json({
                 "status": 1,
                 "code": 200,
@@ -415,6 +415,17 @@ const createAbsent = async (req, res, next) => {
             }, {
                 where: { id: preAbsenClass.rows[0].id }
             })
+            NotificationModel.create({
+                teacher_id,
+                class_id,
+                content: "Lớp " + class_code + ' đã hủy điểm danh',
+                absent_class_id: createAbsentClass.id,
+                type: Constants.TYPE_NOTIFICATION.CANCEL_ABSENT
+            })
+            if (teacher.device_id) {
+                pushNotificationAppTeacher(teacher.device_id, "Lớp " + class_code + ' đã hủy điểm danh',
+                    { absent_class_id: createAbsentClass.id })
+            }
         }
         const createAbsentClass = await AbsentClassModel.create({
             class_id,
@@ -433,10 +444,13 @@ const createAbsent = async (req, res, next) => {
             NotificationModel.create({
                 teacher_id,
                 class_id,
-                content: "Lớp " + class_code + ' đã kết thúc điểm danh'
+                content: "Lớp " + class_code + ' đã kết thúc điểm danh',
+                absent_class_id: createAbsentClass.id,
+                type: Constants.TYPE_NOTIFICATION.ABSENT_CLASS_END
             })
             if (teacher.device_id) {
-                pushNotificationAppStudent(teacher.device_id, "Lớp " + class_code + ' dang điểm danh', { class_id: class_id })
+                pushNotificationAppTeacher(teacher.device_id, "Lớp " + class_code + '  đã kết thúc điểm danh',
+                    { absent_class_id: createAbsentClass.id })
             }
         }, Constants.TIME_ABSENT * 60 * 1000);
         const liststudent = await StudentModel.findAndCountAll({
@@ -453,30 +467,37 @@ const createAbsent = async (req, res, next) => {
                 student_id: liststudent.rows[index].id,
                 absent_class_id: createAbsentClass.id,
                 class_id: parseInt(class_id),
-                teacher_id
+                teacher_id,
             })
             await NotificationModel.create({
                 student_id: liststudent.rows[index].id,
                 class_id,
-                content: "Lớp " + classAbsent.rows[0].class_code + ' dang điểm danh'
+                content: "Lớp " + classAbsent.rows[0].class_code + ' dang điểm danh',
+                type: Constants.TYPE_NOTIFICATION.ABSENT_STUDENT,
+                absent_class_id: createAbsentClass.id
             })
             if (liststudent.rows[index].device_id) {
-                pushNotificationAppStudent(liststudent.rows[index].device_id, "Lớp " + classAbsent.rows[0].class_code + ' dang điểm danh', { class_id: class_id })
+                pushNotificationAppStudent(liststudent.rows[index].device_id,
+                    "Lớp " + classAbsent.rows[0].class_code + ' dang điểm danh',
+                    { class_id: class_id })
             }
 
         }
-        const listAbsentClass = await AbsentClassModel.findAll({
-            where: {
-                is_active: 1,
-                class_id
-            }
-        })
+        // const classes = await ClassModel.findAll({
+        //     include: [{
+        //         model: SubjectModel
+        //     }
+        //     ],
+        //     where: {
+        //         id: class_id
+        //     }
+        // })
         // console.log(liststudent.count)
         res.json({
             "status": 1,
             "code": 200,
             "message": 'thành công',
-            "data": listAbsentClass
+            "data": {  classAbsent: createAbsentClass }
         })
         return;
     } catch (error) {
@@ -494,13 +515,13 @@ const getDetailAbsent = async (req, res, next) => {
     const { absent_class_id } = req.query;
     console.log(absent_class_id)
     try {
-        const count = await AbsentClassModel.count({
+        const absentClass = await AbsentClassModel.findAll({
             where: {
                 id: absent_class_id,
-                is_active:1
+                is_active: 1
             }
         })
-        if (count < 1) {
+        if (absentClass.length < 1) {
             res.json({
                 "status": 0,
                 "code": 404,
@@ -511,7 +532,7 @@ const getDetailAbsent = async (req, res, next) => {
         }
 
         // [sequelize.fn('count', sequelize.col('AbsentStudentModel.student_id')), 'absentCount']
-        const getDetailAbsent = await StudentModel.findAll({
+        const getDetailAbsent = await StudentModel.findAndCountAll({
             attributes: ['id', 'name', 'phone', 'birthday', 'address', 'email', 'url_avatar',
                 'sex', 'mssv'],
             include: [{
@@ -520,15 +541,23 @@ const getDetailAbsent = async (req, res, next) => {
                 where: {
                     absent_class_id
                 },
-
             }
             ],
         })
-        const  countAbsent = await AbsentStudentModel.count({
+        const countAbsent = await AbsentStudentModel.count({
             where: {
                 absent_class_id,
-                status:1
+                status: 1
             },
+        })
+        const classes = await ClassModel.findAll({
+            include: [{
+                model: SubjectModel
+            }
+            ],
+            where: {
+                id: absentClass[0].class_id
+            }
         })
         // const countAbsent = await AbsentStudentModel.findAll({
         //     attributes: ['student_id', [sequelize.fn('count', sequelize.col('student_id')), 'count']],
@@ -544,12 +573,241 @@ const getDetailAbsent = async (req, res, next) => {
         // for (let index = 0; index < studentInClass.length; index++) {
         //     studentInClass.countAbsent=countAbsent.count
         // }
-        // console.log(typeof studentInClass)
+        // console.log( getDetailAbsent.rows.length)
         res.json({
             "status": 1,
             "code": 200,
             "message": 'thành công',
-            "data":{countAbsent ,listStudent:getDetailAbsent}
+            "data": {
+                absentClass: absentClass[0],
+                countAbsent,
+                total: getDetailAbsent.count,
+                listStudent: getDetailAbsent.rows,
+                classes: classes[0]
+            }
+        })
+        return;
+    } catch (error) {
+        console.log(error)
+        res.json({
+            "status": 0,
+            "code": 404,
+            "message": "Đã có lỗi xảy ra",
+            "data": ''
+        })
+        return;
+    }
+}
+const getAbsentStudent = async (req, res, next) => {
+    const { student_id, class_id } = req.query
+    console.log(student_id, class_id)
+    try {
+        const listId = await AbsentClassModel.findAll({
+            attributes: ['id'],
+            where: {
+                class_id,
+                is_active: 1
+            }
+        })
+        var listIdAbsentClass = []
+        for (let index = 0; index < listId.length; index++) {
+            listIdAbsentClass.push(listId[index].id)
+        }
+        // console.log('listId',typeof listId)
+        const getStudent = await StudentModel.findAll({
+            attributes: ['id', 'name', 'phone', 'birthday', 'address', 'email', 'url_avatar',
+                'sex', 'mssv'],
+            // include: [
+            //     {
+            //         model: StudentClassModel,
+            //         where: {
+            //             student_id,
+            //             class_id
+            //         },
+            //         required:false
+            //     }
+            // ],
+            where: {
+                id: student_id
+            },
+
+        })
+
+
+        if (getStudent.length < 0) {
+            res.json({
+                "status": 0,
+                "code": 404,
+                "message": 'Không tìm thấy học sinh này',
+                "data": ''
+            })
+            return;
+        }
+        const listAbsent = await AbsentStudentModel.findAll({
+            attributes: ['date_absent', 'time_absent', 'status', 'absent_class_id'],
+            where: {
+                absent_class_id: listIdAbsentClass,
+                student_id
+            },
+            order: [
+                ['date_absent', 'DESC']
+            ],
+        })
+        const countTotalAbsent = await AbsentClassModel.count({
+            where: {
+                class_id,
+                is_active: 1
+            }
+        })
+        const countAbsent = await AbsentStudentModel.count({
+            where: {
+                student_id,
+                class_id,
+                status: 1
+            }
+        })
+        res.json({
+            "status": 1,
+            "code": 200,
+            "message": 'thành công',
+            "data": {
+                countAbsent,
+                total: countTotalAbsent,
+                student: getStudent[0],
+                listAbsent
+            }
+        })
+        return;
+    } catch (error) {
+        console.log(error)
+        res.json({
+            "status": 0,
+            "code": 404,
+            "message": "Đã có lỗi xảy ra",
+            "data": ''
+        })
+        return;
+    }
+}
+const getNotification = async (req, res, next) => {
+    const { token } = req.headers
+    if (token == '') {
+        res.json({
+            "status": 0,
+            "code": 404,
+            "message": 'thất bại',
+            "data": ""
+        })
+        return;
+    }
+    try {
+        const teacher = await TeacherModel.findAndCountAll({
+            where: {
+                token
+            }
+        })
+        if (teacher.count > 0) {
+            const ListNoti = await NotificationModel.findAll({
+                attributes: ['id', 'class_id', 'teacher_id', 'absent_class_id', 'content', 'created_date'],
+                where: {
+                    teacher_id: teacher.rows[0].id
+                }
+            })
+            res.json({
+                "status": 1,
+                "code": 200,
+                "message": 'thành công',
+                "data": ListNoti
+            })
+            return;
+        }
+        res.json({
+            "status": 0,
+            "code": 403,
+            "message": 'Chưa đăng nhập',
+            "data": ''
+        })
+        return;
+    } catch (error) {
+        console.log(error)
+        res.json({
+            "status": 0,
+            "code": 404,
+            "message": "Đã có lỗi xảy ra",
+            "data": ''
+        })
+        return;
+    }
+}
+const cancelAbsent = async (req, res, next) => {
+    const { class_id } = req.body
+    console.log(class_id)
+    if (class_id == '') {
+        res.json({
+            "status": 0,
+            "code": 404,
+            "message": 'thất bại',
+            "data": ""
+        })
+        return;
+    }
+    try {
+        const classAbsent = await AbsentClassModel.findAndCountAll({
+            where: {
+                 class_id,
+                status: 1,
+                is_active: 1
+            }
+        })
+        console.log(classAbsent.rows[0].id)
+        if (classAbsent.count < 1) {
+            res.json({
+                "status": 0,
+                "code": 404,
+                "message": 'Lớp này hiện không điểm danh',
+                "data": ''
+            })
+            return;
+        }
+        const absentClass=await AbsentClassModel.update({
+            status: 0,
+            is_active: 0
+        }, {
+            where: {
+                id:classAbsent.rows[0].id
+            }
+        })
+        const liststudent = await StudentModel.findAndCountAll({
+            include: [{
+                model: StudentClassModel,
+                where: {
+                    class_id
+                }
+            }],
+            distinct: true
+        })
+        const classes=await ClassModel.findAll({
+            id:class_id
+        })
+        for (let index = 0; index < liststudent.count; index++) {
+            await NotificationModel.create({
+                student_id: liststudent.rows[index].id,
+                class_id,
+                content: "Lớp " + classes[0].class_code + ' hủy điểm danh',
+                type: Constants.TYPE_NOTIFICATION.CANCEL_ABSENT,
+                absent_class_id: absentClass.id
+            })
+            if (liststudent.rows[index].device_id) {
+                pushNotificationAppStudent(liststudent.rows[index].device_id,
+                    "Lớp " +classes[0].class_code + ' huỷ điểm danh',
+                    { class_id: class_id })
+            }
+        }
+        res.json({
+            "status": 1,
+            "code": 200,
+            "message": 'thành công',
+            "data": 'absentClass'
         })
         return;
     } catch (error) {
@@ -571,4 +829,7 @@ export default {
     changePass,
     getListAbsent,
     getDetailAbsent,
+    getAbsentStudent,
+    getNotification,
+    cancelAbsent
 }

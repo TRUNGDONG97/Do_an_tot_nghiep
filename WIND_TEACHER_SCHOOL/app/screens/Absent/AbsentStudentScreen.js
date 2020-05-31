@@ -12,46 +12,45 @@ import NavigationUtil from '@app/navigation/NavigationUtil'
 import LinearGradient from 'react-native-linear-gradient'
 import FastImage from 'react-native-fast-image'
 import reactotron from 'reactotron-react-native'
-import { getDetailAbsent } from '@action/'
-export class DetailAbsent extends Component {
+import { getStudentAbsent } from '@action'
+export class AbsentStudentScreen extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            status: false
+            refreshing: false,
+            class_id: this.props.navigation.getParam('class_id'),
+            student_id: this.props.navigation.getParam('student_id')
         }
     }
-    componentDidMount() {
-        const id = this.props.navigation.getParam('id');
-        this.props.getDetailAbsent(id)
+    async componentDidMount() {
+       await this.props.getStudentAbsent(this.state.class_id, this.state.student_id)
     }
     render() {
-
         return (
             <Block>
                 <SafeAreaView style={theme.styles.containter}>
                     <BackgroundHeader />
-                    <WindsHeader title={"Detail Absent"} />
+                    <WindsHeader title={"Học sinh điểm danh"} />
                     {this._renderBody()}
                 </SafeAreaView>
             </Block>
         )
     }
     _renderBody() {
-        const { detailAbsentState } = this.props
-        const classes = this.props.navigation.getParam('classes')
-        const date_absent = this.props.navigation.getParam('date_absent')
-        const id = this.props.navigation.getParam('id');
-        reactotron.log('detailAbsentState', detailAbsentState)
-        if (detailAbsentState.isLoading) return <Loading />;
-        if (detailAbsentState.error)
+        const { studentAbsentState } = this.props
+        const { class_id, student_id } = this.state
+        reactotron.log('class_id', class_id)
+        reactotron.log('student_id', student_id)
+        reactotron.log('studentAbsentState', studentAbsentState)
+        if (studentAbsentState.isLoading) return <Loading />;
+        if (studentAbsentState.error)
             return (
                 <Error
                     onPress={() => {
-                        this.props.getDetailAbsent(id);
+                        this.props.getStudentAbsent(class_id, student_id);
                     }}
                 />
             );
-
         return (
             <ScrollView
                 style={{ marginTop: 20, }}
@@ -59,16 +58,23 @@ export class DetailAbsent extends Component {
                 refreshControl={
                     <RefreshControl
                         refreshing={this.state.refreshing}
-                        onRefresh={() => this.props.getDetailAbsent(id)}
+                        onRefresh={() => this.props.getStudentAbsent(class_id, student_id)}
                     />
                 }
             >
                 <View style={styles._viewUser}>
-                    {this._renderUserItem('Tên lớp học', classes.Subject.subject_name)}
-                    {this._renderUserItem('Mã lớp học', classes.class_code)}
-                    {this._renderUserItem('Ngày điểm danh', date_absent)}
+                    {this._renderUserItem('Họ và tên', studentAbsentState.student.name)}
+                    {this._renderUserItem('MSSV', studentAbsentState.student.mssv)}
+                    {this._renderUserItem('Ngày sinh', studentAbsentState.student.birthday.split("-").reverse().join("/"))}
+                    {this._renderUserItem('Số điện thoại', studentAbsentState.student.phone)}
+                    {/* {this._renderUserItem('Điểm giữa kì',
+                        studentAbsentState.student.Student_classes[0].end_semester ?
+                            studentAbsentState.student.Student_classes[0].end_semester : 'chưa có',)}
+                    {this._renderUserItem('Điểm cuối kì',
+                        studentAbsentState.student.Student_classes[0].end_semester ?
+                            studentAbsentState.student.Student_classes[0].end_semester : 'chưa có')} */}
                     {this._renderUserItem("Số lượng điểm danh",
-                        detailAbsentState.data.countAbsent + "/" + detailAbsentState.data.listStudent.length)}
+                        studentAbsentState.countAbsent + "/" + studentAbsentState.total)}
                 </View>
                 <LinearGradient
                     style={styles._lgListClass}
@@ -76,63 +82,73 @@ export class DetailAbsent extends Component {
                     start={{ x: 0.7, y: 1 }} //transparent
                     end={{ x: 0, y: 0.1 }}>
                     <Text style={[theme.fonts.regular20, { color: theme.colors.white }]}>
-                       Danh sách điểm danh </Text>
+                        Danh sách điểm danh </Text>
                 </LinearGradient>
-                <View style={{paddingBottom:20}}>
-                    <View
-                        style={[styles._vColumn,
-                        {
-                            backgroundColor: theme.colors.backgroundBlue,
-                            borderTopWidth: 0.5,
-                            borderTopColor: theme.colors.gray,
-                            marginTop: 10,
-                        }
-                        ]}
-                    >
-                        <View style={[styles.rowTable, { flex: 1 }]}>
-                            <Text style={theme.fonts.regular14}>{R.strings.number}</Text>
-                        </View>
-                        <View style={[styles.rowTable, { flex: 6 }]}>
-                            <Text style={theme.fonts.regular14}>{R.strings.name}</Text>
-                        </View>
-                        <View style={[styles.rowTable, { flex: 3 }]}>
-                            <Text style={theme.fonts.regular14}>MSSV</Text>
-                        </View>
-                        {/* <View style={[styles.rowTable, { flex: 1 }]}>
-                        </View> */}
-                    </View>
+                <View
+                    style={[styles._vColumn,
                     {
-                       detailAbsentState.data.listStudent.length == 0 ? (
-                            <Empty description={'chưa có học sinh nào '}
-                            />
-                        ) : (
-
-                            detailAbsentState.data.listStudent.map((item, index) => (
-                                    <View key={index.toString()} style={{ width: "100%" }}>
-                                        {this._renderRowTable(item, index)}
-                                    </View>
-                                ))
-                            )
+                        backgroundColor: theme.colors.backgroundBlue,
+                        borderTopWidth: 0.5,
+                        borderTopColor: theme.colors.gray,
+                        marginTop: 20
                     }
+                    ]}
+                >
+                    <View style={[styles.rowTable, { flex: 1 }]}>
+                        <Text style={theme.fonts.regular14}>{R.strings.number}</Text>
+                    </View>
+                    <View style={[styles.rowTable, { flex: 3 }]}>
+                        <Text style={theme.fonts.regular14}>Ngày </Text>
+                    </View>
+                    <View style={[styles.rowTable, { flex: 2 }]}>
+                        <Text style={theme.fonts.regular14}>Thời gian</Text>
+                    </View>
+                    <View style={[styles.rowTable, { flex: 1 }]}>
+                        <Text style={theme.fonts.regular14}></Text>
+                    </View>
+
                 </View>
+                {
+                    studentAbsentState.listAbsent.length == 0 ? (
+                        <View style={[styles.rowTable, { flex: 1 }]}>
+                            <Text style={theme.fonts.regular14}>Chưa điểm danh </Text>
+                        </View>
+                    ) : (
+
+                            studentAbsentState.listAbsent.map((item, index) => (
+                                <View key={index.toString()} style={{ width: "100%" }}>
+                                    {this._renderRowTable(item, index)}
+                                </View>
+                            ))
+                        )
+                }
             </ScrollView>
         )
     }
-    _renderUserItem(title, text) {
+    _renderUserItem(title, text, edit) {
         return (
             <View style={{ flexDirection: "row", paddingHorizontal: 10, paddingVertical: 5 }}>
                 <Text style={[theme.fonts.medium15, {
                     color: theme.colors.backgroundHeader,
-                    flex:1
+                    flex: 1
                 }]}>{title}</Text>
                 <Text style={[theme.fonts.medium15, {
                     color: theme.colors.backgroundHeader,
                     flex: 1,
                 }]}>:  {text}</Text>
-
+                {edit &&
+                    <View style={[styles.rowTable, { flex: 1 }]}>
+                        <Icon.AntDesign
+                            name='edit'
+                            color={theme.colors.backgroundHeader}
+                            size={16} />
+                    </View>
+                }
             </View>
         )
     }
+
+
     _renderRowTable(item, index) {
         return (
             <View
@@ -143,34 +159,35 @@ export class DetailAbsent extends Component {
                 <View style={[styles.rowTable, { flex: 1 }]}>
                     <Text style={theme.fonts.regular14}>{index + 1}</Text>
                 </View>
-                <View style={[styles.rowTable, { flex: 6 }]}>
+                <View style={[styles.rowTable, { flex: 3 }]}>
                     <Text style={theme.fonts.regular14}
                         numberOfLines={2}
-                    >{item.name}</Text>
+                    >{item.date_absent?item.date_absent.split("-").reverse().join("/"):'not'}</Text>
                 </View>
-                <View style={[styles.rowTable, { flex: 3 }]}>
-                    <Text style={theme.fonts.regular14}>{item.mssv}</Text>
+                <View style={[styles.rowTable, { flex: 2 }]}>
+                    <Text style={theme.fonts.regular14}>{item.time_absent? item.time_absent.slice(0, 5):'not'}</Text>
                 </View>
-                {/* <View style={[styles.rowTable, { flex: 1 }]}>
-                    <Icon.AntDesign
-                        name='infocirlce'
-                        color={theme.colors.blue}
+                <View style={[styles.rowTable, { flex: 1 }]}>
+                    <Icon.Octicons
+                        name='primitive-dot'
+                        color={item.status == 1 ? theme.colors.green : theme.colors.gray}
                         size={16} />
-                </View> */}
+                </View>
+
             </View>
         )
     }
 }
 
 const mapStateToProps = (state) => ({
-    detailAbsentState: state.detailAbsentReducer
+    studentAbsentState: state.studentAbsentReducer
 })
 
 const mapDispatchToProps = {
-    getDetailAbsent
+    getStudentAbsent
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DetailAbsent)
+export default connect(mapStateToProps, mapDispatchToProps)(AbsentStudentScreen)
 const styles = StyleSheet.create({
     _viewUser: {
         // justifyContent:'space-between',

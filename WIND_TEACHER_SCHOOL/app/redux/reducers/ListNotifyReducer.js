@@ -1,5 +1,5 @@
 import {
- 
+
 
   GET_LIST_NOTIFICATION,
   GET_LIST_NOTIFICATION_SUCCESS,
@@ -7,16 +7,20 @@ import {
 } from "../actions/type";
 
 const initialState = {
-  data: {},
+  data: [],
   isLoading: false,
   error: null,
-  checkFirst:1
+  // checkFirst:1
 };
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   switch (action.type) {
     case GET_LIST_NOTIFICATION: {
-      return { ...state, isLoading: true,checkFirst: action.checkFirst };
+      return {
+        ...state,
+        isLoading: true,
+        // checkFirst: action.checkFirst
+      };
     }
     case GET_LIST_NOTIFICATION_SUCCESS: {
       return {
