@@ -711,7 +711,9 @@ const getNotification = async (req, res, next) => {
                 attributes: ['id', 'class_id', 'teacher_id', 'absent_class_id', 'content', 'created_date'],
                 where: {
                     teacher_id: teacher.rows[0].id
-                }
+                },  order: [
+                    ['created_date','DESC']
+                ]
             })
             res.json({
                 "status": 1,

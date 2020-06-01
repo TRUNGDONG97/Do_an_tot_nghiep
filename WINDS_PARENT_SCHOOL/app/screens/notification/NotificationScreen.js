@@ -15,10 +15,13 @@ import {
     WindsHeader,
     BackgroundHeader,
     Icon,
-    BlockItem
+    BlockItem,
+    Loading,
+    Empty,
+    Error
 } from '@component'
 import theme from '@theme'
-import { getListNotification } from '../../constants/Api'
+import { getListNotifyAction } from '@action'
 import { ScrollView } from 'react-native-gesture-handler'
 import Mockup from '@app/constants/Mockup'
 import Ripple from 'react-native-material-ripple';
@@ -51,7 +54,7 @@ class FlatListItem extends Component {
                         style={[theme.fonts.regular14, {
                             color: theme.colors.gray,
                             marginTop: 5
-                        }]}>15/12/2020</Text>
+                        }]}>{item.created_date.split("-").reverse().join("/")}</Text>
                 </View>
             </Ripple>
         );
@@ -64,21 +67,37 @@ class NotificationScreen extends Component {
             isRefresh: false
         };
     }
+    componentDidMount(){
+        this.props.getListNotifyAction()
+    }
     _renderBody() {
+        const { notificationState } = this.props
+        // reactotron.log('notificationState', notificationState)
+        if (notificationState.isLoading) return <Loading />;
+        if (notificationState.error)
+            return (
+                <Error
+                    onPress={() => {
+                        this.props.getListNotifyAction();
+                    }}
+                />
+            );
+        if (notificationState.data.length == 0) return <Empty />
         return (
             <FlatList
                 showsVerticalScrollIndicator={false}
-                contentContainerStyle={{ paddingHorizontal: 10, marginTop: 20 }}
+                contentContainerStyle={{ paddingHorizontal: 10, marginTop: 20 ,paddingBottom:50}}
                 refreshControl={
                     <RefreshControl
                         refreshing={this.state.isRefresh}
                         onRefresh={() => {
+                            this.props.getListNotifyAction();
                             // this._onRefresh();
                         }}
                     />
                 }
                 keyExtractor={(item, index) => index.toString()}
-                data={Mockup.listnotifi}
+                data={notificationState.data}
                 renderItem={({ item, pos }) => {
                     return <FlatListItem item={item} pos={pos} />;
                 }}
@@ -98,9 +117,11 @@ class NotificationScreen extends Component {
     }
 }
 const mapStateToProps = state => ({
+    notificationState: state.listNotifyReducer
 });
 
 const mapDispatchToProps = {
+    getListNotifyAction
 };
 export default connect(mapStateToProps, mapDispatchToProps)(NotificationScreen);
 

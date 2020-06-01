@@ -38,7 +38,8 @@ export default class AuthLoadingScreen extends Component {
             <Block>
                 <FastImage
                     source={R.images.img_splash}
-                    style={{ width: '100%', height: '100%' }} />
+                    style={{ width: '100%', height: '100%' }} 
+                    resizeMode={'cover'} />
             </Block>
         )
     }

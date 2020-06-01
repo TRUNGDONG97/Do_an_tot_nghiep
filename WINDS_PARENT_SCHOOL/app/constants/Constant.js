@@ -11,8 +11,9 @@ const SCREEN_ROUTER = {
   NOTIFICATION: 'Notification',
   STUDY: 'Study',
   CHANGE_PASSWORD: 'ChangePassWord',
-  CHANGE_USER_INFO:'ChangeUserInfo'
-
+  CHANGE_USER_INFO:'ChangeUserInfo',
+  LIST_ABSENT:'list_absent',
+  DETAIL_CLASS:'detail_class'
 };
 const LIKE_STATE = {
   LIKE: 1,

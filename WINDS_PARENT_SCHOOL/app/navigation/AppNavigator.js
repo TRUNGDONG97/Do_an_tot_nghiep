@@ -17,6 +17,8 @@ import R from '@R';
 import theme from "@theme";
 import { Icon, ImageViewerScreen } from '@component'
 import ChangeUserInfo from '@screen/user/ChangeUserInfo'
+import ListAbsentScreen from '@screen/absent/ListAbsentScreen'
+import ClassDetailScreen from '@screen/class/ClassDetailScreen'
 import {
     Image
 } from "react-native";
@@ -26,6 +28,10 @@ const Auth = createStackNavigator({
     [SCREEN_ROUTER.LOGIN]: LoginScreen,
     [SCREEN_ROUTER.REGISTER]: RegisterScreen,
     // [SCREEN_ROUTER.FORGOT_PASS]: ForgotPasswordScreen
+}, {
+    defaultNavigationOptions: {
+        header: null
+    }
 })
 
 const getTabBarIcon = (navigation, focused, tintColor) => {
@@ -44,9 +50,11 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
                 />
             );
         }
-        case SCREEN_ROUTER.STUDY: {
-            iconName = "wallet"
-            break
+        case SCREEN_ROUTER.LIST_ABSENT: {
+            iconName = "earth";
+            return (
+                <Icon.Fontisto name={iconName} size={iconSize} color={tintColor} outline />
+            );
         }
         case SCREEN_ROUTER.NOTIFICATION: {
             iconName = "bell"
@@ -70,13 +78,13 @@ const Main = createBottomTabNavigator(
                 tabBarLabel: R.strings.class,
             },
         },
-        // [SCREEN_ROUTER.STUDY]: {
-        //     screen: StudyScreen,
-        //     title: R.strings.study,
-        //     navigationOptions: {
-        //         tabBarLabel: R.strings.study,
-        //     },
-        // },
+        [SCREEN_ROUTER.LIST_ABSENT]: {
+            screen: ListAbsentScreen,
+            title: 'Điểm danh',
+            navigationOptions: {
+                tabBarLabel: "Điểm danh",
+            },
+        },
         [SCREEN_ROUTER.NOTIFICATION]: {
             screen: NotificationScreen,
             title: R.strings.notification,
@@ -124,6 +132,7 @@ const MainStack = createStackNavigator({
     [SCREEN_ROUTER.STUDY]: StudyScreen,
     [SCREEN_ROUTER.CHANGE_PASSWORD]: ChangePassWordScreen,
     [SCREEN_ROUTER.CHANGE_USER_INFO]: ChangeUserInfo,
+    [SCREEN_ROUTER.DETAIL_CLASS]: ClassDetailScreen,
 },
     {
         defaultNavigationOptions: {

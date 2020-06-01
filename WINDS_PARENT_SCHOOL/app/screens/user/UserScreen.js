@@ -127,7 +127,7 @@ export class UserScreen extends Component {
                         <Avatar
                             rounded
                             source={{
-                                uri: 'http://5f7ff762.ngrok.io/upload/avatarStudent/donglt20150959.jpg'
+                                uri: UserInfoState.data.url_avatar
                                 // uri:
                             }}
                             size={65}
@@ -159,11 +159,9 @@ export class UserScreen extends Component {
                             <TouchableOpacity
                                 onPress={() => NavigationUtil.navigate(SCREEN_ROUTER.CHANGE_USER_INFO)}
                             >
-                                <Icon.FontAwesome size={20}
+                                <Icon.FontAwesome size={25}
                                     name='edit'
-                                    type='feathericons'
-                                    color={theme.colors.backgroundHeader}
-                                    size={30} />
+                                    color={theme.colors.backgroundHeader} />
                             </TouchableOpacity>
                         </View>
 

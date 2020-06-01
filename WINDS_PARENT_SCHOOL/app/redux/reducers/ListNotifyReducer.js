@@ -1,7 +1,7 @@
 import { GET_LIST_NOTIFICATION_FAIL, GET_LIST_ABSENT, GET_LIST_ABSENT_SUCCESS, GET_LIST_ABSENT_FAIL, GET_LIST_CLASS, GET_LIST_CLASS_SUCCESS, GET_LIST_CLASS_FAIL, GET_LIST_NOTIFICATION, GET_LIST_NOTIFICATION_SUCCESS } from "../actions/type";
 
 const initialState = {
-    data :{},
+    data :[],
     isLoading: false,
     error: null
 }

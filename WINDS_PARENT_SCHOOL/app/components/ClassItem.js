@@ -30,7 +30,7 @@ export default class ClassItem extends Component {
             <Block
                 style={{
                     width: width * 0.95,
-                    marginTop: 10,
+                    marginTop: 20,
                     flex: 1,
                     backgroundColor: "white",
                     borderRadius: 4
@@ -39,10 +39,11 @@ export default class ClassItem extends Component {
                 <Ripple rippleDuration={500}
                     rippleSequential={true}
                     onPress={() => {
-                        NavigationUtil.navigate(SCREEN_ROUTER.STUDY)
+                        NavigationUtil.navigate(SCREEN_ROUTER.DETAIL_CLASS,{class_id:item.id})
                     }}>
                     <Block style={[theme.styles.styleBlockHeader, { alignItems: 'center' }]}>
-                        <Text style={(theme.fonts.bold16, { color: "white", fontWeight: 'bold', fontSize: 20 })}>{item.Subject.subject_name}</Text>
+                        <Text style={(theme.fonts.bold16, { color: "white", fontWeight: 'bold', fontSize: 20 })}>
+                            {item.Subject.subject_name}</Text>
                     </Block>
                     <View style={{ flexDirection: 'row' }}>
                         <View style={{ paddingVertical: 10, paddingHorizontal: 16, flex: 1 }}>

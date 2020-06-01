@@ -43,6 +43,9 @@ export class ListClassAbsentScreen extends Component {
                     }}
                 />
             );
+        if (listAbsentState.data.length == 0)
+            return <Empty description={"Chưa có lớp nào"}
+            />
         return (
             <Block flex={1} style={{ marginTop: 20 }}>
                 <FlatList

@@ -4,7 +4,7 @@ import {
   GET_CLASS_LIST_SUCCESS
 } from "../actions/type";
 const initialState = {
-  data: {},
+  data: [],
   // mail: {},
   // promotion: [],
   isLoading: false,

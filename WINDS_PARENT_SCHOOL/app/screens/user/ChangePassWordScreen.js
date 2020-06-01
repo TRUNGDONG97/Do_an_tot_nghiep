@@ -64,6 +64,7 @@ export class ChangePassWordScreen extends Component {
             if (error.message == "Network Error") {
                 Toast.show('Lỗi mạng', BACKGROUND_TOAST.FAIL);
             }
+            Toast.show('Đã có lỗi xảy ra', BACKGROUND_TOAST.FAIL);
             //   reactotron.log(error, "error");
             this.setState({
                 ...this.state,

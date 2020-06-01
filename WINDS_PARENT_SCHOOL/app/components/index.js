@@ -25,6 +25,7 @@ import CommentItem from './CommentItem'
 import ActionSheet from './ActionSheet'
 import ClassItem from './ClassItem'
 import Checked from './Checked'
+import AbsentItem from './AbsentItem'
 export {
     Block, AppHeader, WindsHeader,
     FastImage, Empty, BackgroundHeader,
@@ -43,5 +44,6 @@ export {
     CommentItem,
     ActionSheet,
     ClassItem,
-    Checked
+    Checked,
+    AbsentItem
 }

@@ -57,6 +57,7 @@ export class NotificationScreen extends Component {
           }}
         />
       );
+    if (notificationState.data.length == 0) return <Empty />
     return (
       <Block
         style={{

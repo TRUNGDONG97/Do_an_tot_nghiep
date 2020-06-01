@@ -6,11 +6,14 @@ import SubjectModel from '../../models/SubjectModel'
 import StudentModel from '../../models/StudentModel'
 import StudentClassModel from '../../models/StudentClassModel'
 import pug from 'pug'
-import { getArrayPages, PageCount,pushNotificationAppStudent } from '../../constants/Funtions'
+import { getArrayPages, PageCount, pushNotificationAppStudent } from '../../constants/Funtions'
 import { Op } from 'sequelize'
 import sequelize from 'sequelize'
 import md5 from 'md5';
 import crypto from 'crypto-js';
+import AbsentClassModel from '../../models/AbsentClassModel'
+import AbsentStudentModel from '../../models/AbsentStudentModel'
+import NotificationModel from '../../models/NotificationModel'
 const getClass = async (req, res, next) => {
     const { token } = req.headers
     if (token == '') {
@@ -43,7 +46,8 @@ const getClass = async (req, res, next) => {
                     model: SubjectModel
                 }],
                 where: {
-                    status: 1
+                    status: 1,
+                    is_active: 1
                 },
                 order: [
                     ['Schedule_classes', 'day_of_week', 'ASC']
@@ -221,7 +225,7 @@ const changeUserInfo = async (req, res, next) => {
 
     }
 }
-const changePass = async (req,res,next) => {
+const changePass = async (req, res, next) => {
     const { token } = req.headers;
     if (token == '') {
         res.json({
@@ -240,7 +244,7 @@ const changePass = async (req,res,next) => {
             }
         })
         if (student.count > 0) {
-            if(student.rows[0].password.trim()!=md5(oldPassword.trim())){
+            if (student.rows[0].password.trim() != md5(oldPassword.trim())) {
                 res.json({
                     "status": 0,
                     "code": 404,
@@ -273,8 +277,237 @@ const changePass = async (req,res,next) => {
         })
         return;
     } catch (error) {
-         console.log(error)
-         res.json({
+        console.log(error)
+        res.json({
+            "status": 0,
+            "code": 404,
+            "message": "Đã có lỗi xảy ra",
+            "data": ''
+        })
+        return;
+    }
+}
+const ListAbsentClass = async (req, res, next) => {
+    const { token } = req.headers
+    // console.log(token)
+    if (token == '') {
+        res.json({
+            "status": 0,
+            "code": 404,
+            "message": 'thất bại',
+            "data": ""
+        })
+        return;
+    }
+    try {
+        const student = await StudentModel.findAll({
+            where: {
+                token
+            }
+        })
+        // console.log(student.count)
+        if (student.length > 0) {
+            const listClass = await ClassModel.findAll({
+                include: [{
+                    model: StudentClassModel,
+                    attributes: ['student_id'],
+                    where: {
+                        student_id: student[0].id
+                    },
+                    required: false
+                }, {
+                    model: SubjectModel,
+                    attributes: ['subject_name', 'subject_code']
+                }, {
+                    model: AbsentClassModel,
+                    attributes: ['date_absent', 'time_start'],
+                    include: [{
+                        model: AbsentStudentModel,
+                        attributes: ['time_absent', 'status'],
+                        where: { student_id: student[0].id },
+                        required: false
+                    }],
+                    required: false,
+                    where: {
+                        is_active: 1
+                    }
+                }],
+                where: {
+                    status: 1,
+                    is_active: 1
+                }
+                // distinct: true
+            });
+            res.json({
+                "status": 1,
+                "code": 200,
+                "message": 'thành công',
+                "data": listClass
+            })
+            return;
+        }
+        res.json({
+            "status": 0,
+            "code": 403,
+            "message": 'Chưa đăng nhập',
+            "data": ""
+        })
+        return;
+    } catch (error) {
+        console.log(error)
+        res.json({
+            "status": 0,
+            "code": 404,
+            "message": "Đã có lỗi xảy ra",
+            "data": ''
+        })
+        return;
+    }
+}
+const DetailClass = async (req, res, next) => {
+    const { class_id } = req.query;
+    if (class_id == '') {
+        res.json({
+            "status": 0,
+            "code": 404,
+            "message": 'Đã có lỗi xảy ra',
+            "data": ""
+        })
+        return;
+    }
+    try {
+        const classes = await ClassModel.findAll({
+            attributes: ['class_code', 'status'],
+            include: [{
+                model: TeacherModel,
+                attributes: ['id', 'name', 'phone', 'email', 'url_avatar'],
+                required: false
+            },
+            {
+                model: ScheduleClassModel,
+            }, {
+                model: SubjectModel
+            }],
+            where: {
+                id: class_id
+            },
+
+        })
+        res.json({
+            "status": 1,
+            "code": 200,
+            "message": 'thành công',
+            "data": classes[0]
+        })
+        return;
+    } catch (error) {
+        console.log(error)
+        res.json({
+            "status": 0,
+            "code": 404,
+            "message": "Đã có lỗi xảy ra",
+            "data": ''
+        })
+        return;
+    }
+}
+const notification = async (req, res, next) => {
+    const { token } = req.headers
+    if (token == '') {
+        res.json({
+            "status": 0,
+            "code": 404,
+            "message": 'thất bại',
+            "data": ""
+        })
+        return;
+    }
+    try {
+        const student = await StudentModel.findAndCountAll({
+            where: {
+                token
+            }
+        })
+        if (student.count > 0) {
+            const ListNoti = await NotificationModel.findAll({
+                attributes: ['id', 'class_id', 'student_id', 'absent_class_id', 'content', 'created_date'],
+                where: {
+                    student_id: student.rows[0].id
+                },
+                order: [
+                    ['created_date', 'DESC']
+                ]
+            })
+            // pushNotificationAppStudent('d4194038-1130-4ba4-8e09-9ae44b14cc00',
+            //     ' dang điểm danh',
+            //     { class_id: 4 })
+            res.json({
+                "status": 1,
+                "code": 200,
+                "message": 'thành công',
+                "data": ListNoti
+            })
+            return;
+        }
+        res.json({
+            "status": 0,
+            "code": 403,
+            "message": 'Chưa đăng nhập',
+            "data": ''
+        })
+        return;
+    } catch (error) {
+        console.log(error)
+        res.json({
+            "status": 0,
+            "code": 404,
+            "message": "Đã có lỗi xảy ra",
+            "data": ''
+        })
+        return;
+    }
+}
+const absentStudent = async (req, res, next) => {
+    const { class_id, gps_longitude, gps_latitude } = res.body;
+    const { token } = res.headers;
+    const currentDate = new Date()
+    const time_absent = currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + "00";
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    const date_absent = yyyy + '-' + mm + '-' + dd;
+    console.log('date_absent',date_absent)
+    console.log('token',token)
+    console.log('class_id',class_id)
+    console.log('gps_longitude',gps_longitude)
+    console.log('gps_latitude',gps_latitude)
+    console.log('time_absent',time_absent)
+    try {
+        const student = await StudentModel.findAll({
+            where: {
+                token
+            }
+        })
+        if (student.length < 1) {
+            res.json({
+                "status": 0,
+                "code": 403,
+                "message": 'Chưa đăng nhập',
+                "data": ''
+            })
+            return;
+        }
+        res.json({
+            "status": 1,
+            "code": 200,
+            "message": 'thành công',
+            "data": 'ListNoti'
+        })
+        return;
+    } catch (error) {
+        console.log(error)
+        res.json({
             "status": 0,
             "code": 404,
             "message": "Đã có lỗi xảy ra",
@@ -288,4 +521,8 @@ export default {
     getUserInfo,
     changeUserInfo,
     changePass,
+    ListAbsentClass,
+    DetailClass,
+    notification,
+    absentStudent
 }

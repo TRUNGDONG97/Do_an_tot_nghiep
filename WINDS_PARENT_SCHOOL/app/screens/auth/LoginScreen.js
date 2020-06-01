@@ -57,7 +57,7 @@ export default class LoginScreen extends Component {
         user: this.state.username,
         password: this.state.password,
         deviceID: this.state.deviceID,
-        type:1
+        type: 1
       });
 
       this.setState(
@@ -117,7 +117,7 @@ export default class LoginScreen extends Component {
             {R.strings.forgot_password}
           </Text>
         </TouchableOpacity> */}
-        <Button style={{marginTop:40}} title={R.strings.login} onPress={this.login} />
+        <Button style={{ marginTop: 40 }} title={R.strings.login} onPress={this.login} />
       </KeyboardAvoidingView>
     );
   }

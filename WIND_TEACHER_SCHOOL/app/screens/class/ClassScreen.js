@@ -5,7 +5,7 @@ import { getListClass } from '@action'
 import {
     Block, WindsHeader,
     BackgroundHeader, Loading,
-    FastImage, ClassItem
+    FastImage, ClassItem, Empty
 } from '@app/components'
 import R from '@R'
 import theme from '@theme'
@@ -19,7 +19,7 @@ class ClassScreen extends Component {
     state = {
         isRefresh: false,
     };
-    componentDidMount(){
+    componentDidMount() {
         this.props.getListClass()
     }
     render() {
@@ -45,8 +45,11 @@ class ClassScreen extends Component {
                     }}
                 />
             );
+        if (classListState.data.length == 0)
+            return <Empty description={"Chưa có lớp nào"}
+            />
         return (
-            <Block flex={1} style={{marginTop:20}}>
+            <Block flex={1} style={{ marginTop: 20 }}>
                 {/* <Block style={{ marginTop: Platform.OS == "android" ? 0 : 15, paddingBottom: 15 }}> */}
                 <FlatList
                     showsVerticalScrollIndicator={false}

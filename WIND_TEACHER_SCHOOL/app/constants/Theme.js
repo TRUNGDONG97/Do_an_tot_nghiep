@@ -7,7 +7,7 @@ const colors = {
 	primaryDark: "#F6CB26",
 	primaryDark1: "#2E384D",
 	active: "#002D4A",
-	active1: "#7F95A4",
+	active1: "#2E5BFF",
 	blue: "#2E5BFF",
 	lightblue: "rgba(46,92,255,0.2)",
 	backgroundColorTable: "#DDF1F9",

@@ -19,6 +19,9 @@ import {
   UPDATE_USER_SUCCESS,
   UPDATE_USER_FAIL,
   UPDATE_USER,
+  GET_DETAIL_CLASS,
+  GET_DETAIL_CLASS_SUCCESS,
+  GET_DETAIL_CLASS_FAIL,
 
 } from '../actions/type';
 import Toast, { BACKGROUND_TOAST } from "@app/utils/Toast";
@@ -29,8 +32,8 @@ import NavigationUtil from '@app/navigation/NavigationUtil'
 
 export function* getListAbsent(action) {
   try {
-    const response = yield call(API.getListAbsent, action.payload)
-    yield put({ type: GET_LIST_ABSENT_SUCCESS, payload: response.result })
+    const response = yield call(API.getListAbsent)
+    yield put({ type: GET_LIST_ABSENT_SUCCESS, payload: response.data })
     // alert(JSON.stringify(response))
   } catch (err) {
     yield put({ type: GET_LIST_ABSENT_FAIL, payload: err })
@@ -42,8 +45,6 @@ export function* getListClass() {
   try {
     const response = yield call(API.getListClass)
     yield put({ type: GET_LIST_CLASS_SUCCESS, payload: response.data })
-    // alert(JSON.stringify(response))
-    // reactotron.log(response)
   } catch (err) {
     yield put({ type: GET_LIST_CLASS_FAIL, payload: err })
     // alert(err)
@@ -51,9 +52,9 @@ export function* getListClass() {
 }
 
 
-export function* getListNotify(action) {
+export function* getListNotify() {
   try {
-    const response = yield call(API.getListNotification, action.payload)
+    const response = yield call(API.getListNotification)
     yield put({ type: GET_LIST_NOTIFICATION_SUCCESS, payload: response.data })
     // alert(JSON.stringify(response))
   } catch (err) {
@@ -83,6 +84,7 @@ export function* getUserInfo() {
     // alert(err)
   }
 }
+
 export function* updateUser(action) {
   try {
     const response = yield call(API.updateUser, action.payload);
@@ -96,9 +98,21 @@ export function* updateUser(action) {
     }
   }
 }
+// export function* getDetailClass(action) {
+//   try {
+//     const response = yield call(API.getDetailClass,action.payload)
+//     // reactotron.log(response)
+//     yield put({ type: GET_DETAIL_CLASS_SUCCESS, payload: response.data })
+//     // alert(JSON.stringify(response))
+//   } catch (err) {
+//     yield put({ type: GET_DETAIL_CLASS_FAIL, payload: err })
+//     // alert(err)
+//   }
+// }
 export const watchListAbsent = takeEvery(GET_LIST_ABSENT, getListAbsent);
 export const watchGetListClass = takeEvery(GET_LIST_CLASS, getListClass);
 export const watchGetListNotify = takeEvery(GET_LIST_NOTIFICATION, getListNotify);
 export const watchGetListFee = takeEvery(GET_LIST_FEE, getListFee);
 export const watchGetUserInfo = takeEvery(GET_USER_INFOR, getUserInfo);
 export const watchUpdateUser = takeEvery(UPDATE_USER, updateUser);
+// export const watchGetDetailClass = takeEvery(GET_DETAIL_CLASS, getDetailClass);

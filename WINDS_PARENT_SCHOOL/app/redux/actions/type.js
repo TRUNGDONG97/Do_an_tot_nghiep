@@ -27,3 +27,6 @@ export const UPDATE_USER = 'daotao/update_user';
 export const UPDATE_USER_SUCCESS = 'daotao/update_user_success';
 export const UPDATE_USER_FAIL = 'daotao/update_user_fail';
 
+// export const GET_DETAIL_CLASS = 'daotao/get_detail_class';
+// export const GET_DETAIL_CLASS_SUCCESS = 'daotao/get_detail_class_success';
+// export const GET_DETAIL_CLASS_FAIL = 'daotao/get_detail_class_fail';

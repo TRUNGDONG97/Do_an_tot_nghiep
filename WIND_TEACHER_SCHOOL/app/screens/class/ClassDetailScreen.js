@@ -24,7 +24,7 @@ import FastImage from 'react-native-fast-image'
 import reactotron from 'reactotron-react-native'
 import Geolocation from '@react-native-community/geolocation';
 import { showMessages } from '@app/utils/Alert'
-import { createAbsent,cancelAbsent} from '@app/constants/Api'
+import { createAbsent, cancelAbsent } from '@app/constants/Api'
 import Toast, { BACKGROUND_TOAST } from "@app/utils/Toast";
 export class ClassDetailScreen extends Component {
     constructor(props) {
@@ -42,6 +42,10 @@ export class ClassDetailScreen extends Component {
     }
     _startAbsent = async (gps_latitude, gps_longitude) => {
         const { class_id } = this.state
+        if (!gps_latitude || !gps_longitude) {
+            Toast.show('Chưa định vị được vị trí của máy', BACKGROUND_TOAST.SUCCESS);
+            return;
+        }
         const payload = {
             class_id,
             gps_latitude,
@@ -92,18 +96,18 @@ export class ClassDetailScreen extends Component {
             },
             error => {
                 reactotron.log(error, 'error getCurrentPosition')
-                Toast.show("Đã có lỗi xảy ra", BACKGROUND_TOAST.FAIL);
+                Toast.show("Chưa lấy được vị trí", BACKGROUND_TOAST.FAIL);
             },
         );
     }
-    _cancelAbsent=async()=>{
+    _cancelAbsent = async () => {
         const { class_id } = this.state
         this.setState({
             ...this.state,
             isLoading: true
         });
         try {
-            const response = await cancelAbsent({class_id});
+            const response = await cancelAbsent({ class_id });
             reactotron.log(response, 'res');
             Toast.show(response.message, BACKGROUND_TOAST.SUCCESS);
             this.setState({
@@ -139,6 +143,7 @@ export class ClassDetailScreen extends Component {
         const item = this.props.navigation.getParam('class')
         if (this.state.isLoading) return <Loading />;
         // reactotron.log('Student_classes', item.Student_classes)
+
         return (
             <ScrollView
                 style={{ marginTop: 20, }}
@@ -169,13 +174,13 @@ export class ClassDetailScreen extends Component {
                     </TouchableOpacity>
 
                     <TouchableOpacity style={{ flex: 1, marginHorizontal: 20, borderRadius: 5 }}
-                        onPress={()=>{
+                        onPress={() => {
                             this._cancelAbsent()
                         }}
                     >
                         <LinearGradient
                             style={styles.bgButton}
-                            colors={["#FE2E2E","#F5A9A9"]}
+                            colors={["#FE2E2E", "#F5A9A9"]}
                             start={{ x: 0.7, y: 1 }} //transparent
                             end={{ x: 0, y: 0.1 }}
                         >
@@ -193,9 +198,9 @@ export class ClassDetailScreen extends Component {
                             // reactotron.log(this.state.region)
                         }}
                     /> */}
-                    
+
                 </View>
-             
+
 
                 <LinearGradient
                     style={styles._lgListClass}
@@ -284,7 +289,7 @@ export class ClassDetailScreen extends Component {
     }
     _renderUserItem(title, text) {
         return (
-            <View style={{ flexDirection: "row", paddingHorizontal: 10, paddingVertical: 5 ,marginLeft:20}}>
+            <View style={{ flexDirection: "row", paddingHorizontal: 10, paddingVertical: 5, marginLeft: 20 }}>
                 <Text style={[theme.fonts.medium15, {
                     color: theme.colors.backgroundHeader,
                     width: 120

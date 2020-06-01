@@ -1,8 +1,8 @@
 import {  GET_LIST_CLASS, GET_LIST_CLASS_SUCCESS, GET_LIST_CLASS_FAIL } from "../actions/type";
 
 const initialState = {
-    data: {},
-    isLoading: false,
+    data: [],
+    isLoading: true,
     error: null,
 }
 

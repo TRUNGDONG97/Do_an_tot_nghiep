@@ -8,7 +8,7 @@ const colors = {
   primary: "#F3F3F3",
   primaryDark: "#F6CB26",
   primaryDark1: "#2E384D",
-  active: "#002D4A",
+  active: "#2E5BFF",
   blue: "#2E5BFF",
   lightblue: "rgba(46,92,255,0.2)",
   green: "#33AC2E",
@@ -36,7 +36,8 @@ const colors = {
   backgroundColorTable: "#A4EBF6",
   backgroundHeader: "#1d67a5",
   primaryText: '#0B4369',
-
+  backgroundBlue:'#A7EEF9',
+  backgroundBlueItem:'#E9FAFD'
 };
 
 const sizes = {

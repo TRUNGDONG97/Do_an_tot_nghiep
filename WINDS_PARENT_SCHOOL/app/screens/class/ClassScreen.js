@@ -15,7 +15,8 @@ import {
     BackgroundHeader, Loading,
     FastImage, Icon,
     Content,
-    ClassItem
+    ClassItem,
+    Empty
 } from '@component'
 import R from '@R'
 import theme from '@theme'
@@ -58,9 +59,10 @@ class ClassScreen extends Component {
                     }}
                 />
             );
+        if(classListState.data.length==0) return <Empty description={"Chưa có lớp nào"}/>
             // reactotron.log('room_name', classListState.data[0].Schedule_classes[0].room_name)
         return (
-            <Block flex={1} style={{marginTop:20}}>
+            <Block flex={1} style={{marginTop:40}}>
                 <FlatList
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={{ paddingHorizontal: 10,paddingBottom:20}}
