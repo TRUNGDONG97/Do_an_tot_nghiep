@@ -83,13 +83,6 @@ export class ClassDetailScreen extends Component {
         await Geolocation.getCurrentPosition(
             position => {
                 const { latitude, longitude } = position.coords;
-                //  this.setState({
-                //     ...this.state,
-                //     region: {
-                //         longitude: longitude,
-                //         latitude: latitude,
-                //       }
-                // });
                 this._startAbsent(latitude, longitude)
                 reactotron.log(latitude, longitude)
                 // return;
@@ -175,7 +168,7 @@ export class ClassDetailScreen extends Component {
 
                     <TouchableOpacity style={{ flex: 1, marginHorizontal: 20, borderRadius: 5 }}
                         onPress={() => {
-                            this._cancelAbsent()
+                            showMessages("","Bạn chắc chắn hủy điểm danh",this._cancelAbsent()) 
                         }}
                     >
                         <LinearGradient

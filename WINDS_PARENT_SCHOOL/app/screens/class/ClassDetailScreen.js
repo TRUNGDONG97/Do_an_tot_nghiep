@@ -21,20 +21,21 @@ import { Avatar } from "react-native-elements";
 import LinearGradient from 'react-native-linear-gradient'
 import {absent} from '@api'
 import Geolocation from '@react-native-community/geolocation';
+import { getListAbsent } from '@action'
 export class ClassDetailScreen extends Component {
     constructor(props) {
         super(props);
+        const class_id = this.props.navigation.getParam('class_id')
         this.state = {
             refreshing: false,
             isLoading: true,
             data: {},
-            error: null
+            error: null,
+            class_id:class_id
         };
     }
     componentDidMount() {
-        const class_id = this.props.navigation.getParam('class_id')
-        reactotron.log(class_id)
-        this._getData(class_id);
+        this._getData(this.state.class_id);
     }
     async _getData(class_id) {
         this.setState({
@@ -73,6 +74,7 @@ export class ClassDetailScreen extends Component {
             gps_latitude,
             gps_longitude
         }
+        // reactotron.log(class_id)
         this.setState({
             ...this.state,
             isLoading: true
@@ -85,9 +87,9 @@ export class ClassDetailScreen extends Component {
                 ...this.state,
                 isLoading: false,
             });
-            // NavigationUtil.navigate(SCREEN_ROUTER.DETAIL_ABSENT, {
-            //     absent_class_id: response.data.classAbsent.id
-            // })
+            this.props.getListAbsent()
+            NavigationUtil.navigate(SCREEN_ROUTER.LIST_ABSENT);
+
         } catch (error) {
             if (error.message == "Network Error") {
                 Toast.show(I18n.t("network_err"), BACKGROUND_TOAST.FAIL);
@@ -112,7 +114,7 @@ export class ClassDetailScreen extends Component {
                 //         latitude: latitude,
                 //       }
                 // });
-                // this._absent(latitude, longitude)
+                this._absent(latitude, longitude)
                 reactotron.log(latitude, longitude)
                 // return;
             },
@@ -254,6 +256,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
+    getListAbsent
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClassDetailScreen)

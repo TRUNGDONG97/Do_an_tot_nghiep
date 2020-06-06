@@ -1,7 +1,8 @@
-$(document).ready(function() {
-//    const url =window.location.search;
-//    const urlParams = new URLSearchParams(url);
-//    alert(urlParams.get('id'))
+$(document).ready(function () {
+    //    const url =window.location.search;
+    //    const urlParams = new URLSearchParams(url);
+    //    alert(urlParams.get('id'))
+    $('#tabClass a').css({ "background-color": "#17a2b8", "color": "#fff" })
 });
 function addStudentInclass(class_id) {
     if (!navigator.onLine) {
@@ -133,7 +134,7 @@ function deleteStuInClass(student_id, class_id) {
                     url: '/class/deleteStuInclass',
                     type: 'POST',
                     data: {
-                        student_id,class_id
+                        student_id, class_id
                     },
                     cache: false,
                     timeout: 50000,

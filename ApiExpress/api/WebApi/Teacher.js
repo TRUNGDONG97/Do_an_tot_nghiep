@@ -7,17 +7,17 @@ import { getArrayPages, PageCount } from '../../constants/Funtions'
 import md5 from 'md5'
 
 
-const getTeacherID=async(req, res, next) => {
+const getTeacherID = async (req, res, next) => {
     const { id } = req.body
     try {
-      
+
         const teachers = await TeacherModel.findAll({
-            where:{
+            where: {
                 id
             }
         })
         res.send({
-            teacher:teachers[0],
+            teacher: teachers[0],
         })
         return;
     } catch (error) {
@@ -26,7 +26,7 @@ const getTeacherID=async(req, res, next) => {
         return;
     }
 }
-const getTeacher = async(req, res, next) => {
+const getTeacher = async (req, res, next) => {
     const { currentPage } = req.body
     try {
         const count = await TeacherModel.count()
@@ -57,11 +57,11 @@ const getTeacher = async(req, res, next) => {
         return;
     }
 }
-const searchTeacher = async(req, res, next) => {
+const searchTeacher = async (req, res, next) => {
     const { currentPage, name, phone, status } = req.body
     var teachers = []
     var count = 0
-        // console.log(status,"status")
+    // console.log(status,"status")
     try {
         if (status == '') {
             teachers = await TeacherModel.findAll({
@@ -146,7 +146,7 @@ const searchTeacher = async(req, res, next) => {
         return;
     }
 }
-const addTeacher = async(req, res, next) => {
+const addTeacher = async (req, res, next) => {
     const {
         name,
         phone,
@@ -178,18 +178,18 @@ const addTeacher = async(req, res, next) => {
             return;
         }
         const newTeacher = await TeacherModel.create({
-                name,
-                phone,
-                password: md5(phone),
-                birthday,
-                address,
-                email,
-                sex,
-                url_avatar,
-                status,
-                salary
-            })
-            // console.log(newStudent)
+            name,
+            phone,
+            password: md5(phone),
+            birthday,
+            address,
+            email,
+            sex,
+            url_avatar,
+            status,
+            salary
+        })
+        // console.log(newTeacher)
         res.send({
             result: 2
         })
@@ -200,18 +200,20 @@ const addTeacher = async(req, res, next) => {
         return;
     }
 }
-const deleteTeacher = async(req, res, next) => {
+const deleteTeacher = async (req, res, next) => {
     const id = parseInt(req.body.id)
-        // console.log(id)
+    // console.log(id)
     try {
         const teachers = await TeacherModel.findAll({
-                where: {
-                    id
-                }
-            })
-            // console.log(students.length)
+            where: {
+                id
+            }
+        })
+        // console.log(Teachers.length)
         if (teachers.length > 0) {
-            await TeacherModel.destroy({
+            await TeacherModel.update({
+                status: 0
+            }, {
                 where: {
                     id
                 }
@@ -230,16 +232,15 @@ const deleteTeacher = async(req, res, next) => {
         return;
     }
 }
-const editTeacher = async(req, res, next) => {
+const editTeacher = async (req, res, next) => {
     const id = parseInt(req.body.id)
     const urlModalEditTeacher = `${process.cwd()}/modals/EditTeacherModal.pug`;
     try {
         const teachers = await TeacherModel.findAll({
-                where: {
-                    id
-                }
-            })
-            // console.log(student)
+            where: {
+                id
+            }
+        })
         if (teachers.length > 0) {
             const htmlModalEditTeacher = await pug.renderFile(urlModalEditTeacher, {
                 teacher: teachers[0]
@@ -260,7 +261,7 @@ const editTeacher = async(req, res, next) => {
         return;
     }
 }
-const saveTeacher = async(req, res, next) => {
+const saveTeacher = async (req, res, next) => {
     const {
         id,
         name,
@@ -273,16 +274,16 @@ const saveTeacher = async(req, res, next) => {
         salary,
         status
     } = req.body
-        // console.log(id)
-        // console.log(name)
-        // console.log(phone)
-        // console.log(birthday)
-        // console.log(address)
-        // console.log(email)
-        // console.log(sex)
-        // console.log(url_avatar)
-        // console.log(salary)
-        // console.log(status)
+    // console.log(id)
+    // console.log(name)
+    // console.log(phone)
+    // console.log(birthday)
+    // console.log(address)
+    // console.log(email)
+    // console.log(sex)
+    // console.log(url_avatar)
+    // console.log(salary)
+    // console.log(status)
     try {
         const teacher = await TeacherModel.findAll({
             where: {
@@ -338,7 +339,7 @@ const saveTeacher = async(req, res, next) => {
     }
 
 }
-const resetPassTeacher = async(req, res, next) => {
+const resetPassTeacher = async (req, res, next) => {
     const { id } = req.body;
     try {
         const teacher = await TeacherModel.findAll({
@@ -370,6 +371,58 @@ const resetPassTeacher = async(req, res, next) => {
         return;
     }
 }
+const importTeacher = async (req, res, next) => {
+    const { listTeacher } = req.body
+    const jsonListTeacher = JSON.parse(listTeacher);
+    console.log(jsonListTeacher[0].sex)
+    try {
+        //    console.log(jsonListTeacher.length)
+        for (let index = 0; index < jsonListTeacher.length; index++) {
+            var countMssv = await TeacherModel.count({
+                where: {
+                    phone: jsonListTeacher[index].phone.toString()
+                }
+            })
+            if (countMssv > 0) {
+                await TeacherModel.update({
+                    name: jsonListTeacher[index].name,
+                    address: jsonListTeacher[index].address,
+                    birthday: jsonListTeacher[index].birthday,
+                    sex: jsonListTeacher[index].sex == "nam" ? 1 : 0,
+                    email: jsonListTeacher[index].email,
+                    phone: "0" + jsonListTeacher[index].phone.toString(),
+                    salary: jsonListTeacher[index].salary,
+                    status: "0" + jsonListTeacher[index].status
+                }, {
+                    where: {
+                        phone: "0" + jsonListTeacher[index].phone.toString()
+                    }
+                })
+            } else {
+                await TeacherModel.create({
+                    name: jsonListTeacher[index].name,
+                    salary: jsonListTeacher[index].salary,
+                    password: md5(jsonListTeacher[index].phone.toString()),
+                    address: jsonListTeacher[index].address,
+                    birthday: jsonListTeacher[index].birthday,
+                    sex: jsonListTeacher[index].sex == "nam" ? 1 : 0,
+                    email: jsonListTeacher[index].email,
+                    phone: "0" + jsonListTeacher[index].phone,
+                    status: "0" + jsonListTeacher[index].status
+                })
+            }
+        }
+        res.send({
+            result: 1
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(404).send()
+        return;
+    }
+
+}
+
 export default {
     getTeacher,
     searchTeacher,
@@ -378,5 +431,6 @@ export default {
     editTeacher,
     resetPassTeacher,
     saveTeacher,
-    getTeacherID
+    getTeacherID,
+    importTeacher
 }

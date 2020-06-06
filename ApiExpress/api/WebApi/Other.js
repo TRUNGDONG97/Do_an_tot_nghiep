@@ -11,24 +11,23 @@ import pug from 'pug'
 // import { getArrayPages, PageCount } from '../../constants/Funtions'
 import formidable from 'formidable'
 import fs from 'fs'
-const uploadAvatar = async(req, res, next) => {
+const uploadFile = async(req, res, next) => {
     var form = new formidable.IncomingForm();
-    form.maxFieldsSize = 10 * 1024 * 1024; // file size 15mb
+    form.maxFieldsSize = 20 * 1024 * 1024; // file size 10mb
     form.uploadDir = "./public/upload/"
     form.parse(req);
     form.once('error', function(error) {
-        res.send({
-            result: 1,
-        })
+        console.log(error, 'eror')
+        res.status(404).send()
         return;
     });
     form.on('file', function(field, file) {
         //rename the incoming file to the file's name
-        fs.rename(file.path, form.uploadDir + "/" + file.name, () => {
-            // console.log("\nFile Renamed!\n");
+        fs.rename(file.path, form.uploadDir + file.name.replace(/ /g, "_"), () => {
+            // console.log(file.path);
         });
     });
-    console.log()
+    // console.log()
     form.once('end', () => {
         res.send({
             result: 1,
@@ -124,5 +123,5 @@ export default {
     getCountTeacher,
     getCountClass,
     getCountSubject,
-    uploadAvatar
+    uploadFile
 }

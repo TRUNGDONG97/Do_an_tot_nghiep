@@ -3,24 +3,24 @@ import sequelize from 'sequelize'
 import Constants from '../../constants/Constants'
 import StudentModel from '../../models/StudentModel'
 import pug from 'pug'
-import { getArrayPages, PageCount } from '../../constants/Funtions'
+import { getArrayPages, PageCount, readFileExel } from '../../constants/Funtions'
 import xlsx from 'xlsx'
 import StudentClassModel from '../../models/StudentClassModel';
 import md5 from 'md5'
-const getStudent = async(req, res, next) => {
+const getStudent = async (req, res, next) => {
 
     try {
         const { currentPage } = req.body
         const { count, rows } = await StudentModel.findAndCountAll({
-                offset: Constants.PER_PAGE * (currentPage - 1),
-                limit: Constants.PER_PAGE,
-                order: [
-                    ['name', 'ASC']
-                ]
-            })
-            // console.log(count)
+            offset: Constants.PER_PAGE * (currentPage - 1),
+            limit: Constants.PER_PAGE,
+            order: [
+                ['name', 'ASC']
+            ]
+        })
+        // console.log(count)
         const pageCount = PageCount(count)
-            // console.log(students.length)
+        // console.log(students.length)
         var urlTable = `${process.cwd()}/table/TableStudent.pug`;
         var htmlTable = await pug.renderFile(urlTable, {
             students: rows,
@@ -40,9 +40,9 @@ const getStudent = async(req, res, next) => {
         return;
     }
 }
-const searchStudent = async(req, res, next) => {
+const searchStudent = async (req, res, next) => {
     const { name, mssv, currentPage } = req.body
-        // console.log(currentPage)
+    // console.log(currentPage)
     var students = []
     var count = 0
     try {
@@ -124,20 +124,20 @@ const searchStudent = async(req, res, next) => {
         return;
     }
 }
-const deleteStudent = async(req, res, next) => {
+const deleteStudent = async (req, res, next) => {
     const id = parseInt(req.body.id)
-        // console.log(id)
+    // console.log(id)
     try {
         const students = await StudentModel.findAll({
-                where: {
-                    id
-                }
-            })
-            // console.log(students.length)
+            where: {
+                id
+            }
+        })
+        // console.log(students.length)
         if (students.length > 0) {
             await StudentClassModel.destroy({
-                where:{
-                    student_id:id
+                where: {
+                    student_id: id
                 }
             })
             await StudentModel.destroy({
@@ -159,7 +159,7 @@ const deleteStudent = async(req, res, next) => {
         return;
     }
 }
-const addStudent = async(req, res, next) => {
+const addStudent = async (req, res, next) => {
     const {
         name,
         phone,
@@ -170,7 +170,7 @@ const addStudent = async(req, res, next) => {
         sex,
         url_avatar
     } = req.body
-        // console.log(birthday,'birthday')
+    // console.log(birthday,'birthday')
     try {
         const countMssv = await StudentModel.count({
             where: {
@@ -200,17 +200,17 @@ const addStudent = async(req, res, next) => {
             return;
         }
         const newStudent = await StudentModel.create({
-                name,
-                phone,
-                password: md5(mssv),
-                birthday,
-                address,
-                email,
-                mssv,
-                sex,
-                url_avatar
-            })
-            // console.log(newStudent)
+            name,
+            phone,
+            password: md5(mssv),
+            birthday,
+            address,
+            email,
+            mssv,
+            sex,
+            url_avatar
+        })
+        // console.log(newStudent)
         res.send({
             result: 3
         })
@@ -221,16 +221,16 @@ const addStudent = async(req, res, next) => {
         return;
     }
 }
-const editStudent = async(req, res, next) => {
+const editStudent = async (req, res, next) => {
     const id = parseInt(req.body.id)
     const urlModalEditStudent = `${process.cwd()}/modals/EditStudentModal.pug`;
     try {
         const student = await StudentModel.findAll({
-                where: {
-                    id
-                }
-            })
-            // console.log(student)
+            where: {
+                id
+            }
+        })
+        // console.log(student)
         if (student.length > 0) {
             const htmlModalEditStudent = await pug.renderFile(urlModalEditStudent, {
                 student: student[0]
@@ -253,7 +253,7 @@ const editStudent = async(req, res, next) => {
 }
 
 
-const saveStudent = async(req, res, next) => {
+const saveStudent = async (req, res, next) => {
     const {
         id,
         name,
@@ -274,11 +274,11 @@ const saveStudent = async(req, res, next) => {
         })
         if (mssv != student[0].mssv) {
             var countMssv = await StudentModel.count({
-                    where: {
-                        mssv
-                    }
-                })
-                // console.log(typeof countMssv)
+                where: {
+                    mssv
+                }
+            })
+            // console.log(typeof countMssv)
             if (countMssv > 0) {
                 res.send({ result: 0 })
                 return;
@@ -334,7 +334,7 @@ const saveStudent = async(req, res, next) => {
     }
 
 }
-const resetPass = async(req, res, next) => {
+const resetPass = async (req, res, next) => {
     const { id } = req.body;
     try {
         const student = await StudentModel.findAll({
@@ -366,16 +366,16 @@ const resetPass = async(req, res, next) => {
         return;
     }
 }
-const detailStudent = async(req, res, next) => {
+const detailStudent = async (req, res, next) => {
     const id = parseInt(req.body.id)
     const urlModalEditStudent = `${process.cwd()}/modals/DetailStudentModal.pug`;
     try {
         const student = await StudentModel.findAll({
-                where: {
-                    id
-                }
-            })
-            // console.log(student)
+            where: {
+                id
+            }
+        })
+        // console.log(student)
         if (student.length > 0) {
             const htmlModalDetailStudent = await pug.renderFile(urlModalEditStudent, {
                 student: student[0]
@@ -396,18 +396,48 @@ const detailStudent = async(req, res, next) => {
         return;
     }
 }
-const importStudent = async(req, res, next) => {
-    const { formData } = req.body
+const importStudent = async (req, res, next) => {
+    const { listStudent } = req.body
+    const jsonListStudent = JSON.parse(listStudent);
+    console.log(jsonListStudent[0].sex)
     try {
-        var reader = new FileReader();
-        reader.readAsArrayBuffer(formData);
-        var data = new Uint8Array(reader.result);
-        var wb = xlsx.read(data, { type: 'array' });
-        console.log(wb)
+        //    console.log(jsonListStudent.length)
+        for (let index = 0; index < jsonListStudent.length; index++) {
+            var countMssv = await StudentModel.count({
+                where: {
+                    mssv: jsonListStudent[index].mssv.toString()
+                }
+            })
+            if (countMssv > 0) {
+                await StudentModel.update({
+                    name: jsonListStudent[index].name,
+                    password: md5(jsonListStudent[index].mssv.toString()),
+                    address: jsonListStudent[index].address,
+                    birthday: jsonListStudent[index].birthday,
+                    sex: jsonListStudent[index].sex=="nam"?1:0,
+                    email: jsonListStudent[index].email,
+                    phone:"0"+jsonListStudent[index].phone.toString()
+                }, {
+                    where: {
+                        mssv: jsonListStudent[index].mssv.toString()
+                    }
+                })
+            } else {
+                await StudentModel.create({
+                    name: jsonListStudent[index].name,
+                    mssv: jsonListStudent[index].mssv,
+                    password: md5(jsonListStudent[index].mssv.toString()),
+                    address: jsonListStudent[index].address,
+                    birthday: jsonListStudent[index].birthday,
+                    sex: jsonListStudent[index].sex=="nam"?1:0,
+                    email: jsonListStudent[index].email,
+                    phone:"0"+ jsonListStudent[index].phone
+                })
+            }
+        }
         res.send({
             result: 1
         })
-
     } catch (error) {
         console.log(error)
         res.status(404).send()

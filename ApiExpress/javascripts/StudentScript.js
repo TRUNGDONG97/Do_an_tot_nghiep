@@ -1,7 +1,7 @@
-$(document).ready(function() {
+$(document).ready(function () {
     $('#tabStudent a').css({ "background-color": "#17a2b8", "color": "#fff" })
     getStudent(1)
-    $('#btnSearch').click(function() {
+    $('#btnSearch').click(function () {
         searchStudent(1)
     })
     $('#txtAddBirthday').datepicker({
@@ -39,19 +39,19 @@ function getStudent(currentPage) {
         data: { currentPage },
         cache: false,
         timeout: 50000,
-    }).done(function(res) {
+    }).done(function (res) {
         $('#tableStudent').html(res.htmlTable)
-            // $('#paginateActive').css({ "background-color": "#17a2b8", "color": "#fff" })
+        // $('#paginateActive').css({ "background-color": "#17a2b8", "color": "#fff" })
         return
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
-                title: "Đã có lỗi xảy ra",
-                text: "",
-                icon: "warning",
-                dangerMode: true,
-            })
-            // console.log(textStatus + ': ' + errorThrown);
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown);
         return;
     })
 }
@@ -83,12 +83,12 @@ function searchStudent(currentPage) {
         // dataType: "json",
         cache: false,
         timeout: 50000,
-    }).done(function(res) {
+    }).done(function (res) {
         // console.log(res.htmlTable)
         $('#tableStudent').html(res.htmlTable)
-            // $('#paginateActive').css({ "background-color": "#17a2b8", "color": "#fff" })
+        // $('#paginateActive').css({ "background-color": "#17a2b8", "color": "#fff" })
         return
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
             title: "Đã có lỗi xảy ra",
@@ -111,12 +111,12 @@ function deleteStudent(id) {
         return;
     }
     swal({
-            title: "Bạn chắc chắn xóa chứ?",
-            text: "",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true
-        })
+        title: "Bạn chắc chắn xóa chứ?",
+        text: "",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true
+    })
         .then((isConFirm) => {
             if (isConFirm) {
                 $.ajax({
@@ -127,7 +127,7 @@ function deleteStudent(id) {
                     },
                     cache: false,
                     timeout: 50000,
-                }).done(function(res) {
+                }).done(function (res) {
                     // console.log(res.result)
                     if (res.result == 1) {
                         swal({
@@ -144,22 +144,22 @@ function deleteStudent(id) {
                         });
                     }
 
-                }).fail(function(jqXHR, textStatus, errorThrown) {
+                }).fail(function (jqXHR, textStatus, errorThrown) {
                     // If fail
                     swal({
-                            title: "Đã có lỗi xảy ra",
-                            text: "",
-                            icon: "warning",
-                            dangerMode: true,
-                        })
-                        // console.log(textStatus + ': ' + errorThrown);
+                        title: "Đã có lỗi xảy ra",
+                        text: "",
+                        icon: "warning",
+                        dangerMode: true,
+                    })
+                    // console.log(textStatus + ': ' + errorThrown);
                     return;
                 })
             }
         });
 }
 
-const addStudent = async() => {
+const addStudent = async () => {
     if (!navigator.onLine) {
         swal({
             title: "Kiểm tra kết nối internet!",
@@ -175,7 +175,7 @@ const addStudent = async() => {
     var address = $.trim($("#txtAddAddress").val());
     var email = $.trim($("#txtAddEmail").val());
     var sex = $('#addSexFemale').prop('checked')
-        //get file image
+    //get file image
     var fileUpload = $("#ImageStudent").get(0);
     var files = fileUpload.files;
 
@@ -191,23 +191,19 @@ const addStudent = async() => {
     // checkedPhone(phone)
     // checkedMail(email)
     // console.log(files.length);
-    if (files.length <= 0) {
-        swal({
-            title: "Chưa thêm ảnh sinh viên",
-            text: "",
-            icon: "warning"
-        })
-        return;
+    var srcImg;
+    if (files.length > 0) {
+        var fileData = new FormData();
+        var fileName = "";
+        for (var i = 0; i < files.length; i++) {
+            fileData.append(files[i].name, files[i]);
+            fileName = files[i].name;
+        }
+        srcImg = window.location.origin + "/upload/" + fileName.replace(/ /g, "_")
     }
 
-    var fileData = new FormData();
-    var fileName = "";
-    for (var i = 0; i < files.length; i++) {
-        fileData.append(files[i].name, files[i]);
-        fileName = files[i].name;
-    }
-    var srcImg = window.location.origin + "/upload/" + fileName
-        // console.log(typeof files)
+
+    // console.log(typeof files)
     $.ajax({
         url: '/student/add',
         type: 'POST',
@@ -223,9 +219,13 @@ const addStudent = async() => {
         },
         cache: false,
         timeout: 50000,
-    }).done(function(res) {
+        beforeSend:function(){
+            $('#modalLoad').modal('show');
+        }
+    }).done(function (res) {
         // console.log(res.result)
         if (res.result == 0) {
+            $('#modalLoad').modal('hide');
             $("#txtAddMssv").val("");
             swal({
                 title: "Mã số sinh viên đã tồn tại",
@@ -235,6 +235,7 @@ const addStudent = async() => {
             return;
         }
         if (res.result == 1) {
+            $('#modalLoad').modal('hide');
             $("#txtAddPhone").val("");
             swal({
                 title: "Số điện thoại đã tồn tại",
@@ -244,6 +245,7 @@ const addStudent = async() => {
             return;
         }
         if (res.result == 2) {
+            $('#modalLoad').modal('hide');
             $("#txtAddEmail").val("");
             swal({
                 title: "Email đã tồn tại",
@@ -263,18 +265,23 @@ const addStudent = async() => {
             text: "",
             icon: "success"
         })
-        uploadImage(fileData)
+        
+        if (files.length > 0) {
+            uploadImage(fileData)
+        }
         getStudent(1)
+        $('#modalLoad').modal('hide');
         return;
-    }).fail(function(jqXHR, textStatus, errorThrown) {
-        // If fail
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        // If 
+        $('#modalLoad').modal('hide');
         swal({
-                title: "Đã có lỗi xảy ra",
-                text: "",
-                icon: "warning",
-                dangerMode: true,
-            })
-            // console.log(textStatus + ': ' + errorThrown);
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown);
         return;
     })
 }
@@ -293,29 +300,35 @@ function editStudent(id) {
         data: { id },
         type: 'POST',
         cache: false,
-        timeout: 50000
-    }).done(function(res) {
+        timeout: 50000,
+        beforeSend: function () {
+            $('#modalLoad').modal('show');
+        },
+    }).done(function (res) {
         // console.log(res)
         if (res.result == 0) {
+            $('#modalLoad').modal('hide');
             swal({
                 title: "Không tồn tại sinh viên này",
                 text: "",
                 icon: "warning"
             });
         } else {
+            $('#modalLoad').modal('hide');
             $('#divModalEditStudent').html(res.htmlModalEditStudent)
             $('#EditStudentModal').modal('show');
         }
         return;
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
+        $('#modalLoad').modal('hide');
         swal({
-                title: "Đã có lỗi xảy ra",
-                text: "",
-                icon: "warning",
-                dangerMode: true,
-            })
-            // console.log(textStatus + ': ' + errorThrown);
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown);
         return;
     })
 }
@@ -360,16 +373,16 @@ function saveStudent(id) {
             fileData.append(files[i].name, files[i]);
             fileName = files[i].name;
         }
-        srcImg = window.location.origin + "/upload/" + fileName
+        srcImg = window.location.origin + "/upload/" + fileName.replace(/ /g, "_");
     }
-    if (srcImg == null) {
-        swal({
-            title: "Cần thêm ảnh cho sinh viên",
-            text: "",
-            icon: "warning"
-        })
-        return;
-    }
+    // if (srcImg == null) {
+    //     swal({
+    //         title: "Cần thêm ảnh cho sinh viên",
+    //         text: "",
+    //         icon: "warning"
+    //     })
+    //     return;
+    // }
     $.ajax({
         url: '/student/save',
         data: {
@@ -385,10 +398,14 @@ function saveStudent(id) {
         },
         type: 'POST',
         cache: false,
-        timeout: 50000
-    }).done(function(res) {
+        timeout: 50000,
+        beforeSend:function(){
+            $('#modalLoad').modal('show');
+        }
+    }).done(function (res) {
         // console.log(res.result)
         if (res.result == 0) {
+            $('#modalLoad').modal('hide');
             swal({
                 title: "Mã số sinh viên đã tồn tại",
                 text: "",
@@ -397,6 +414,7 @@ function saveStudent(id) {
             return;
         }
         if (res.result == 1) {
+            $('#modalLoad').modal('hide');
             swal({
                 title: "Số điện thoại đã tồn tại",
                 text: "",
@@ -405,6 +423,7 @@ function saveStudent(id) {
             return;
         }
         if (res.result == 2) {
+            $('#modalLoad').modal('hide');
             swal({
                 title: "Email đã tồn tại",
                 text: "",
@@ -412,13 +431,16 @@ function saveStudent(id) {
             })
             return;
         }
-        uploadImage(fileData)
+        if (files.length > 0) {
+            uploadImage(fileData)
+        }
         $("#EditStudentModal").modal("hide");
         $("#txtEditName").val("");
         $("#txtEditPhone").val("");
         $("#txtEditMssv").val("");
         $("#txtEditAddress").val("");
         $("#txtEditEmail").val("");
+        $('#modalLoad').modal('hide');
         swal({
             title: "Cập nhập thành công",
             text: "",
@@ -426,15 +448,15 @@ function saveStudent(id) {
         })
         getStudent(1)
         return;
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
-                title: "Đã có lỗi xảy ra",
-                text: "",
-                icon: "warning",
-                dangerMode: true,
-            })
-            // console.log(textStatus + ': ' + errorThrown);
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown);
         return;
     })
 
@@ -455,7 +477,7 @@ function resetPass(id) {
         type: 'POST',
         cache: false,
         timeout: 50000
-    }).done(function(res) {
+    }).done(function (res) {
         // console.log(res)
         if (res.result == 0) {
             swal({
@@ -472,15 +494,15 @@ function resetPass(id) {
             $('#EditStudentModal').modal('hide');
         }
         return;
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
-                title: "Đã có lỗi xảy ra",
-                text: "",
-                icon: "warning",
-                dangerMode: true,
-            })
-            // console.log(textStatus + ': ' + errorThrown);
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown);
         return;
     })
 }
@@ -536,83 +558,62 @@ function importStudent() {
         })
         return;
     }
-    if (typeof(FileReader) != "undefined") {
-        var reader = new FileReader();
-
-        reader.onload = function(e) {
-
-            // var data = e.target.result;
-            // var workbook = XLSX.read(data, { type: 'binary', cellDates: true, cellStyles: true });
-            var binary = "";
-            var bytes = new Uint8Array(e.target.result);
-            var length = bytes.byteLength;
-            for (var i = 0; i < length; i++) {
-                binary += String.fromCharCode(bytes[i]);
-            }
-            // call 'xlsx' to read the file
-            var workbook = XLSX.read(binary, { type: 'binary', cellDates: true, cellStyles: true });
-            var firstSheet = workbook.SheetNames[0];
-            var excelRows = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[firstSheet]);
-            // var json = JSON.stringify(excelRows)
-
-            var fileData = new FormData();
-            var fileName = "";
-            for (var i = 0; i < excelRows[1].__proto__.length; i++) {
-                fileData.append(excelRows[1].__proto__[i].name, excelRows[1].__proto__[i], 'test.jpg');
-                // fileName = excelRows[1].__proto__[i].name;
-            }
-            // console.log(fileData)
-            // console.log(fileName)
-            uploadImage(fileData)
-        };
-        reader.readAsArrayBuffer(fileUpload.files[0]);
-    } else {
-        alert("Please upload a valid Excel file.");
-    }
-    // var fileUpload = $("#txtFile")[0];
-    // var reader = new FileReader();
-    // reader.readAsArrayBuffer(e.target.files[0]);
-    // var data = new Uint8Array(reader.result);
-    // console.log(data)
-
-
-    // console.log('dsdsd')
-    // // var fileData = new FormData();
-    // // var fileName = "";
-    // // for (var i = 0; i < files.length; i++) {
-    // //     fileData.append(files[i].name, files[i]);
-    // //     fileName = files[i].name;
-    // // }
-    // $.ajax({
-    //     url: '/student/import',
-    //     data: { formData },
-    //     type: 'POST',
-    //     cache: false,
-    //     timeout: 50000
-    // }).done(function(res) {
-    //     console.log(res.result)
-    //         // if (res.result == 0) {
-    //         //     swal({
-    //         //         title: "",
-    //         //         text: "Không tồn tại sinh viên này",
-    //         //         icon: "warning"
-    //         //     });
-    //         // } else {
-    //         //     $('#divModalDetailStudent').html(res.htmlModalDetailStudent)
-    //         //     $('#detailStudentModal').modal('show');
-    //         // }
-    //     return;
-    // }).fail(function(jqXHR, textStatus, errorThrown) {
-    //     // If fail
-    //     swal({
-    //         title: "Đã có lỗi xảy ra",
-    //         text: "",
-    //         icon: "warning",
-    //         dangerMode: true,
-    //     })
-    //     console.log(textStatus + ': ' + errorThrown);
-    //     return;
-    // })
+    var arrStudent
+    var reader = new FileReader();
+    reader.readAsArrayBuffer(fileUpload.files[0]);
+    reader.onload = function (e) {
+        var binary = "";
+        var bytes = new Uint8Array(e.target.result);
+        var length = bytes.byteLength;
+        for (var i = 0; i < length; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        // call 'xlsx' to read the file
+        var workbook = XLSX.read(binary, { type: 'binary', cellDates: true, cellStyles: true });
+        var firstSheet = workbook.SheetNames[0];
+        arrStudent = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[firstSheet]);
+        // console.log(arrStudent[0].name)
+        // console.log(arrStudent[0])
+        if (arrStudent.length == 0) {
+            swal({
+                title: "File không có dữ liệu",
+                text: "",
+                icon: "warning"
+            })
+            return;
+        }
+        $('#mdImport').modal('hide')
+        $.ajax({
+            url: '/student/import',
+            data: { listStudent: JSON.stringify(arrStudent) },
+            type: 'POST',
+            beforeSend: function () {
+                $('#modalLoad').modal('show');
+            },
+        }).done(function (res) {
+            
+            // console.log(res.result)
+            getStudent(1)
+            $('#modalLoad').modal('hide');
+            swal({
+                title: " Thành công",
+                text: "",
+                icon: "success"
+            })
+            return;
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            // If fail
+            $('#modalLoad').modal('hide');
+            swal({
+                title: "Đã có lỗi xảy ra",
+                text: "",
+                icon: "warning",
+                dangerMode: true,
+            })
+            console.log(textStatus + ': ' + errorThrown);
+            return;
+        })
+    };
 }
 
 
@@ -655,30 +656,33 @@ function checkedMssv(mssv) {
 
 function uploadImage(fileData) {
     $.ajax({
-        url: "/uploadAvatar",
+        url: "/uploadFile",
         type: 'POST',
         data: fileData,
         contentType: false, // Not to set any content header  
         processData: false, // Not to process data  
         cache: false,
-        enctype: 'multipart/form-data'
-    }).done(function(res) {
-        if (res.result == 0) {
-            swal({
-                title: "Không thể upload ảnh",
-                text: "",
-                icon: "warning"
-            })
-        }
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+        enctype: 'multipart/form-data',
+       
+    }).done(function (res) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
+        $('#modalLoad').modal('hide');
         swal({
-                title: "Đã có lỗi xảy ra",
-                text: "",
-                icon: "warning",
-                dangerMode: true,
-            })
-            // console.log(textStatus + ': ' + errorThrown.message);
-            // console.log(jqXHR);
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown.message);
+        // console.log(jqXHR);
     })
+}
+function convertDate(date) {
+    var currentDate = new Date(date)
+    var dd = String(currentDate.getDate()).padStart(2, '0');
+    var mm = String(currentDate.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = currentDate.getFullYear();
+
+    return yyyy + '-' + mm + '-' + dd;
 }

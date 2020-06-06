@@ -33,8 +33,8 @@ export class AppContainer extends Component {
 
     onReceived(notification) {
         reactotron.log("Notification received: ", notification);
-        // const class_id=notification.payload.additionalData.class_id
-        // NavigationUtil.push(SCREEN_ROUTER.DETAIL_CLASS, { class_id: class_id })
+        const class_id=notification.payload.additionalData.class_id
+        NavigationUtil.push(SCREEN_ROUTER.DETAIL_CLASS, { class_id: class_id })
     }
 
     onOpened(openResult) {

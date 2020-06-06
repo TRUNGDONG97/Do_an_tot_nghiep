@@ -6,7 +6,7 @@ import SubjectModel from '../../models/SubjectModel'
 import StudentModel from '../../models/StudentModel'
 import StudentClassModel from '../../models/StudentClassModel'
 import pug from 'pug'
-import { getArrayPages, PageCount, pushNotificationAppStudent } from '../../constants/Funtions'
+import { getArrayPages, PageCount, pushNotificationAppStudent, getDistance } from '../../constants/Funtions'
 import { Op } from 'sequelize'
 import sequelize from 'sequelize'
 import md5 from 'md5';
@@ -14,6 +14,7 @@ import crypto from 'crypto-js';
 import AbsentClassModel from '../../models/AbsentClassModel'
 import AbsentStudentModel from '../../models/AbsentStudentModel'
 import NotificationModel from '../../models/NotificationModel'
+import Constants from '../../constants/Constants'
 const getClass = async (req, res, next) => {
     const { token } = req.headers
     if (token == '') {
@@ -50,7 +51,7 @@ const getClass = async (req, res, next) => {
                     is_active: 1
                 },
                 order: [
-                    ['Schedule_classes', 'day_of_week', 'ASC']
+                    ['Schedule_classes', 'day_of_week', 'ASC'],
                 ],
                 // distinct: true
             })
@@ -468,21 +469,21 @@ const notification = async (req, res, next) => {
     }
 }
 const absentStudent = async (req, res, next) => {
-    const { class_id, gps_longitude, gps_latitude } = res.body;
-    const { token } = res.headers;
+    const { class_id, gps_longitude, gps_latitude } = req.body;
+    const { token } = req.headers;
     const currentDate = new Date()
     const time_absent = currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + "00";
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
+    var dd = String(currentDate.getDate()).padStart(2, '0');
+    var mm = String(currentDate.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = currentDate.getFullYear();
 
     const date_absent = yyyy + '-' + mm + '-' + dd;
-    console.log('date_absent',date_absent)
-    console.log('token',token)
-    console.log('class_id',class_id)
-    console.log('gps_longitude',gps_longitude)
-    console.log('gps_latitude',gps_latitude)
-    console.log('time_absent',time_absent)
+    // console.log('date_absent',date_absent)
+    // console.log('token',token)
+    // console.log('class_id',class_id)
+    // console.log('gps_longitude',gps_longitude)
+    // console.log('gps_latitude',gps_latitude)
+    // console.log('time_absent',time_absent)
     try {
         const student = await StudentModel.findAll({
             where: {
@@ -498,11 +499,103 @@ const absentStudent = async (req, res, next) => {
             })
             return;
         }
+        const absentClass = await AbsentClassModel.findAll({
+            where: {
+                is_active: 1,
+                status: 1,
+                class_id
+            }
+        })
+        if (absentClass.length < 1) {
+            res.json({
+                "status": 0,
+                "code": 404,
+                "message": "Lớp này hiện không điểm danh",
+                "data": ''
+            })
+            return;
+        }
+
+        const absentOfStudent = await AbsentStudentModel.findAll({
+            where: {
+                absent_class_id: absentClass[0].id,
+                student_id: student[0].id
+            }
+        })
+        // 
+
+        if (absentOfStudent.length < 1) {
+            res.json({
+                "status": 0,
+                "code": 404,
+                "message": "Bạn không trong danh sách điểm danh",
+                "data": ''
+            })
+            return;
+        }
+        if (absentOfStudent[0].status == 1) {
+            res.json({
+                "status": 0,
+                "code": 404,
+                "message": "Bạn đã điểm danh",
+                "data": ''
+            })
+            return;
+        }
+        const checkDeviceId = await AbsentStudentModel.findAll({
+            where: {
+                absent_class_id: absentClass[0].id,
+                device_id: student[0].device_id
+            }
+        })
+        // console.log(student[0].device_id)
+        // console.log(checkDeviceId.length)
+
+        if (checkDeviceId.length > 0) {
+            res.json({
+                "status": 0,
+                "code": 404,
+                "message": "Máy điện thoại này đã điểm danh",
+                "data": ''
+            })
+            return;
+        }
+        // console.log(absentOfStudent.length)
+        // const checkToken=        
+        const distance = await getDistance(
+            absentClass[0].gps_latitude,
+            absentClass[0].gps_longitude,
+            gps_latitude,
+            gps_longitude
+        )
+        // console.log(distance)
+        if (distance > Constants.DISTANCE) {
+            res.json({
+                "status": 0,
+                "code": 404,
+                "message": "Bạn không đang ở trong lớp",
+                "data": ''
+            })
+            return;
+        }
+        console.log(student[0].device_id)
+        const updateAbsentOfStu=await AbsentStudentModel.update({
+            status:1,
+            gps_latitude,
+            gps_longitude,
+            date_absent,
+            time_absent,
+            device_id:student[0].device_id
+        },{
+            where:{
+                id :absentOfStudent[0].id
+            }
+        })
         res.json({
             "status": 1,
             "code": 200,
             "message": 'thành công',
-            "data": 'ListNoti'
+            "data": updateAbsentOfStu
         })
         return;
     } catch (error) {
@@ -516,6 +609,7 @@ const absentStudent = async (req, res, next) => {
         return;
     }
 }
+
 export default {
     getClass,
     getUserInfo,

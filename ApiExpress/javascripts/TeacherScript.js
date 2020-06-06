@@ -1,7 +1,7 @@
-$(document).ready(function() {
+$(document).ready(function () {
     $('#tabTeacher a').css({ "background-color": "#17a2b8", "color": "#fff" })
     getTeacher(1)
-    $('#btnSearchTeacher').click(function() {
+    $('#btnSearchTeacher').click(function () {
         searchTeacher(1)
     })
     $('#txtAddBirthday').datepicker({
@@ -30,11 +30,11 @@ function getTeacher(currentPage) {
         data: { currentPage },
         cache: false,
         timeout: 50000,
-    }).done(function(res) {
+    }).done(function (res) {
         $('#tableTeacher').html(res.htmlTable)
-            // $('#paginateActive').css({ "background-color": "#17a2b8", "color": "#fff" })
+        // $('#paginateActive').css({ "background-color": "#17a2b8", "color": "#fff" })
         return
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
             title: "Đã có lỗi xảy ra",
@@ -77,18 +77,18 @@ function searchTeacher(currentPage) {
         // dataType: "json",
         cache: false,
         timeout: 50000,
-    }).done(function(res) {
+    }).done(function (res) {
         $('#tableTeacher').html(res.htmlTable)
         return
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
-                title: "Đã có lỗi xảy ra",
-                text: "",
-                icon: "warning",
-                dangerMode: true,
-            })
-            // console.log(textStatus + ': ' + errorThrown);
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown);
         return;
     });
 }
@@ -123,7 +123,7 @@ function addTeacher() {
     }
     checkedPhone(phone)
     checkedMail(email)
-        // console.log(files.length);
+    // console.log(files.length);
     if (files.length <= 0) {
         swal({
             title: "Chưa thêm ảnh ",
@@ -138,7 +138,7 @@ function addTeacher() {
         fileData.append(files[i].name, files[i]);
         fileName = files[i].name;
     }
-    var srcImg = window.location.origin + "/upload/" + fileName
+    var srcImg = window.location.origin + "/upload/" + fileName.replace(/ /g, "_");
 
     $.ajax({
         url: "/teacher/add",
@@ -156,9 +156,13 @@ function addTeacher() {
         },
         cache: false,
         timeout: 50000,
-    }).done(function(res) {
-        console.log(res.result)
+        beforeSend:function(){
+            $('#modalLoad').modal('show');
+        }
+    }).done(function (res) {
+        // console.log(res.result)
         if (res.result == 0) {
+            $('#modalLoad').modal('hide');
             $("#txtAddPhone").val("");
             swal({
                 title: "Số điện thoại đã tồn tại",
@@ -168,6 +172,7 @@ function addTeacher() {
             return;
         }
         if (res.result == 1) {
+            $('#modalLoad').modal('hide');
             $("#txtAddEmail").val("");
             swal({
                 title: "Email đã tồn tại",
@@ -182,6 +187,7 @@ function addTeacher() {
         $("#txtAddPhone").val("");
         $("#txtAddAddress").val("");
         $("#txtAddEmail").val("");
+        $('#modalLoad').modal('hide');
         swal({
             title: "Thêm thành công",
             text: "",
@@ -189,15 +195,15 @@ function addTeacher() {
         })
         getTeacher(1)
         return;
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
-                title: "Đã có lỗi xảy ra",
-                text: "",
-                icon: "warning",
-                dangerMode: true,
-            })
-            // console.log(textStatus + ': ' + errorThrown);
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown);
         return;
     })
 }
@@ -212,12 +218,12 @@ function deleteTeacher(id) {
         return;
     }
     swal({
-            title: "Bạn chắc chắn xóa chứ?",
-            text: "",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true
-        })
+        title: "Bạn chắc chắn xóa chứ?",
+        text: "",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true
+    })
         .then((isConFirm) => {
             if (isConFirm) {
                 $.ajax({
@@ -228,7 +234,7 @@ function deleteTeacher(id) {
                     },
                     cache: false,
                     timeout: 50000,
-                }).done(function(res) {
+                }).done(function (res) {
                     // console.log(res.result)
                     if (res.result == 1) {
                         swal({
@@ -244,15 +250,15 @@ function deleteTeacher(id) {
                             icon: "warning"
                         });
                     }
-                }).fail(function(jqXHR, textStatus, errorThrown) {
+                }).fail(function (jqXHR, textStatus, errorThrown) {
                     // If fail
                     swal({
-                            title: "Đã có lỗi xảy ra",
-                            text: "",
-                            icon: "warning",
-                            dangerMode: true,
-                        })
-                        // console.log(textStatus + ': ' + errorThrown);
+                        title: "Đã có lỗi xảy ra",
+                        text: "",
+                        icon: "warning",
+                        dangerMode: true,
+                    })
+                    // console.log(textStatus + ': ' + errorThrown);
                     return;
                 })
             }
@@ -273,29 +279,35 @@ function editTeacher(id) {
         data: { id },
         type: 'POST',
         cache: false,
-        timeout: 50000
-    }).done(function(res) {
+        timeout: 50000,
+        beforeSend:function(){
+            $('#modalLoad').modal('show');
+        }
+    }).done(function (res) {
         // console.log(res)
         if (res.result == 0) {
+            $('#modalLoad').modal('hide');
             swal({
                 title: "Không tồn tại giáo viên này",
                 text: "",
                 icon: "warning"
             });
         } else {
+            $('#modalLoad').modal('hide');
             $('#divModalEditTeacher').html(res.htmlModalEditTeacher)
             $('#editTeacherModal').modal('show');
         }
         return;
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
+        $('#modalLoad').modal('hide');
         swal({
-                title: "Đã có lỗi xảy ra",
-                text: "",
-                icon: "warning",
-                dangerMode: true,
-            })
-            // console.log(textStatus + ': ' + errorThrown);
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown);
         return;
     })
 }
@@ -315,7 +327,7 @@ function resetPass(id) {
         type: 'POST',
         cache: false,
         timeout: 50000
-    }).done(function(res) {
+    }).done(function (res) {
         // console.log(res)
         if (res.result == 0) {
             swal({
@@ -332,15 +344,15 @@ function resetPass(id) {
             $('#editTeacherModal').modal('hide');
         }
         return;
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
-                title: "Đã có lỗi xảy ra",
-                text: "",
-                icon: "warning",
-                dangerMode: true,
-            })
-            // console.log(textStatus + ': ' + errorThrown);
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown);
         return;
     })
 }
@@ -394,7 +406,7 @@ function saveTeacher(id) {
             fileData.append(files[i].name, files[i]);
             fileName = files[i].name;
         }
-        srcImg = window.location.origin + "/upload/avatarStudent/" + fileName
+        srcImg = window.location.origin + "/upload/avatarStudent/" + fileName.replace(/ /g, "_");
     }
     // console.log(srcImg)
     if (srcImg == null) {
@@ -421,11 +433,15 @@ function saveTeacher(id) {
         },
         type: 'POST',
         cache: false,
-        timeout: 50000
-    }).done(function(res) {
+        timeout: 50000,
+        beforeSend:function(){
+            $('#modalLoad').modal('show');
+        }
+    }).done(function (res) {
         // console.log(res.result)
 
         if (res.result == 0) {
+            $('#modalLoad').modal('hide');
             swal({
                 title: "Số điện thoại đã tồn tại",
                 text: "",
@@ -434,6 +450,7 @@ function saveTeacher(id) {
             return;
         }
         if (res.result == 1) {
+            $('#modalLoad').modal('hide');
             swal({
                 title: "Email đã tồn tại",
                 text: "",
@@ -443,6 +460,7 @@ function saveTeacher(id) {
         }
         uploadImage(fileData)
         $("#editTeacherModal").modal("hide");
+        $('#modalLoad').modal('hide');
         // $("#txtEditName").val("");
         // $("#txtEditPhone").val("");
         // $("#txtEditAddress").val("");
@@ -454,19 +472,20 @@ function saveTeacher(id) {
         })
         getTeacher(1)
         return;
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
-                title: "Đã có lỗi xảy ra",
-                text: "",
-                icon: "warning",
-                dangerMode: true,
-            })
-            // console.log(textStatus + ': ' + errorThrown);
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown);
         return;
     })
 }
-function detailClassTeacher(id){
+
+function detailClassTeacher(id) {
     // var name =teacher.attr('data-name');
     // const nameTeacher=name.split(' ').join('-')
     // alert(id)
@@ -477,21 +496,91 @@ function detailClassTeacher(id){
         type: 'POST',
         cache: false,
         timeout: 50000
-    }).done(function(res) {
-        const nameTeacher=res.teacher.name.split(' ').join('-')
+    }).done(function (res) {
+        const nameTeacher = res.teacher.name.split(' ').join('-')
         window.location.href = '/admin/class?name=' + nameTeacher;
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown);
+        return;
+    })
+}
+function importTeacher() {
+    var fileUpload = $("#txtFile").get(0);
+    var files = fileUpload.files;
+    if (files.length <= 0) {
+        swal({
+            title: "Chưa chọn file ",
+            text: "",
+            icon: "warning"
+        })
+        return;
+    }
+    var arrTeacher
+    var reader = new FileReader();
+    reader.readAsArrayBuffer(fileUpload.files[0]);
+    reader.onload = function (e) {
+        var binary = "";
+        var bytes = new Uint8Array(e.target.result);
+        var length = bytes.byteLength;
+        for (var i = 0; i < length; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        // call 'xlsx' to read the file
+        var workbook = XLSX.read(binary, { type: 'binary', cellDates: true, cellStyles: true });
+        var firstSheet = workbook.SheetNames[0];
+        arrTeacher = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[firstSheet]);
+        // console.log(arrTeacher[0].name)
+        // console.log(arrTeacher[0])
+        if (arrTeacher.length == 0) {
+            swal({
+                title: "File không có dữ liệu",
+                text: "",
+                icon: "warning"
+            })
+            return;
+        }
+        $('#mdImport').modal('hide')
+        $.ajax({
+            url: '/teacher/import',
+            data: { listTeacher: JSON.stringify(arrTeacher) },
+            type: 'POST',
+            beforeSend: function () {
+                $('#modalLoad').modal('show');
+            },
+        }).done(function (res) {
+
+            // console.log(res.result)
+            getTeacher(1)
+            $('#modalLoad').modal('hide');
+            swal({
+                title: " Thành công",
+                text: "",
+                icon: "success"
+            })
+            return;
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            // If fail
+            $('#modalLoad').modal('hide');
+            swal({
                 title: "Đã có lỗi xảy ra",
                 text: "",
                 icon: "warning",
                 dangerMode: true,
             })
-            // console.log(textStatus + ': ' + errorThrown);
-        return;
-    })
+            console.log(textStatus + ': ' + errorThrown);
+            return;
+        })
+    };
 }
+
+
 
 function checkedMail(email) {
     var email_regex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
@@ -519,31 +608,24 @@ function checkedPhone(phone) {
 
 function uploadImage(fileData) {
     $.ajax({
-        url: "/uploadAvatar",
+        url: "/uploadFile",
         type: 'POST',
         data: fileData,
         contentType: false, // Not to set any content header  
         processData: false, // Not to process data  
         cache: false,
         enctype: 'multipart/form-data'
-    }).done(function(res) {
-        if (res.result == 0) {
-            swal({
-                title: "Không thể upload ảnh",
-                text: "",
-                icon: "warning",
-                dangerMode: true,
-            })
-        }
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+    }).done(function (res) {
+    
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
-                title: "Đã có lỗi xảy ra",
-                text: "",
-                icon: "warning",
-                dangerMode: true,
-            })
-            // console.log(textStatus + ': ' + errorThrown.message);
-            // console.log(jqXHR);
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown.message);
+        // console.log(jqXHR);
     })
 }

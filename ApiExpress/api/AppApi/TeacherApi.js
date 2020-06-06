@@ -55,6 +55,7 @@ const getUserInfo = async (req, res, next) => {
             })
             return;
         }
+        
         res.json({
             "status": 0,
             "code": 403,
@@ -472,13 +473,13 @@ const createAbsent = async (req, res, next) => {
             await NotificationModel.create({
                 student_id: liststudent.rows[index].id,
                 class_id,
-                content: "Lớp " + classAbsent.rows[0].class_code + ' dang điểm danh',
+                content: "Lớp " + classAbsent.rows[0].class_code + ' đang điểm danh',
                 type: Constants.TYPE_NOTIFICATION.ABSENT_STUDENT,
                 absent_class_id: createAbsentClass.id
             })
             if (liststudent.rows[index].device_id) {
                 pushNotificationAppStudent(liststudent.rows[index].device_id,
-                    "Lớp " + classAbsent.rows[0].class_code + ' dang điểm danh',
+                    "Lớp " + classAbsent.rows[0].class_code + ' đang điểm danh',
                     { class_id: class_id })
             }
 
@@ -530,7 +531,7 @@ const getDetailAbsent = async (req, res, next) => {
             })
             return;
         }
-
+        
         // [sequelize.fn('count', sequelize.col('AbsentStudentModel.student_id')), 'absentCount']
         const getDetailAbsent = await StudentModel.findAndCountAll({
             attributes: ['id', 'name', 'phone', 'birthday', 'address', 'email', 'url_avatar',

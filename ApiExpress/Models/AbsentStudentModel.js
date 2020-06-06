@@ -32,6 +32,9 @@ const Absent_Student = sequelize.define('Absent_Student', {
     },
     gps_longitude: {
         type: Sequelize.FLOAT
+    },
+    device_id:{
+        type:Sequelize.STRING
     }
 
 }, {

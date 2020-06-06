@@ -9,12 +9,14 @@ import pug from 'pug'
 import { getArrayPages, PageCount } from '../constants/Funtions'
 import { Op } from 'sequelize'
 import sequelize from 'sequelize'
+import AbsentStudentModel from '../models/AbsentStudentModel'
+import AbsentClassModel from '../models/AbsentClassModel'
 
-const getClass = async(req, res, next) => {
-    
+const getClass = async (req, res, next) => {
+
     res.render('ClassView');
 }
-const detailClass = async(req, res, next) => {
+const detailClass = async (req, res, next) => {
     const id = req.query.id
     if (!id) {
         res.redirect('/admin/class')
@@ -23,27 +25,44 @@ const detailClass = async(req, res, next) => {
     try {
         const classes = await ClassModel.findAll({
             include: [{
-                    model: StudentClassModel,
-                    include: [{
-                        model: StudentModel
-                    }]
-                },
-                {
-                    model: SubjectModel
-                },
-                {
-                    model: TeacherModel
-                },
-                {
-                    model: ScheduleClassModel
-                },
+                model: StudentClassModel,
+                include: [{
+                    model: StudentModel,
+                    // include:[{
+                    //     model:AbsentStudentModel,
+                    //     attributes:[[sequelize.fn('count', sequelize.col('Absent_Student.studen_id')), 'count']],
+                    //     where:{
+                    //         class_id:id,
+                    //         status:1
+                    //     },
+                    //     group:['Absent_Student.student_id']
+                    // }]
+                }]
+            },
+            {
+                model: SubjectModel
+            },
+            {
+                model: TeacherModel
+            },
+            {
+                model: ScheduleClassModel
+            },
             ],
             where: {
                 class_code: id
             }
         })
+        const absentClass = await AbsentClassModel.findAll({
+            where: {
+                class_id: classes[0].id,
+                is_active: 1
+            }
+        })
+        // const listStudent =await StudentModel.findAll({
 
-        // console.log(classes[0].Teacher) 
+        // })
+        
         // console.log(classes.length)
         if (classes.length < 1) {
             res.redirect('/admin/class')
@@ -52,7 +71,8 @@ const detailClass = async(req, res, next) => {
         res.render('DetailClassView', {
             class_code: id,
             classes: classes[0],
-            student_classes: classes[0].Student_classes
+            student_classes: classes[0].Student_classes,
+            countAbsent:absentClass.length
         });
         return;
     } catch (error) {

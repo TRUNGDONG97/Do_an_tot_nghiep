@@ -25,6 +25,8 @@ import { getListNotifyAction } from '@action'
 import { ScrollView } from 'react-native-gesture-handler'
 import Mockup from '@app/constants/Mockup'
 import Ripple from 'react-native-material-ripple';
+import {SCREEN_ROUTER} from '@constant'
+import NavigationUtil from '@app/navigation/NavigationUtil';
 class FlatListItem extends Component {
     render() {
         const { item } = this.props;
@@ -34,7 +36,7 @@ class FlatListItem extends Component {
                 rippleDuration={800}
                 rippleSequential={true}
                 onPress={() => {
-                    // NavigationUtil.navigate(SCREEN_ROUTER.STUDY)
+                    NavigationUtil.navigate(SCREEN_ROUTER.DETAIL_CLASS,{class_id:item.class_id})
                 }}>
                 <Icon.Ionicons
                     name="md-notifications"
@@ -86,7 +88,7 @@ class NotificationScreen extends Component {
         return (
             <FlatList
                 showsVerticalScrollIndicator={false}
-                contentContainerStyle={{ paddingHorizontal: 10, marginTop: 20 ,paddingBottom:50}}
+                contentContainerStyle={{ paddingHorizontal: 10, marginTop: 40 ,paddingBottom:50}}
                 refreshControl={
                     <RefreshControl
                         refreshing={this.state.isRefresh}
@@ -133,11 +135,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingVertical: 10,
-        paddingHorizontal: 10
+        paddingHorizontal: 20
     },
     _txtTitle: {
         justifyContent: 'center',
-        marginLeft: 10,
+        marginLeft: 20,
 
     }
 })

@@ -374,7 +374,8 @@ function saveClass(class_id) {
         })
         return;
     }
-    if ((day1 == '' || timeStart1 == '' || timeEnd1 == '' || room1 == '') && (day2 == '' || timeStart2 == '' || timeEnd2 == '' || room2 == '')) {
+    if ((day1 == '' || timeStart1 == '' || timeEnd1 == '' || room1 == '')
+     && (day2 == '' || timeStart2 == '' || timeEnd2 == '' || room2 == '')) {
         swal({
             title: "Chưa nhập lịch học",
             text: "",
@@ -454,7 +455,7 @@ function deleteClass(id, class_code) {
         return;
     }
     swal({
-        title: "Bạn chắc chắn hủy lớp " + class_code + " ?",
+        title: "Bạn chắc chắn hủy lớp" + class_code + " ?",
         text: "",
         icon: "warning",
         buttons: true,
@@ -501,6 +502,136 @@ function deleteClass(id, class_code) {
             }
         });
 }
+function updateStatus() {
+    if (!navigator.onLine) {
+        swal({
+            title: "Kiểm tra kết nối internet!",
+            text: "",
+            icon: "warning"
+        })
+        return;
+    }
+    swal({
+        title: "Bạn chắc chắn cập nhật trạng thái hoàn thành cho tất cả các lớp ?",
+        text: "",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true
+    })
+        .then((isConFirm) => {
+            if (isConFirm) {
+                $.ajax({
+                    url: '/class/updateAllStatusClass',
+                    type: 'POST',
+                    data: {},
+                    cache: false,
+                    timeout: 50000,
+                    beforeSend:function(){
+                        $('#modalLoad').modal('show');
+                    }
+                }).done(function (res) {
+                    // console.log(res.result)
+                    $('#modalLoad').modal('hide');
+                        swal({
+                            title: "Cập nhật thành công",
+                            text: "",
+                            icon: "warning"
+                        });
+                        getClass(1)
+
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    // If fail
+                    $('#modalLoad').modal('hide');
+                    swal({
+                        title: "Đã có lỗi xảy ra",
+                        text: "",
+                        icon: "warning",
+                        dangerMode: true,
+                    })
+                    // console.log(textStatus + ': ' + errorThrown);
+                    return;
+                })
+            }
+        });
+}
+function importClass(){
+    var fileUpload = $("#txtFile").get(0);
+    var files = fileUpload.files;
+    if (files.length <= 0) {
+        swal({
+            title: "Chưa chọn file ",
+            text: "",
+            icon: "warning"
+        })
+        return;
+    }
+    $('#mdImport').modal('hide')
+    $('#modalLoad').modal('show');
+    var reader = new FileReader();
+    reader.readAsArrayBuffer(fileUpload.files[0]);
+    reader.onload = function (e) {
+       
+        var binary = "";
+        var bytes = new Uint8Array(e.target.result);
+        var length = bytes.byteLength;
+        for (var i = 0; i < length; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        // call 'xlsx' to read the file
+        var workbook = XLSX.read(binary, { type: 'binary', cellDates: true, cellStyles: true });
+        var wopts = { bookType:'xlsx', bookSST:false, type:'base64' };
+        var wbout = XLSX.write(workbook,wopts);
+        var blob = new Blob([s2ab(atob(wbout))],{type: 'application/octet-stream'});
+        var formData = new FormData();
+        formData.append('filetoupload', blob, files[0].name);
+        var namefile = files[0].name.replace(/ /g, "_");
+        // console.log(namefile,'namefile')
+        uploadFile(formData,namefile)
+    };
+}
+function uploadFile(fileData,namefile) {
+    $.ajax({
+        url: "/uploadFile",
+        type: 'POST',
+        data: fileData,
+        contentType: false, // Not to set any content header  
+        processData: false, // Not to process data  
+        cache: false,
+        enctype: 'multipart/form-data'
+    }).done(function (res) {
+        $.ajax({ 
+            url: '/class/import',
+            data: {namefile},
+            type: 'POST',
+        }).done(function (res) {
+            $('#modalLoad').modal('hide');
+            console.log(res)
+           
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            // If fail
+            $('#modalLoad').modal('hide');
+            swal({
+                title: "Đã có lỗi xảy ra",
+                text: "",
+                icon: "warning",
+                dangerMode: true,
+            })
+            console.log(textStatus + ': ' + errorThrown);
+            return;
+        })
+    
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        // If fail
+        swal({
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown.message);
+        // console.log(jqXHR);
+    })
+}
 function checkedPhone(phone) {
     var vnf_regex = /(03|07|08|09|01[2|6|8|9])+([0-9]{8})\b/g;
     if (!vnf_regex.test(phone)) {
@@ -511,4 +642,12 @@ function checkedPhone(phone) {
         })
         return;
     }
+}
+// conver string to arr
+function s2ab(s) {
+    var buf = new ArrayBuffer(s.length);
+    var view = new Uint8Array(buf);
+    for (var i=0; i!=s.length; ++i)
+         view[i] = s.charCodeAt(i) & 0xFF;
+         return buf;
 }

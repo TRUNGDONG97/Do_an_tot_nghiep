@@ -10,7 +10,9 @@ import pug from 'pug'
 import { getArrayPages, PageCount } from '../../constants/Funtions'
 import { Op } from 'sequelize'
 import sequelize from 'sequelize'
-
+import formidable from 'formidable'
+import fs from 'fs'
+import xlsx from 'xlsx'
 const getClass = async (req, res, next) => {
     const { currentPage } = req.body
     try {
@@ -48,7 +50,7 @@ const getClass = async (req, res, next) => {
             pageCount: pageCount,
             search: false,
             pages: getArrayPages(req)(pageCount, currentPage),
-            notPa:true
+            notPa: true
         });
         res.send({
             htmlTable,
@@ -80,8 +82,8 @@ const getClassTeacher = async (req, res, next) => {
             },
             {
                 model: TeacherModel,
-                where:{
-                    name:nameTeacher
+                where: {
+                    name: nameTeacher
                 }
             }
             ],
@@ -101,11 +103,11 @@ const getClassTeacher = async (req, res, next) => {
         var htmlTable = await pug.renderFile(urlTable, {
             classes: classes.rows,
             STT: (1 - 1) * Constants.PER_PAGE,
-            currentPage:1,
+            currentPage: 1,
             pageCount: pageCount,
             search: false,
             pages: getArrayPages(req)(pageCount, 1),
-            notPa:false,
+            notPa: false,
         });
         res.send({
             htmlTable
@@ -209,7 +211,7 @@ const searchClass = async (req, res, next) => {
             pageCount: pageCount,
             search: true,
             pages: getArrayPages(req)(pageCount, currentPage),
-            notPa:true
+            notPa: true
         });
         res.send({
             htmlTable,
@@ -525,7 +527,7 @@ const saveClass = async (req, res, next) => {
             }
         })
         const countScheduleClass = classes[0].Schedule_classes.length;
-        console.log(countScheduleClass)
+
         if (teaPhone != '') {
             teacher = await TeacherModel.findAndCountAll({
                 where: {
@@ -550,38 +552,45 @@ const saveClass = async (req, res, next) => {
             })
             return;
         }
+        console.log(countScheduleClass, 'countScheduleClass')
+        console.log(checkSchedule(room1, room2, day1, timeStart1, timeEnd1, day2, timeStart2, timeEnd2), 'check')
         if (countScheduleClass == 1) {
             if (checkSchedule(room1, room2, day1, timeStart1, timeEnd1, day2, timeStart2, timeEnd2) == 1) {
-                await updateSchedule(classes[0].Schedule_classes[0].id, class_id, day1, timeStart1, timeEnd1, room1)
-            }
-            if (checkSchedule(room1, room2, day1, timeStart1, timeEnd1, day2, timeStart2, timeEnd2) == 2) {
+                console.log(1)
                 await updateSchedule(classes[0].Schedule_classes[0].id, class_id, day2, timeStart2, timeEnd2, room2)
+            } else if (checkSchedule(room1, room2, day1, timeStart1, timeEnd1, day2, timeStart2, timeEnd2) == 2) {
+                // console.log(2)
+                await updateSchedule(classes[0].Schedule_classes[0].id, class_id, day1, timeStart1, timeEnd1, room1)
+            } else {
+                // console.log(3)
+                await updateSchedule(classes[0].Schedule_classes[0].id, class_id, day1, timeStart1, timeEnd1, room1)
+                await createSchedule(class_id, day2, timeStart2, timeEnd2, room2)
             }
-            await updateSchedule(classes[0].Schedule_classes[0].id, class_id, day1, timeStart1, timeEnd1, room1)
-            await createSchedule(class_id, day2, timeStart2, timeEnd2, room2)
         } else {
             if (checkSchedule(room1, room2, day1, timeStart1, timeEnd1, day2, timeStart2, timeEnd2) == 1) {
-                await updateSchedule(classes[0].Schedule_classes[0].id, class_id, day1, timeStart1, timeEnd1, room1)
-                await destroySchedule(classes[0].Schedule_classes[1].id)
-            }
-            if (checkSchedule(room1, room2, day1, timeStart1, timeEnd1, day2, timeStart2, timeEnd2) == 2) {
                 await updateSchedule(classes[0].Schedule_classes[0].id, class_id, day2, timeStart2, timeEnd2, room2)
                 await destroySchedule(classes[0].Schedule_classes[1].id)
+                // console.log(4)
+            } else if (checkSchedule(room1, room2, day1, timeStart1, timeEnd1, day2, timeStart2, timeEnd2) == 2) {
+                await updateSchedule(classes[0].Schedule_classes[0].id, class_id, day1, timeStart1, timeEnd1, room1)
+                await destroySchedule(classes[0].Schedule_classes[1].id)
+                // console.log(5)
+            } else {
+                // console.log(6)
+                await updateSchedule(classes[0].Schedule_classes[0].id, class_id, day1, timeStart1, timeEnd1, room1)
+                await updateSchedule(classes[0].Schedule_classes[1].id, class_id, day2, timeStart2, timeEnd2, room2)
             }
-            await updateSchedule(classes[0].Schedule_classes[0].id, class_id, day1, timeStart1, timeEnd1, room1)
-            await updateSchedule(classes[0].Schedule_classes[1].id, class_id, day2, timeStart2, timeEnd2, room2)
-
         }
-        await ClassModel.update({
-            // class_code:class_code,
-            teacher_id: teacher ? teacher.rows[0].id : null,
-            subject_id: subject.rows[0].id,
-            status
-        }, {
-            where: {
-                id: class_id
-            }
-        })
+        // await ClassModel.update({
+        //     // class_code:class_code,
+        //     teacher_id: teacher ? teacher.rows[0].id : null,
+        //     subject_id: subject.rows[0].id,
+        //     status
+        // }, {
+        //     where: {
+        //         id: class_id
+        //     }
+        // })
         res.send({
             result: 2,
         })
@@ -595,7 +604,7 @@ const saveClass = async (req, res, next) => {
 
 const deleteStuInclass = async (req, res, next) => {
     const { student_id, class_id } = req.body
-
+    
     try {
         const stuInClass = await StudentClassModel.findAndCountAll({
             where: {
@@ -626,7 +635,6 @@ const deleteStuInclass = async (req, res, next) => {
             var htmlTable = await pug.renderFile(urlTable, {
                 student_classes: new_class_stu[0].Student_classes
             });
-            // console.log(new_class_stu[0].Schedule_classes[0])
             res.send({
                 result: 1,
                 htmlTable
@@ -638,7 +646,7 @@ const deleteStuInclass = async (req, res, next) => {
         }
 
     } catch (error) {
-        // console.log(error)
+        console.log(error)
         res.status(404).send()
         return;
     }
@@ -655,16 +663,7 @@ const deleteClass = async (req, res, next) => {
         })
         // console.log(students.length)
         if (classes.length > 0) {
-            // await StudentClassModel.destroy({
-            //     where:{
-            //         class_id:id
-            //     }
-            // })
-            // await ScheduleClassModel.destroy({
-            //     where:{
-            //         class_id:id
-            //     }
-            // })
+
             await ClassModel.update({
                 status: 0
             }, {
@@ -686,17 +685,49 @@ const deleteClass = async (req, res, next) => {
         return;
     }
 }
-
+const updateAllStatusClass = async (req, res, next) => {
+    try {
+        await ClassModel.update({
+            status: 2
+        }, {
+            where: {
+                is_active: 1,
+                status: 1
+            }
+        })
+        res.send({
+            result: 1
+        })
+    } catch (error) {
+        res.status(404).send()
+        return;
+    }
+}
+const importClass = async (req, res, next) => {
+    const { namefile } = req.body
+    console.log(namefile)
+    var workbook = xlsx.readFile(__dirname.slice(0,__dirname.length-10) +'public/upload/'+namefile);
+    const sheet_name_list = workbook.SheetNames;
+    const list_class=xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+    console.log(list_class[0])
+    
+    res.send({
+        result: 1,
+    })
+    return;
+    // });
+}
 
 
 const checkSchedule = (room1, room2, day1, timeStart1, timeEnd1, day2, timeStart2, timeEnd2) => {
     if (day1 == '' || timeStart1 == '' || timeEnd1 == '' || room1 == '') {
         return 1;
-    }
-    if (day2 == '' || timeStart2 == '' || timeEnd2 == '' || room2 == '') {
+    } else if (day2 == '' || timeStart2 == '' || timeEnd2 == '' || room2 == '') {
         return 2;
+    } else {
+        return 3
     }
-    return 3
+
 }
 const updateSchedule = (id, class_id, day, timeStart, timeEnd, room) => {
     ScheduleClassModel.update({
@@ -738,5 +769,7 @@ export default {
     saveClass,
     deleteStuInclass,
     deleteClass,
-    getClassTeacher
+    getClassTeacher,
+    updateAllStatusClass,
+    importClass
 }

@@ -343,7 +343,7 @@ function saveSubject(id) {
 
 // function uploadImage(fileData) {
 //     $.ajax({
-//         url: "/uploadAvatar",
+//         url: "/uploadFile",
 //         type: 'POST',
 //         data: fileData,
 //         contentType: false, // Not to set any content header  

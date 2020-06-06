@@ -37,11 +37,12 @@ html
             button#btnImport.btn.btn-success(data-target='#mdImport' data-toggle='modal')
               i.fa.fa-upload
               |  Import sinh viên
-            button.btn.btn-outline-success(onclick="window.location = 'exportFormImport'")
-              i.fa.fa-download
-              |  Mẫu import
+            //- button.btn.btn-outline-success(onclick="window.location = 'exportFormImport'")
+            //-   i.fa.fa-download
+            //-   |  Mẫu import
       .container-fluid
         #tableStudent
+    
     include ../modals/AddStudentModal
     #divModalEditStudent
     #mdImport.modal.fade(tabindex='-1', role='dialog')

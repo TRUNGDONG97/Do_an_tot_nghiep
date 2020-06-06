@@ -33,14 +33,50 @@ html
                     option(value='0') Đã bị hủy
                     option(value='1') Đang học
                     option(value='2') Đã hoàn thành
-        .col-md-7.offset-md-4(style='margin-top:20px')
-          button#btnSearchClass.btn.btn-primary(type="button" style='margin-right:100px')
+        .col-md-9.offset-md-3(style='margin-top:20px')
+          button#btnSearchClass.btn.btn-primary.mr-3(type="button" )
             i.fas.fa-search
-              | &nbsp;  Tìm kiếm
-          button#btnAddClass.btn.btn-danger(type="button" data-toggle='modal' data-target='#addClassModal')
+              | &nbsp  Tìm kiếm
+          button#btnAddClass.btn.btn-danger.mr-3(type="button" data-toggle='modal' data-target='#addClassModal')
             i.fas.fa-plus-square
-              | &nbsp;  Thêm lớp học
+              | &nbsp  Thêm lớp học
+          button#updateStatus.btn.btn-secondary.mr-3(type="button" onclick="updateStatus()")
+            i.fas.fa-edit
+              | &nbsp  Cập nhật trạng thái 
+          button#btnImport.btn.btn-success(data-target='#mdImport' data-toggle='modal')
+              i.fa.fa-upload
+              |  Import lớp học
       .container-fluid
         #tableClass
     include ../modals/AddClassModal
     #divModalEditClass
+    #mdImport.modal.fade(tabindex='-1', role='dialog')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header(style='background-color: #28a745;color: white;')
+            h5.modal-title
+              i.fa.fa-upload(aria-hidden='false')
+                | &nbsp Import danh sách lớp học
+            button.close(type='button', data-dismiss='modal', aria-label='Close')
+              span(aria-hidden='true') &times
+          .modal-body(id='')
+            form#frmImport(method='post', enctype='multipart/form-data')
+              .row.mt-2
+                .col-md-12
+                  .input-group
+                    .input-group-prepend
+                      span#inputGroupFileAddon01.input-group-text Tải lên
+                    .custom-file
+                      input#txtFile.custom-file-input(type='file', name='txtFile', aria-describedby='inputGroupFileAddon01'  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel")
+                      label.custom-file-label(for='inputGroupFile01') chọn file
+              .row.mt-2
+                .modal-footer
+                  button.btn.btn-success(type='button', onclick='importClass()') Import
+                  button.btn.btn-secondary(type='button', data-dismiss='modal') đóng
+            script.
+              $('#mdImport #txtFile').on('change', function () {
+              //get the file name
+                var fileName = $(this).val();
+                //replace the "Choose a file" label
+                $(this).next('#mdImport .custom-file-label').html(fileName);
+              });
