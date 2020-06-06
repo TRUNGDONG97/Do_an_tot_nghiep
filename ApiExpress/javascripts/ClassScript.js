@@ -142,24 +142,9 @@ function addClass() {
     var claCode = $.trim($("#txtClassCode").val());
     var subCode = $.trim($("#txtSubjectCode").val());
     var teaPhone = $.trim($("#txtTeacherPhone").val());
-    var room1 = $.trim($("#room1").val());
-    var room2 = $.trim($("#room2").val());
-    var day1 = $.trim($("#txtDay1").val());
-    var day2 = $.trim($("#txtDay2").val());
-    var timeStart1 = $.trim($("#timeStart1").val());
-    var timeStart2 = $.trim($("#timeStart2").val());
-    var timeEnd1 = $.trim($("#timeEnd1").val());
-    var timeEnd2 = $.trim($("#timeEnd2").val());
-    // console.log(claCode)
-    // console.log(subCode)
-    // console.log(teaPhone)
-    // console.log(room)
-    // console.log(day1)
-    // console.log(timeStart1)
-    // console.log(timeEnd1)
-    // console.log(day2)
-    // console.log(timeStart2)
-    // console.log(timeEnd2)
+    var schedule1 = $.trim($("#schedule1").val());
+    var schedule2 = $.trim($("#schedule2").val());
+    console.log(schedule1, schedule2)
     if (subCode == "" || claCode == '') {
         swal({
             title: "Chưa nhập đầy đủ thông tin",
@@ -168,8 +153,7 @@ function addClass() {
         })
         return;
     }
-    if ((day1 == '' || timeStart1 == '' || timeEnd1 == '' || room1 == '') &&
-        (day2 == '' || timeStart2 == '' || timeEnd2 == '' || room2 == '')) {
+    if (schedule1 == '' && schedule2 == '') {
         swal({
             title: "Chưa nhập lịch học",
             text: "",
@@ -187,14 +171,8 @@ function addClass() {
             subCode,
             claCode,
             teaPhone,
-            room1,
-            room2,
-            day1,
-            timeStart1,
-            timeEnd1,
-            day2,
-            timeStart2,
-            timeEnd2,
+            schedule1,
+            schedule2
         },
         cache: false,
         timeout: 50000,
@@ -244,14 +222,9 @@ function addClass() {
             $("#txtSubjectCode").val("");
             $("#txtTeacherPhone").val("");
             $("#txtAddAddress").val("");
-            $("#room1").val("");
-            $("#room2").val("");
-            $("#txtDay1").val("");
-            $("#txtDay2").val("");
-            $("#timeStart1").val("");
-            $("#timeStart2").val("");
-            $("#timeEnd1").val("");
-            $("#timeEnd2").val("");
+            $("#schedule1").val("");
+            $("#schedule2").val("");
+
             getClass(1)
             return;
         }
@@ -265,14 +238,9 @@ function addClass() {
         $("#txtSubjectCode").val("");
         $("#txtTeacherPhone").val("");
         $("#txtAddAddress").val("");
-        $("#room1").val("");
-        $("#room2").val("");
-        $("#txtDay1").val("");
-        $("#txtDay2").val("");
-        $("#timeStart1").val("");
-        $("#timeStart2").val("");
-        $("#timeEnd1").val("");
-        $("#timeEnd2").val("");
+        $("#schedule1").val("");
+        $("#schedule2").val("");
+
         getClass(1)
         return;
     }).fail(function (jqXHR, textStatus, errorThrown) {
@@ -345,27 +313,10 @@ function saveClass(class_id) {
     }
     var subCode = $.trim($("#txtEditSubjectCode").val());
     var teaPhone = $.trim($("#txtEditTeacherPhone").val());
-    var room1 = $.trim($("#editRoom1").val());
-    var room2 = $.trim($("#editRoom2").val());
-    var day1 = $.trim($("#txtEditDay1").val());
-    var day2 = $.trim($("#txtEditDay2").val());
-    var timeStart1 = $.trim($("#editTimeStart1").val());
-    var timeStart2 = $.trim($("#editTimeStart2").val());
-    var timeEnd1 = $.trim($("#editTimeEnd1").val());
-    var timeEnd2 = $.trim($("#editTimeEnd2").val());
+    var schedule1 = $.trim($("#editSchedule1").val());
+    var schedule2 = $.trim($("#editSchedule2").val());
     var status = $("#editStuClassStatus").val();
-    // console.log(subCode)
-    // console.log(teaPhone)
-    // console.log(room1)
-    // console.log(room2)
-    // console.log(day1)
-    // console.log(timeStart1)
-    // console.log(timeEnd1)
-    // console.log(day2)
-    // console.log(timeStart2)
-    // console.log(timeEnd2)
-    // console.log(status)
-    // console.log(class_id)
+    console.log(schedule1, schedule2)
     if (subCode == "" || status == '') {
         swal({
             title: "Chưa nhập đầy đủ thông tin",
@@ -374,8 +325,7 @@ function saveClass(class_id) {
         })
         return;
     }
-    if ((day1 == '' || timeStart1 == '' || timeEnd1 == '' || room1 == '')
-     && (day2 == '' || timeStart2 == '' || timeEnd2 == '' || room2 == '')) {
+    if (schedule1 == '' && schedule2 == '') {
         swal({
             title: "Chưa nhập lịch học",
             text: "",
@@ -390,18 +340,12 @@ function saveClass(class_id) {
         url: '/class/save',
         type: 'POST',
         data: {
-            status,
             class_id,
+            status,
             subCode,
+            schedule1,
+            schedule2,
             teaPhone,
-            room1,
-            room2,
-            day1,
-            timeStart1,
-            timeEnd1,
-            day2,
-            timeStart2,
-            timeEnd2,
         },
         cache: false,
         timeout: 50000,
@@ -526,18 +470,18 @@ function updateStatus() {
                     data: {},
                     cache: false,
                     timeout: 50000,
-                    beforeSend:function(){
+                    beforeSend: function () {
                         $('#modalLoad').modal('show');
                     }
                 }).done(function (res) {
                     // console.log(res.result)
                     $('#modalLoad').modal('hide');
-                        swal({
-                            title: "Cập nhật thành công",
-                            text: "",
-                            icon: "warning"
-                        });
-                        getClass(1)
+                    swal({
+                        title: "Cập nhật thành công",
+                        text: "",
+                        icon: "warning"
+                    });
+                    getClass(1)
 
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     // If fail
@@ -554,7 +498,7 @@ function updateStatus() {
             }
         });
 }
-function importClass(){
+function importClass() {
     var fileUpload = $("#txtFile").get(0);
     var files = fileUpload.files;
     if (files.length <= 0) {
@@ -570,7 +514,7 @@ function importClass(){
     var reader = new FileReader();
     reader.readAsArrayBuffer(fileUpload.files[0]);
     reader.onload = function (e) {
-       
+
         var binary = "";
         var bytes = new Uint8Array(e.target.result);
         var length = bytes.byteLength;
@@ -578,18 +522,31 @@ function importClass(){
             binary += String.fromCharCode(bytes[i]);
         }
         // call 'xlsx' to read the file
-        var workbook = XLSX.read(binary, { type: 'binary', cellDates: true, cellStyles: true });
-        var wopts = { bookType:'xlsx', bookSST:false, type:'base64' };
-        var wbout = XLSX.write(workbook,wopts);
-        var blob = new Blob([s2ab(atob(wbout))],{type: 'application/octet-stream'});
+        var workbook = XLSX.read(binary,
+            {
+                type: 'binary',
+                cellDates: true,
+                cellStyles: true,
+                cellNF: true,
+                cellText: false
+            });
+        // var firstSheet = workbook.SheetNames[0];
+        // arrStudent = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[firstSheet]);
+        // console.log(arrStudent[0])
+        var wopts = { bookType: 'xlsx', bookSST: false, type: 'base64' };
+        var wbout = XLSX.write(workbook, wopts);
+        // console.log(wbout)
+        var blob = new Blob([s2ab(atob(wbout))], { type: 'application/octet-stream' });
         var formData = new FormData();
         formData.append('filetoupload', blob, files[0].name);
         var namefile = files[0].name.replace(/ /g, "_");
-        // console.log(namefile,'namefile')
-        uploadFile(formData,namefile)
+        // console.log(formData,'formData')
+
+        uploadFile(formData, namefile)
+        // $('#modalLoad').modal('hide');
     };
 }
-function uploadFile(fileData,namefile) {
+function uploadFile(fileData, namefile) {
     $.ajax({
         url: "/uploadFile",
         type: 'POST',
@@ -599,14 +556,20 @@ function uploadFile(fileData,namefile) {
         cache: false,
         enctype: 'multipart/form-data'
     }).done(function (res) {
-        $.ajax({ 
+        $.ajax({
             url: '/class/import',
-            data: {namefile},
+            data: { namefile },
             type: 'POST',
         }).done(function (res) {
             $('#modalLoad').modal('hide');
+            swal({
+                title: "Thêm  thành công",
+                text: "",
+                icon: "warning"
+            });
+            getClass(1)
             console.log(res)
-           
+
         }).fail(function (jqXHR, textStatus, errorThrown) {
             // If fail
             $('#modalLoad').modal('hide');
@@ -619,9 +582,10 @@ function uploadFile(fileData,namefile) {
             console.log(textStatus + ': ' + errorThrown);
             return;
         })
-    
+
     }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
+        $('#modalLoad').modal('hide');
         swal({
             title: "Đã có lỗi xảy ra",
             text: "",
@@ -647,7 +611,7 @@ function checkedPhone(phone) {
 function s2ab(s) {
     var buf = new ArrayBuffer(s.length);
     var view = new Uint8Array(buf);
-    for (var i=0; i!=s.length; ++i)
-         view[i] = s.charCodeAt(i) & 0xFF;
-         return buf;
+    for (var i = 0; i != s.length; ++i)
+        view[i] = s.charCodeAt(i) & 0xFF;
+    return buf;
 }

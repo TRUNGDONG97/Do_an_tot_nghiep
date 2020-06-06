@@ -13,6 +13,7 @@ import sequelize from 'sequelize'
 import formidable from 'formidable'
 import fs from 'fs'
 import xlsx from 'xlsx'
+import DateUtil from '../../constants/DateUtil'
 const getClass = async (req, res, next) => {
     const { currentPage } = req.body
     try {
@@ -36,9 +37,6 @@ const getClass = async (req, res, next) => {
             ],
             offset: Constants.PER_PAGE * (currentPage - 1),
             limit: Constants.PER_PAGE,
-            order: [
-                ['Schedule_classes', 'day_of_week', 'ASC']
-            ],
             distinct: true
         })
         const pageCount = PageCount(classes.count)
@@ -89,9 +87,6 @@ const getClassTeacher = async (req, res, next) => {
             ],
             offset: Constants.PER_PAGE * (1 - 1),
             limit: Constants.PER_PAGE,
-            order: [
-                ['Schedule_classes', 'day_of_week', 'ASC']
-            ],
             distinct: true
         })
         // const count = await ClassModel.count()
@@ -154,9 +149,6 @@ const searchClass = async (req, res, next) => {
                 ],
                 offset: Constants.PER_PAGE * (currentPage - 1),
                 limit: Constants.PER_PAGE,
-                order: [
-                    ['Schedule_classes', 'day_of_week', 'ASC']
-                ],
                 where: sequelize.where(sequelize.fn('lower', sequelize.col('class_code')), {
                     [Op.like]: '%' + claCode + '%'
                 }),
@@ -185,9 +177,6 @@ const searchClass = async (req, res, next) => {
                 ],
                 offset: Constants.PER_PAGE * (currentPage - 1),
                 limit: Constants.PER_PAGE,
-                order: [
-                    ['Schedule_classes', 'day_of_week', 'ASC']
-                ],
                 where: {
                     [Op.and]: [
                         sequelize.where(sequelize.fn('lower', sequelize.col('class_code')), {
@@ -227,15 +216,9 @@ const addClass = async (req, res, next) => {
     const {
         subCode,
         claCode,
-        room1,
-        room2,
         teaPhone,
-        day1,
-        timeStart1,
-        timeEnd1,
-        day2,
-        timeStart2,
-        timeEnd2
+        schedule1,
+        schedule2
     } = req.body
     try {
         var teacher;
@@ -244,7 +227,7 @@ const addClass = async (req, res, next) => {
                 class_code: claCode
             }
         })
-
+        // console.log(classes.rows[0].id)
 
         const subject = await SubjectModel.findAndCountAll({
             where: {
@@ -291,22 +274,16 @@ const addClass = async (req, res, next) => {
                 return;
             }
             // console.log(countScheduleClass, 'đá')
-            if (day1 == '' || timeStart1 == '' || timeEnd1 == '' || room1 == '') {
-                await ScheduleClassModel.create({
-                    class_id: classes.row[0].id,
-                    day_of_week: day2,
-                    time_start: timeStart2,
-                    time_end: timeEnd2,
-                    room_name: room2
-                })
-            }
-            if (day2 == '' || timeStart2 == '' || timeEnd2 == '' || room2 == '') {
+            if (schedule1 != '') {
                 await ScheduleClassModel.create({
                     class_id: classes.rows[0].id,
-                    day_of_week: day1,
-                    time_start: timeStart1,
-                    time_end: timeEnd1,
-                    room_name: room1
+                    schedule: schedule1
+                })
+            }
+            if (schedule2 != '') {
+                await ScheduleClassModel.create({
+                    class_id: classes.rows[0].id,
+                    schedule: schedule2
                 })
             }
             res.send({
@@ -323,24 +300,19 @@ const addClass = async (req, res, next) => {
             status: 1, // đang học
             subject_id: subject.rows[0].id
         })
-        if (day1 == '' || timeStart1 == '' || timeEnd1 == '' || room1 == '') {
+        if (schedule1 != '') {
             await ScheduleClassModel.create({
                 class_id: newClass.id,
-                day_of_week: day2,
-                time_start: timeStart2,
-                time_end: timeEnd2,
-                room_name: room2
+                schedule: schedule1
             })
         }
-        if (day2 == '' || timeStart2 == '' || timeEnd2 == '' || room2 == '') {
+        if (schedule2 != '') {
             await ScheduleClassModel.create({
                 class_id: newClass.id,
-                day_of_week: day1,
-                time_start: timeStart1,
-                time_end: timeEnd1,
-                room_name: room1
+                schedule: schedule2
             })
         }
+
         res.send({
             result: 4
         })
@@ -506,15 +478,10 @@ const saveClass = async (req, res, next) => {
         class_id,
         status,
         subCode,
-        room1,
-        room2,
+        schedule1,
+        schedule2,
         teaPhone,
-        day1,
-        timeStart1,
-        timeEnd1,
-        day2,
-        timeStart2,
-        timeEnd2
+
     } = req.body
     try {
         var teacher;
@@ -552,33 +519,33 @@ const saveClass = async (req, res, next) => {
             })
             return;
         }
-        console.log(countScheduleClass, 'countScheduleClass')
-        console.log(checkSchedule(room1, room2, day1, timeStart1, timeEnd1, day2, timeStart2, timeEnd2), 'check')
+        // console.log(countScheduleClass, 'countScheduleClass')
+        // console.log(checkSchedule(room1, room2, day1, timeStart1, timeEnd1, day2, timeStart2, timeEnd2), 'check')
         if (countScheduleClass == 1) {
-            if (checkSchedule(room1, room2, day1, timeStart1, timeEnd1, day2, timeStart2, timeEnd2) == 1) {
+            if (checkSchedule(schedule1, schedule2) == 1) {
                 console.log(1)
-                await updateSchedule(classes[0].Schedule_classes[0].id, class_id, day2, timeStart2, timeEnd2, room2)
-            } else if (checkSchedule(room1, room2, day1, timeStart1, timeEnd1, day2, timeStart2, timeEnd2) == 2) {
+                await updateSchedule(classes[0].Schedule_classes[0].id,class_id,schedule2)
+            } else if (checkSchedule(schedule1,schedule2) == 2) {
                 // console.log(2)
-                await updateSchedule(classes[0].Schedule_classes[0].id, class_id, day1, timeStart1, timeEnd1, room1)
+                await updateSchedule(classes[0].Schedule_classes[0].id, class_id, schedule1)
             } else {
                 // console.log(3)
-                await updateSchedule(classes[0].Schedule_classes[0].id, class_id, day1, timeStart1, timeEnd1, room1)
-                await createSchedule(class_id, day2, timeStart2, timeEnd2, room2)
+                await updateSchedule(classes[0].Schedule_classes[0].id, class_id, schedule1)
+                await createSchedule(class_id, schedule2)
             }
         } else {
-            if (checkSchedule(room1, room2, day1, timeStart1, timeEnd1, day2, timeStart2, timeEnd2) == 1) {
-                await updateSchedule(classes[0].Schedule_classes[0].id, class_id, day2, timeStart2, timeEnd2, room2)
+            if (checkSchedule(schedule1,schedule2) == 1) {
+                await updateSchedule(classes[0].Schedule_classes[0].id, class_id,schedule2)
                 await destroySchedule(classes[0].Schedule_classes[1].id)
                 // console.log(4)
-            } else if (checkSchedule(room1, room2, day1, timeStart1, timeEnd1, day2, timeStart2, timeEnd2) == 2) {
-                await updateSchedule(classes[0].Schedule_classes[0].id, class_id, day1, timeStart1, timeEnd1, room1)
+            } else if (checkSchedule(schedule1,schedule2) == 2) {
+                await updateSchedule(classes[0].Schedule_classes[0].id, class_id, schedule1)
                 await destroySchedule(classes[0].Schedule_classes[1].id)
                 // console.log(5)
             } else {
                 // console.log(6)
-                await updateSchedule(classes[0].Schedule_classes[0].id, class_id, day1, timeStart1, timeEnd1, room1)
-                await updateSchedule(classes[0].Schedule_classes[1].id, class_id, day2, timeStart2, timeEnd2, room2)
+                await updateSchedule(classes[0].Schedule_classes[0].id, class_id,schedule1)
+                await updateSchedule(classes[0].Schedule_classes[1].id, class_id, schedule2)
             }
         }
         // await ClassModel.update({
@@ -604,7 +571,7 @@ const saveClass = async (req, res, next) => {
 
 const deleteStuInclass = async (req, res, next) => {
     const { student_id, class_id } = req.body
-    
+
     try {
         const stuInClass = await StudentClassModel.findAndCountAll({
             where: {
@@ -706,36 +673,74 @@ const updateAllStatusClass = async (req, res, next) => {
 const importClass = async (req, res, next) => {
     const { namefile } = req.body
     console.log(namefile)
-    var workbook = xlsx.readFile(__dirname.slice(0,__dirname.length-10) +'public/upload/'+namefile);
+    var workbook = xlsx.readFile(__dirname.slice(0, __dirname.length - 10) + 'public/upload/' + namefile,
+        { cellDates: true });
     const sheet_name_list = workbook.SheetNames;
-    const list_class=xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+    const list_class = xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
     console.log(list_class[0])
-    
+    if (list_class.length < 1) {
+        res.send({
+            result: 0
+        })
+        return;
+    }
+    for (let index = 0; index < list_class.length; index++) {
+        var countClass = ClassModel.findAll({
+            where: {
+                class_id: list_class[index].classid,
+            }
+        })
+        var countStudent = StudentModel.findAll({
+            where: {
+                mssv: list_class[index].StudentID
+            }
+        })
+        if (countClass.length > 0) {
+            addStudentInClass(countStudent[0], list_class[index].classid,
+                list_class[index].studentname, list_class[index].StudentID, list_class[index].birthdate)
+        } else {
+
+        }
+    }
     res.send({
         result: 1,
     })
     return;
     // });
 }
+const addStudentInClass = async (countStudent, class_id, studentname, StudentID, birthday) => {
+    if (countStudent.length > 0) {
+        await StudentClassModel.create({
+            student_id: countStudent.id,
+            class_id
+        })
+    } else {
+        const student = await StudentModel.create({
+            name: studentname,
+            mssv: StudentID,
+            birthday: formatInputDate(birthday)
+        })
+        await StudentClassModel.create({
+            student_id: student.id,
+            class_id
+        })
+    }
+}
 
-
-const checkSchedule = (room1, room2, day1, timeStart1, timeEnd1, day2, timeStart2, timeEnd2) => {
-    if (day1 == '' || timeStart1 == '' || timeEnd1 == '' || room1 == '') {
+const checkSchedule = (schedule1, schedule2) => {
+    if (schedule1 == '') {
         return 1;
-    } else if (day2 == '' || timeStart2 == '' || timeEnd2 == '' || room2 == '') {
+    } else if (schedule2 == '') {
         return 2;
     } else {
         return 3
     }
 
 }
-const updateSchedule = (id, class_id, day, timeStart, timeEnd, room) => {
+const updateSchedule = (id, class_id, schedule) => {
     ScheduleClassModel.update({
         class_id: class_id,
-        day_of_week: day,
-        time_start: timeStart,
-        time_end: timeEnd,
-        room_name: room
+        schedule
     }, {
         where: {
             id
@@ -749,13 +754,10 @@ const destroySchedule = (id) => {
         }
     })
 }
-const createSchedule = (class_id, day, timeStart, timeEnd, room) => {
+const createSchedule = (class_id, schedule) => {
     ScheduleClassModel.create({
         class_id: class_id,
-        day_of_week: day,
-        time_start: timeStart,
-        time_end: timeEnd,
-        room_name: room
+        schedule
     })
 }
 

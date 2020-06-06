@@ -9,16 +9,7 @@ const Scheduleclass = sequelize.define('Schedule_class', {
     class_id: {
         type: Sequelize.INTEGER
     },
-    day_of_week: {
-        type: Sequelize.INTEGER
-    },
-    time_start: {
-        type: Sequelize.INTEGER
-    },
-    time_end: {
-        type: Sequelize.INTEGER
-    },
-    room_name: {
+    schedule: {
         type: Sequelize.STRING
     }
 }, {

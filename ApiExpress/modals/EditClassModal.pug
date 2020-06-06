@@ -25,66 +25,14 @@
                                     option(value='') --Lựa chon--
                                     option(value='0') Đã bị hủy
                                     option(value='1') Đang học
-                                    option(value='2') Đã hoàn thành
-                label Lịch học:
-                .row.col-md-11.col-sm-11.col-11.offset-md-1
-                    .col-md-2
-                        .row
-                            label.col-md-5(style='padding-top:6px;') Thứ:
-                            .col-md-7.col-sm-7.col-7
-                                input#txtEditDay1.form-control(type='number' min='2' max='7' placeholder='' value=parseInt(classes.Schedule_classes[0].day_of_week))
-                    p(style='padding-top:6px;padding-right:10px;') từ:
-                    .col-md-2
-                        .row
-                            .form-group
-                                #time_start1.time-picker.input-group.date(data-target-input='nearest')
-                                    input#editTimeStart1.form-control.datetimepicker-input(type='text' data-target='#time_start1' value=classes.Schedule_classes[0].time_start)
-                                    .input-group-append(data-target='#time_start1' data-toggle='datetimepicker' )
-                                        .input-group-text
-                                            i.far.fa-clock
-                    p(style='padding-top:6px;padding-right:10px;padding-left:10px;') đến:
-                    .col-md-2
-                        .row
-                            .form-group
-                                #time_end1.time-picker.input-group.date(data-target-input='nearest')
-                                    input#editTimeEnd1.form-control.datetimepicker-input(type='text' data-target='#time_end1' value=classes.Schedule_classes[0].time_end)
-                                    .input-group-append(data-target='#time_end1' data-toggle='datetimepicker')
-                                        .input-group-text
-                                            i.far.fa-clock
-                    .col-md-4
-                        .row
-                            label.col-md-4.col-sm-4.col-4(style='padding-top:6px;padding-right:10px;') Phòng:
-                            .col-md-8.col-sm-8.col-8
-                                input#editRoom1.form-control(type='text' maxlength="50" value=classes.Schedule_classes[0].room_name)   
-                .row.col-md-11.col-sm-11.col-11.offset-md-1
-                    .col-md-2
-                        .row
-                            label.col-md-5(style='padding-top:6px;') Thứ:
-                            .col-md-7.col-sm-7.col-7
-                                input#txtEditDay2.form-control(type='number' min='1' max='7' value=classes.Schedule_classes.length>1?parseInt(classes.Schedule_classes[1].day_of_week):null)
-                    p(style='padding-top:6px;padding-right:10px;') từ:
-                    .col-md-2
-                        .row
-                            .form-group
-                                #time_start2.time-picker.input-group.date(data-target-input='nearest')
-                                    input#editTimeStart2.form-control.datetimepicker-input(type='text' data-target='#time_start2' value=classes.Schedule_classes.length>1?classes.Schedule_classes[1].time_start:'')
-                                    .input-group-append(data-target='#time_start2' data-toggle='datetimepicker')
-                                        .input-group-text
-                                            i.far.fa-clock
-                    p(style='padding-top:6px;padding-right:10px;padding-left:10px;') đén:
-                    .col-md-2
-                        .row
-                            .form-group
-                                #time_end2.time-picker.input-group.date(data-target-input='nearest')
-                                    input#editTimeEnd2.form-control.datetimepicker-input(type='text' data-target='#time_end2' value=classes.Schedule_classes.length>1?classes.Schedule_classes[1].time_end:'' )
-                                    .input-group-append(data-target='#time_end2' data-toggle='datetimepicker')
-                                        .input-group-text
-                                            i.far.fa-clock
-                    .col-md-4
-                        .row
-                            label.col-md-4.col-sm-4.col-4(style='padding-top:6px;padding-right:10px;') Phòng:
-                            .col-md-8.col-sm-8.col-8
-                                input#editRoom2.form-control(type='text' maxlength="50" value=classes.Schedule_classes.length>1?classes.Schedule_classes[1].room_name:'')  
+                                    option(value='2') Đã hoàn 
+                    .row.col-md-12(style='margin-bottom:20px;margin-top:20px')
+                        label.col-md-2.col-sm-2.col-2 Lịch học:
+                        .col-md-6.col-sm-6.col-6
+                            input#editSchedule1.form-control(type='text' 
+                                value=classes.Schedule_classes[0].schedule)   
+                            input#editSchedule2.form-control(type='text' style="margin-top:20px" 
+                                value=classes.Schedule_classes.length>1?classes.Schedule_classes[0].schedule:""  )  
             .modal-footer
                 button.btn.btn-secondary(type='button' data-dismiss='modal') Đóng
                 button.btn.btn-danger(type='button' onclick='saveClass('+classes.id+')') Lưu
