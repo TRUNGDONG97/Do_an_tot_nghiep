@@ -5,7 +5,7 @@ import TeacherModel from '../../models/TeacherModel'
 import pug from 'pug'
 import { getArrayPages, PageCount } from '../../constants/Funtions'
 import md5 from 'md5'
-
+import xlsx from 'xlsx'
 
 const getTeacherID = async (req, res, next) => {
     const { id } = req.body
@@ -372,43 +372,58 @@ const resetPassTeacher = async (req, res, next) => {
     }
 }
 const importTeacher = async (req, res, next) => {
-    const { listTeacher } = req.body
-    const jsonListTeacher = JSON.parse(listTeacher);
-    console.log(jsonListTeacher[0].sex)
+    const { namefile } = req.body
+    var workbook = xlsx.readFile(__dirname.slice(0, __dirname.length - 10) + 'public/upload/' + namefile,
+        { cellDates: true });
+    const sheet_name_list = workbook.SheetNames;
+    const list_teacher = xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+    if (list_teacher.length < 1) {
+        res.send({
+            result: 0
+        })
+        return;
+    }
     try {
-        //    console.log(jsonListTeacher.length)
-        for (let index = 0; index < jsonListTeacher.length; index++) {
-            var countMssv = await TeacherModel.count({
+        for (let index = 0; index < list_teacher.length; index++) {
+            if (!list_teacher[index].phone) {
+                res.send({
+                    result: 2
+                })
+                return;
+            }
+        }
+        for (let index = 0; index < list_teacher.length; index++) {
+            var countPhone = await TeacherModel.count({
                 where: {
-                    phone: jsonListTeacher[index].phone.toString()
+                    phone: "0" +list_teacher[index].phone.toString()
                 }
             })
-            if (countMssv > 0) {
+            if (countPhone > 0) {
                 await TeacherModel.update({
-                    name: jsonListTeacher[index].name,
-                    address: jsonListTeacher[index].address,
-                    birthday: jsonListTeacher[index].birthday,
-                    sex: jsonListTeacher[index].sex == "nam" ? 1 : 0,
-                    email: jsonListTeacher[index].email,
-                    phone: "0" + jsonListTeacher[index].phone.toString(),
-                    salary: jsonListTeacher[index].salary,
-                    status: "0" + jsonListTeacher[index].status
+                    name: list_teacher[index].name,
+                    address: list_teacher[index].address,
+                    birthday: list_teacher[index].birthday,
+                    sex: list_teacher[index].sex == "nam" ? 1 : 0,
+                    email: list_teacher[index].email,
+                    phone: "0" + list_teacher[index].phone.toString(),
+                    salary: list_teacher[index].salary,
+                    status: "0" + list_teacher[index].status
                 }, {
                     where: {
-                        phone: "0" + jsonListTeacher[index].phone.toString()
+                        phone: "0" + list_teacher[index].phone.toString()
                     }
                 })
             } else {
                 await TeacherModel.create({
-                    name: jsonListTeacher[index].name,
-                    salary: jsonListTeacher[index].salary,
-                    password: md5(jsonListTeacher[index].phone.toString()),
-                    address: jsonListTeacher[index].address,
-                    birthday: jsonListTeacher[index].birthday,
-                    sex: jsonListTeacher[index].sex == "nam" ? 1 : 0,
-                    email: jsonListTeacher[index].email,
-                    phone: "0" + jsonListTeacher[index].phone,
-                    status: "0" + jsonListTeacher[index].status
+                    name: list_teacher[index].name,
+                    salary: list_teacher[index].salary,
+                    password: md5(list_teacher[index].phone.toString()),
+                    address: list_teacher[index].address,
+                    birthday: list_teacher[index].birthday,
+                    sex: list_teacher[index].sex == "nam" ? 1 : 0,
+                    email: list_teacher[index].email,
+                    phone: "0" + list_teacher[index].phone,
+                    status: "0" + list_teacher[index].status
                 })
             }
         }

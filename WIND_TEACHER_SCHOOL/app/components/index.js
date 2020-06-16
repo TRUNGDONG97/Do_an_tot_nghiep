@@ -25,6 +25,7 @@ import CategoryTopic from './CategoryTopic'
 import ClassItem from './ClassItem'
 import Checked from './Checked'
 import AbsentItem from './AbsentItem'
+import ModalDialog from './ModalDialog'
 
 export {
     Block, AppHeader, WindsHeader,
@@ -36,5 +37,5 @@ export {
     PostItem, ImageViewerScreen, ActionSheet,
     Checkbox, RadioButton,CommentItem,
     CategoryTopic,ClassItem,Checked,
-    AbsentItem
+    AbsentItem,ModalDialog
 }

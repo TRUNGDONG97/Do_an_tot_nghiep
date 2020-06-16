@@ -51,7 +51,7 @@ const getClass = async (req, res, next) => {
                     is_active: 1
                 },
                 order: [
-                    ['Schedule_classes', 'day_of_week', 'ASC'],
+                    ['Schedule_classes', 'schedule', 'ASC'],
                 ],
                 // distinct: true
             })
@@ -555,7 +555,7 @@ const absentStudent = async (req, res, next) => {
             res.json({
                 "status": 0,
                 "code": 404,
-                "message": "Máy điện thoại này đã điểm danh",
+                "message": "Thiết bị này đã điểm danh",
                 "data": ''
             })
             return;
@@ -591,6 +591,9 @@ const absentStudent = async (req, res, next) => {
                 id :absentOfStudent[0].id
             }
         })
+        // await NotificationModel.create({
+
+        // })
         res.json({
             "status": 1,
             "code": 200,

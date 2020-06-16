@@ -7,7 +7,8 @@ import {
     FlatList,
     ScrollView,
     ImageBackground,
-    TouchableOpacity
+    TouchableOpacity,
+    TextInput,
 } from 'react-native'
 import { connect } from 'react-redux'
 import theme from '@theme'
@@ -15,7 +16,9 @@ import R from '@R'
 import { SCREEN_ROUTER } from '@constant'
 import {
     AppHeader, Block, Button,
-    Empty, Checkbox, BackgroundHeader, WindsHeader, Icon, Loading
+    Empty, Checkbox, BackgroundHeader,
+    WindsHeader, Icon, Loading,
+    ModalDialog
 } from '@component'
 import NavigationUtil from '@app/navigation/NavigationUtil'
 import Mockup from '@app/constants/Mockup'
@@ -36,8 +39,12 @@ export class ClassDetailScreen extends Component {
                 longitude: null,
                 latitude: null
             },
-            isLoading: false
-
+            isLoading: false,
+            isModalVisible: false,
+            mid_semester: null,
+            end_semester: null,
+            index: null,
+            itemStudent: null
         }
     }
     _startAbsent = async (gps_latitude, gps_longitude) => {
@@ -120,6 +127,10 @@ export class ClassDetailScreen extends Component {
             reactotron.log(error);
         }
     }
+    showModal = () => {
+        // alert('dfdkf')
+        this.refDialog.handleVisible()
+    }
     render() {
         const item = this.props.navigation.getParam('class')
         return (
@@ -127,6 +138,7 @@ export class ClassDetailScreen extends Component {
                 <SafeAreaView style={theme.styles.containter}>
                     <BackgroundHeader />
                     <WindsHeader title={item.Subject.subject_name} />
+                    {this._renderModalPoint()}
                     {this._renderBody()}
                 </SafeAreaView>
             </Block>
@@ -138,10 +150,18 @@ export class ClassDetailScreen extends Component {
         // reactotron.log('Student_classes', item.Student_classes)
 
         return (
-            <ScrollView
-                style={{ marginTop: 20, }}
+            // <ScrollView horizontal
+            //     contentContainerStyle={{ width: 1000 }}
+            //     showsHorizontalScrollIndicator={false}
+            // >
+            <View
+                style={{
+                    marginTop: 5,
+                    flex: 1
+                }}
                 showsVerticalScrollIndicator={false}
             >
+
                 <View style={styles._viewUser}>
                     {this._renderUserItem('Mã lớp học', item.class_code)}
                     {this._renderUserItem(R.strings.number_of_people, item.Student_classes.length)}
@@ -149,7 +169,7 @@ export class ClassDetailScreen extends Component {
                 </View>
                 <View style={{
                     flexDirection: 'row',
-                    marginTop: 30,
+                    marginTop: 15,
                 }}>
                     <TouchableOpacity style={{ flex: 1, marginHorizontal: 20, borderRadius: 5 }}
                         onPress={() => {
@@ -168,7 +188,7 @@ export class ClassDetailScreen extends Component {
 
                     <TouchableOpacity style={{ flex: 1, marginHorizontal: 20, borderRadius: 5 }}
                         onPress={() => {
-                            showMessages("","Bạn chắc chắn hủy điểm danh",this._cancelAbsent()) 
+                            showMessages("", "Bạn chắc chắn hủy điểm danh", this._cancelAbsent())
                         }}
                     >
                         <LinearGradient
@@ -195,55 +215,75 @@ export class ClassDetailScreen extends Component {
                 </View>
 
 
-                <LinearGradient
-                    style={styles._lgListClass}
-                    colors={["#ff740d", "#f9ad2e"]}
-                    start={{ x: 0.7, y: 1 }} //transparent
-                    end={{ x: 0, y: 0.1 }}>
-                    <Text style={[theme.fonts.regular20, { color: theme.colors.white }]}>
-                        {R.strings.list_class}</Text>
-                </LinearGradient>
+                {/* <LinearGradient
+                        style={styles._lgListClass}
+                        colors={["#ff740d", "#f9ad2e"]}
+                        start={{ x: 0.7, y: 1 }} //transparent
+                        end={{ x: 0, y: 0.1 }}>
+                        <Text style={[theme.fonts.regular18, { color: theme.colors.white }]}>
+                            {R.strings.list_class}</Text>
+                    </LinearGradient> */}
 
-
-                <View style={{ paddingBottom: 20 }}>
-                    <View
-                        style={[styles._vColumn,
-                        {
-                            backgroundColor: theme.colors.backgroundBlue,
-                            borderTopWidth: 0.5,
-                            borderTopColor: theme.colors.gray,
-                            marginTop: 10,
-                        }
-                        ]}
+                <ScrollView
+                    contentContainerStyle={{
+                        width: 600,
+                        // flex: 1
+                        // backgroundColor:'red'
+                        paddingBottom: 10
+                    }}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                >
+                    <ScrollView style={{ paddingBottom: 100 }}
+                        showsVerticalScrollIndicator={false}
                     >
-                        <View style={[styles.rowTable, { flex: 1 }]}>
-                            <Text style={theme.fonts.regular14}>{R.strings.number}</Text>
+                        <View
+                            style={[styles._vColumn,
+                            {
+                                backgroundColor: theme.colors.backgroundBlue,
+                                borderTopWidth: 0.5,
+                                borderTopColor: theme.colors.gray,
+                                marginTop: 10,
+                            }
+                            ]}
+                        >
+                            <View style={[styles.rowTable, { flex: 1 }]}>
+                                <Text style={theme.fonts.regular14}>{R.strings.number}</Text>
+                            </View>
+                            <View style={[styles.rowTable, { flex: 5 }]}>
+                                <Text style={theme.fonts.regular14}>{R.strings.name}</Text>
+                            </View>
+                            <View style={[styles.rowTable, { flex: 3 }]}>
+                                <Text style={theme.fonts.regular14}>MSSV</Text>
+                            </View>
+                            <View style={[styles.rowTable, { flex: 2 }]}>
+                                <Text style={theme.fonts.regular14}>Giữa kì</Text>
+                            </View>
+                            <View style={[styles.rowTable, { flex: 2 }]}>
+                                <Text style={theme.fonts.regular14}>Cuối kì</Text>
+                            </View>
+                            <View style={[styles.rowTable, { flex: 1 }]}>
+                            </View>
                         </View>
-                        <View style={[styles.rowTable, { flex: 6 }]}>
-                            <Text style={theme.fonts.regular14}>{R.strings.name}</Text>
-                        </View>
-                        <View style={[styles.rowTable, { flex: 3 }]}>
-                            <Text style={theme.fonts.regular14}>MSSV</Text>
-                        </View>
-                        {/* <View style={[styles.rowTable, { flex: 1 }]}>
-                        </View> */}
-                    </View>
-                    {
-                        item.Student_classes.length == 0 ? (
-                            <Empty description={'chưa có học sinh nào'}
-                            />
-                        ) : (
+                        {
+                            item.Student_classes.length == 0 ? (
+                                <Empty description={'chưa có học sinh nào'}
+                                />
+                            ) : (
 
-                                item.Student_classes.map((item, index) => (
-                                    <View key={index.toString()} style={{ width: "100%" }}>
-                                        {this._renderRowTable(item, index)}
-                                    </View>
-                                ))
-                            )
-                    }
-                </View>
+                                    item.Student_classes.map((item, index) => (
+                                        <View key={index.toString()} style={{ width: "100%" }}>
+                                            {this._renderRowTable(item, index)}
+                                        </View>
+                                    ))
+                                )
+                        }
+                    </ScrollView>
+                </ScrollView>
                 {/* <Button title='Chia sẻ vị trí' style={{ alignSelf: 'center', marginBottom: 100, marginTop: 50, }} /> */}
-            </ScrollView>
+
+            </View>
+            // </ScrollView>
         )
     }
 
@@ -263,7 +303,7 @@ export class ClassDetailScreen extends Component {
                 <View style={[styles.rowTable, { flex: 1 }]}>
                     <Text style={theme.fonts.regular14}>{index + 1}</Text>
                 </View>
-                <View style={[styles.rowTable, { flex: 6 }]}>
+                <View style={[styles.rowTable, { flex: 5 }]}>
                     <Text style={theme.fonts.regular14}
                         numberOfLines={2}
                     >{item.Student.name}</Text>
@@ -271,6 +311,31 @@ export class ClassDetailScreen extends Component {
                 <View style={[styles.rowTable, { flex: 3 }]}>
                     <Text style={theme.fonts.regular14}>{item.Student.mssv}</Text>
                 </View>
+                <View style={[styles.rowTable, { flex: 2 }]}>
+                    <Text style={theme.fonts.regular14}>
+                        {item.mid_semester ? item.mid_semester : null}</Text>
+                </View>
+                <View style={[styles.rowTable, { flex: 2 }]}>
+                    <Text style={theme.fonts.regular14}>
+                        {item.end_semester ? item.end_semester : null}</Text>
+                </View>
+                <TouchableOpacity style={[styles.rowTable, { flex: 1 }]}
+                    onPress={() => {
+                        this.setState({
+                            ...this.state,
+                            mid_semester: item.mid_semester,
+                            end_semester: item.end_semester,
+                            index: index,
+                            itemStudent: item
+                        })
+                        this.showModal()
+                    }}
+                >
+                    <Icon.Feather
+                        name='edit'
+                        color={theme.colors.backgroundHeader}
+                        size={20} />
+                </TouchableOpacity>
                 {/* <View style={[styles.rowTable, { flex: 1 }]}>
                     <Icon.AntDesign
                         name='infocirlce'
@@ -295,6 +360,123 @@ export class ClassDetailScreen extends Component {
             </View>
         )
     }
+    _renderModalPoint() {
+        return (
+            <ModalDialog ref={(ref) => this.refDialog = ref}>
+                <View style={{ flex: 1, justifyContent: 'center' }}>
+                    <View style={{
+                        backgroundColor: theme.colors.white,
+                        marginHorizontal: 20,
+                        paddingHorizontal: 10
+                    }}>
+                        <View style={{
+                            flexDirection: "row",
+                            justifyContent: 'space-between',
+                            marginVertical: 10,
+
+                        }}>
+                            <Text style={[theme.fonts.regular20,
+
+                            ]}>Sửa điểm</Text>
+                            <TouchableOpacity onPress={this.showModal}>
+                                <Icon.FontAwesome
+                                    name='close'
+                                    // type='feathericons'
+                                    color={theme.colors.black}
+                                    size={25} />
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{ height: 1, width: '100%', backgroundColor: 'black' }} />
+                        <Text style={[theme.fonts.regular16, { marginTop: 5 }]}>
+                            Họ tên : {this.state.itemStudent ? this.state.itemStudent.Student.name : null}
+                        </Text>
+                        <Text style={[theme.fonts.regular16, { marginTop: 5 }]}>
+                            Mssv : {this.state.itemStudent ? this.state.itemStudent.Student.mssv : null}
+                        </Text>
+                        <View style={{
+                            flexDirection: 'row',
+                            width: '100%', height: 40,
+                            alignItems: "center",
+                            marginTop: 20
+                        }}>
+                            <Text style={[theme.fonts.regular16, { marginRight: 30 }]}>
+                                Điểm giữa kì:
+                            </Text>
+                            <TextInput
+                                value={this.state.mid_semester}
+                                onChangeText={text => this.setState({
+                                    ...this.state,
+                                    mid_semester: text
+                                })}
+                                autoCapitalize="none"
+                                keyboardType="number-pad"
+                                clearButtonMode="while-editing"
+                                returnKeyType="next"
+                                placeholder="Điểm giữa kì"
+                                style={{
+                                    flex: 1,
+                                    borderWidth: 0.5,
+                                    borderColor: 'black',
+                                    borderRadius: 3,
+                                    textAlign:'center'
+                                }}
+                            >
+                            </TextInput>
+                        </View>
+                        <View style={{
+                            flexDirection: 'row',
+                            width: '100%', height: 40,
+                            alignItems: "center",
+                            marginTop: 20
+                        }}>
+                            <Text style={[theme.fonts.regular16, { marginRight: 30 }]}>
+                                Điểm cuối kì:
+                            </Text>
+                            <TextInput
+                                value={this.state.end_semester}
+                                onChangeText={text => this.setState({
+                                    ...this.state,
+                                    end_semester: text
+                                })}
+                                autoCapitalize="none"
+                                keyboardType="number-pad"
+                                clearButtonMode="while-editing"
+                                returnKeyType="next"
+                                placeholder="Điểm cuối kì"
+                                style={{
+                                    flex: 1,
+                                    borderWidth: 0.5,
+                                    borderColor: 'black',
+                                    borderRadius: 3,
+                                    textAlign:"center"
+                                }}
+                            >
+                            </TextInput>
+                        </View>
+                        <View
+                            style={{
+                                marginTop: 20,
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                marginHorizontal: 20,
+                                marginBottom:20
+                            }}
+                        >
+                            <View />
+                            <TouchableOpacity
+                                onPress={()=>{
+                                    alert(this.state.mid_semester+this.state.end_semester)
+                                }}
+                            >
+                                <Text style={[theme.fonts.regular18, { color: 'green' }]}>Sửa điểm</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+
+            </ModalDialog>
+        )
+    }
 }
 
 const mapStateToProps = (state) => ({
@@ -311,6 +493,7 @@ const styles = StyleSheet.create({
         // justifyContent:'space-between',
         marginHorizontal: 20,
         // marginTop: 10,
+        // width:theme.dimension.width*0.9,
         backgroundColor: theme.colors.white,
         paddingVertical: 5,
         // alignItems:'center',
@@ -376,7 +559,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 30,
+        marginTop: 10,
         paddingVertical: 10,
         borderRadius: 5
     },

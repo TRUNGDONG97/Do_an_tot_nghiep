@@ -316,7 +316,7 @@ function saveClass(class_id) {
     var schedule1 = $.trim($("#editSchedule1").val());
     var schedule2 = $.trim($("#editSchedule2").val());
     var status = $("#editStuClassStatus").val();
-    console.log(schedule1, schedule2)
+    console.log(teaPhone)
     if (subCode == "" || status == '') {
         swal({
             title: "Chưa nhập đầy đủ thông tin",
@@ -561,14 +561,33 @@ function uploadFile(fileData, namefile) {
             data: { namefile },
             type: 'POST',
         }).done(function (res) {
+            if(res.result==0){
+                $('#modalLoad').modal('hide');
+                swal({
+                    title: "File chưa có dữ liệu",
+                    text: "",
+                    icon: "warning",
+                })
+                return;
+            }
+            if(res.result==2){
+                $('#modalLoad').modal('hide');
+                swal({
+                    title: "Form file sai",
+                    text: "",
+                    icon: "warning",
+                })
+                return;
+            }
             $('#modalLoad').modal('hide');
             swal({
                 title: "Thêm  thành công",
                 text: "",
                 icon: "warning"
             });
+            $("#txtFile").val("")
             getClass(1)
-            console.log(res)
+            // console.log(res)
 
         }).fail(function (jqXHR, textStatus, errorThrown) {
             // If fail

@@ -30,7 +30,7 @@ export default class ClassItem extends Component {
             <Block
                 style={{
                     width: width * 0.95,
-                    marginTop: 10,
+                    marginTop: 20,
                     flex: 1,
                     backgroundColor: "white",
                     borderRadius: 4
@@ -39,23 +39,29 @@ export default class ClassItem extends Component {
                 <Ripple rippleDuration={500}
                     rippleSequential={true}
                     onPress={() => {
-                        NavigationUtil.navigate(SCREEN_ROUTER.CLASS_DETAIL,{class:item})
+                        NavigationUtil.navigate(SCREEN_ROUTER.CLASS_DETAIL, { class: item })
                     }}>
                     <Block style={[theme.styles.styleBlockHeader, { alignItems: 'center' }]}>
-                        <Text style={(theme.fonts.bold16, { color: "white", fontWeight: 'bold', fontSize: 20 })}>{item.Subject.subject_name}</Text>
-                        <Text style={(theme.fonts.bold16, { color: "white", fontWeight: 'bold', fontSize: 16 })}>{item.class_code}</Text>
+                        <Text style={(theme.fonts.bold16,
+                        {
+                            color: "white", fontWeight: 'bold', fontSize: 20
+                        })}>{item.Subject.subject_name}</Text>
+                        <Text style={(theme.fonts.bold16,
+                        {
+                            color: "white", fontWeight: 'bold', fontSize: 16
+                        })}>{item.class_code}</Text>
                     </Block>
                     <View style={{ flexDirection: 'row' }}>
                         <View style={{ paddingVertical: 10, paddingHorizontal: 16, flex: 1 }}>
                             <Content
                                 img={R.images.ic_calendar}
-                                title1={"Thứ " + item.Schedule_classes[0].day_of_week + " " + item.Schedule_classes[0].time_start + " " + item.Schedule_classes[0].time_end}
-                                title2={item.Schedule_classes[1] ? "Thứ " + item.Schedule_classes[1].day_of_week + " " + item.Schedule_classes[1].time_start + " " + item.Schedule_classes[1].time_end : null} />
-                            <Content
+                                title1={item.Schedule_classes[0].schedule}
+                                title2={item.Schedule_classes[1] ? item.Schedule_classes[1].schedule : null} />
+                            {/* <Content
                                 img={R.images.ic_location}
                                 title1={item.Schedule_classes[0].room_name}
                                 title2={item.Schedule_classes[1] ? item.Schedule_classes[1].room_name : null}
-                            />
+                            /> */}
                         </View>
                         <View style={{ justifyContent: "center" }}>
                             <Icon.Entypo

@@ -60,7 +60,6 @@ class ClassScreen extends Component {
                 />
             );
         if(classListState.data.length==0) return <Empty description={"Chưa có lớp nào"}/>
-            // reactotron.log('room_name', classListState.data[0].Schedule_classes[0].room_name)
         return (
             <Block flex={1} style={{marginTop:40}}>
                 <FlatList

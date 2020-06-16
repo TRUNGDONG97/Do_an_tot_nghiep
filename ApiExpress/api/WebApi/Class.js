@@ -14,6 +14,7 @@ import formidable from 'formidable'
 import fs from 'fs'
 import xlsx from 'xlsx'
 import DateUtil from '../../constants/DateUtil'
+import md5 from 'md5'
 const getClass = async (req, res, next) => {
     const { currentPage } = req.body
     try {
@@ -25,7 +26,10 @@ const getClass = async (req, res, next) => {
                 }]
             },
             {
-                model: SubjectModel
+                model: SubjectModel,
+                where: {
+                    is_active: 1
+                }
             },
             {
                 model: ScheduleClassModel,
@@ -72,7 +76,10 @@ const getClassTeacher = async (req, res, next) => {
                 }]
             },
             {
-                model: SubjectModel
+                model: SubjectModel,
+                where: {
+                    is_active: 1
+                }
             },
             {
                 model: ScheduleClassModel,
@@ -136,9 +143,16 @@ const searchClass = async (req, res, next) => {
                 },
                 {
                     model: SubjectModel,
-                    where: sequelize.where(sequelize.fn('lower', sequelize.col('subject_code')), {
-                        [Op.like]: '%' + subCode + '%'
-                    }),
+                    where: {
+                        [Op.and]: [
+                            sequelize.where(sequelize.fn('lower', sequelize.col('subject_code')), {
+                                [Op.like]: '%' + subCode + '%'
+                            }),
+                            {
+                                is_active: 1
+                            }
+                        ]
+                    }
                 },
                 {
                     model: TeacherModel
@@ -164,9 +178,16 @@ const searchClass = async (req, res, next) => {
                 },
                 {
                     model: SubjectModel,
-                    where: sequelize.where(sequelize.fn('lower', sequelize.col('subject_code')), {
-                        [Op.like]: '%' + subCode + '%'
-                    })
+                    where: {
+                        [Op.and]: [
+                            sequelize.where(sequelize.fn('lower', sequelize.col('subject_code')), {
+                                [Op.like]: '%' + subCode + '%'
+                            }),
+                            {
+                                is_active: 1
+                            }
+                        ]
+                    }
                 },
                 {
                     model: TeacherModel
@@ -231,7 +252,8 @@ const addClass = async (req, res, next) => {
 
         const subject = await SubjectModel.findAndCountAll({
             where: {
-                subject_code: subCode
+                subject_code: subCode,
+                is_active: 1
             }
         })
         if (classes.count > 0 && subject.count < 0) {
@@ -439,7 +461,8 @@ const editClass = async (req, res, next) => {
     try {
         const classes = await ClassModel.findAll({
             include: [{
-                model: SubjectModel
+                model: SubjectModel,
+                is_active: 1
             },
             {
                 model: ScheduleClassModel,
@@ -510,7 +533,8 @@ const saveClass = async (req, res, next) => {
 
         const subject = await SubjectModel.findAndCountAll({
             where: {
-                subject_code: subCode
+                subject_code: subCode,
+                is_active: 1
             }
         })
         if (subject.count < 0) {
@@ -524,8 +548,8 @@ const saveClass = async (req, res, next) => {
         if (countScheduleClass == 1) {
             if (checkSchedule(schedule1, schedule2) == 1) {
                 console.log(1)
-                await updateSchedule(classes[0].Schedule_classes[0].id,class_id,schedule2)
-            } else if (checkSchedule(schedule1,schedule2) == 2) {
+                await updateSchedule(classes[0].Schedule_classes[0].id, class_id, schedule2)
+            } else if (checkSchedule(schedule1, schedule2) == 2) {
                 // console.log(2)
                 await updateSchedule(classes[0].Schedule_classes[0].id, class_id, schedule1)
             } else {
@@ -534,30 +558,30 @@ const saveClass = async (req, res, next) => {
                 await createSchedule(class_id, schedule2)
             }
         } else {
-            if (checkSchedule(schedule1,schedule2) == 1) {
-                await updateSchedule(classes[0].Schedule_classes[0].id, class_id,schedule2)
+            if (checkSchedule(schedule1, schedule2) == 1) {
+                await updateSchedule(classes[0].Schedule_classes[0].id, class_id, schedule2)
                 await destroySchedule(classes[0].Schedule_classes[1].id)
                 // console.log(4)
-            } else if (checkSchedule(schedule1,schedule2) == 2) {
+            } else if (checkSchedule(schedule1, schedule2) == 2) {
                 await updateSchedule(classes[0].Schedule_classes[0].id, class_id, schedule1)
                 await destroySchedule(classes[0].Schedule_classes[1].id)
                 // console.log(5)
             } else {
                 // console.log(6)
-                await updateSchedule(classes[0].Schedule_classes[0].id, class_id,schedule1)
+                await updateSchedule(classes[0].Schedule_classes[0].id, class_id, schedule1)
                 await updateSchedule(classes[0].Schedule_classes[1].id, class_id, schedule2)
             }
         }
-        // await ClassModel.update({
-        //     // class_code:class_code,
-        //     teacher_id: teacher ? teacher.rows[0].id : null,
-        //     subject_id: subject.rows[0].id,
-        //     status
-        // }, {
-        //     where: {
-        //         id: class_id
-        //     }
-        // })
+        await ClassModel.update({
+            // class_code:class_code,
+            teacher_id: teacher ? teacher.rows[0].id : null,
+            subject_id: subject.rows[0].id,
+            status
+        }, {
+            where: {
+                id: class_id
+            }
+        })
         res.send({
             result: 2,
         })
@@ -677,48 +701,137 @@ const importClass = async (req, res, next) => {
         { cellDates: true });
     const sheet_name_list = workbook.SheetNames;
     const list_class = xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
-    console.log(list_class[0])
     if (list_class.length < 1) {
         res.send({
             result: 0
         })
         return;
     }
-    for (let index = 0; index < list_class.length; index++) {
-        var countClass = ClassModel.findAll({
-            where: {
-                class_id: list_class[index].classid,
-            }
-        })
-        var countStudent = StudentModel.findAll({
-            where: {
-                mssv: list_class[index].StudentID
-            }
-        })
-        if (countClass.length > 0) {
-            addStudentInClass(countStudent[0], list_class[index].classid,
-                list_class[index].studentname, list_class[index].StudentID, list_class[index].birthdate)
-        } else {
 
+    try {
+        for (let index = 0; index < list_class.length; index++) {
+            if (!list_class[index].classid
+                || !list_class[index].StudentID
+                || !list_class[index].courseid) {
+                console.log(list_class[index].classid)
+                console.log(list_class[index].StudentID)
+                console.log(list_class[index].courseid)
+                res.send({
+                    result: 2
+                })
+
+                return;
+            }
         }
+        for (let index = 0; index < list_class.length; index++) {
+
+            // console.log(list_class[index].courseid)
+            var countClass = await ClassModel.findAll({
+                include: [{
+                    model: ScheduleClassModel
+                }],
+                where: {
+                    class_code: list_class[index].classid.toString(),
+                }
+            })
+            var countStudent = await StudentModel.findAll({
+                where: {
+                    mssv: list_class[index].StudentID
+                }
+            })
+            var countSubject = await SubjectModel.findAll({
+                where: {
+                    subject_code: list_class[index].courseid,
+                    is_active: 1
+                }
+            })
+            console.log(countSubject.length, 'countSubject')
+            console.log(countStudent.length, 'countStudent')
+            console.log(countClass.length, 'countClass')
+            if (countClass.length > 0) {
+                console.log('có lơp học')
+                addStudentInClass(countStudent, countClass[0].id,
+                    list_class[index].studentname, list_class[index].StudentID, list_class[index].birthdate)
+                if (getSchedule(list_class[index].TimeTable) != countClass[0].Schedule_classes[0].schedule
+                    && countClass[0].Schedule_classes.length < 2) {
+                    await ScheduleClassModel.create({
+                        class_id: countClass[0].id,
+                        schedule: getSchedule(list_class[index].TimeTable)
+                    })
+                    console.log('thêm lịch học')
+                }
+            } else {
+                console.log('ko có lớp học')
+                if (countSubject.length > 0) {
+                    var classes = await ClassModel.create({
+                        class_code: list_class[index].classid.toString(),
+                        subject_id: countSubject[0].id
+                    })
+                    await ScheduleClassModel.create({
+                        class_id: classes.id,
+                        schedule: getSchedule(list_class[index].TimeTable)
+                    })
+                    addStudentInClass(countStudent, classes.id,
+                        list_class[index].studentname, list_class[index].StudentID, list_class[index].birthdate)
+
+                    console.log('có  môn học')
+                } else {
+                    var subject = await SubjectModel.create({
+                        subject_code: list_class[index].courseid,
+                        subject_name: list_class[index].name
+                    })
+
+                    var classes = await ClassModel.create({
+                        class_code: list_class[index].classid.toString(),
+                        subject_id: subject.id,
+                        status: 1,
+
+                    })
+                    await ScheduleClassModel.create({
+                        class_id: classes.id,
+                        schedule: getSchedule(list_class[index].TimeTable)
+                    })
+                    addStudentInClass(countStudent, classes.id,
+                        list_class[index].studentname, list_class[index].StudentID, list_class[index].birthdate)
+                }
+
+            }
+        }
+        res.send({
+            result: 1,
+        })
+        return;
+        // });
+    } catch (error) {
+        console.log(error)
+        res.status(404).send()
+        return;
     }
-    res.send({
-        result: 1,
-    })
-    return;
-    // });
+}
+const getSchedule = (TimeTable) => {
+    return TimeTable ? TimeTable.slice(TimeTable.indexOf("TG"), TimeTable.length) : "chưa có";
 }
 const addStudentInClass = async (countStudent, class_id, studentname, StudentID, birthday) => {
     if (countStudent.length > 0) {
-        await StudentClassModel.create({
-            student_id: countStudent.id,
-            class_id
+        var studentInclas = await StudentClassModel.findAll({
+            where: {
+                class_id,
+                student_id: countStudent[0].id
+            }
         })
+        if (studentInclas.length < 1) {
+            await StudentClassModel.create({
+                student_id: countStudent[0].id,
+                class_id,
+            })
+        }
+
     } else {
-        const student = await StudentModel.create({
+        var student = await StudentModel.create({
             name: studentname,
-            mssv: StudentID,
-            birthday: formatInputDate(birthday)
+            mssv: StudentID.toString(),
+            birthday: birthday ? DateUtil.formatInputDate(birthday) : "2020-05-21",
+            password: md5(StudentID.toString())
         })
         await StudentClassModel.create({
             student_id: student.id,

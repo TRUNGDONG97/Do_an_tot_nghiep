@@ -15,7 +15,7 @@ const login = async (req, res, next) => {
     const { user, password, type, deviceID } = req.body;
     // console.log(user);
     // console.log(password);
-    // console.log(type == 1);
+    // console.log(type);
 
 
     if (user == '' || password == '' || (type != 1 && type != 2)) {

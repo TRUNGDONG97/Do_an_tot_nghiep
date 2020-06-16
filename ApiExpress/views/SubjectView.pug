@@ -23,7 +23,40 @@ html
                         button#btnAddSubject.btn.btn-danger(type="button" data-toggle='modal' data-target='#AddSubjectModal' style='margin-left:20px;')
                             i.fas.fa-user-plus
                             | &nbsp;  Thêm Môn học
+                        button#btnImport.btn.btn-success.ml-3(data-target='#mdImport' data-toggle='modal')
+                            i.fa.fa-upload
+                            |  Import môn học
             .container-fluid
                 #tableSubject
         include ../modals/AddSubjectModal
         #divModalEditSubject
+        #mdImport.modal.fade(tabindex='-1' role='dialog')
+            .modal-dialog(role='document')
+                .modal-content
+                    .modal-header(style='background-color: #28a745;color: white;')
+                        h5.modal-title
+                            i.fa.fa-upload(aria-hidden='false')
+                                | &nbsp Import danh sách sinh viên
+                        button.close(type='button' data-dismiss='modal' aria-label='Close')
+                            span(aria-hidden='true') &times;
+                    .modal-body(id='')
+                        form#frmImport(method='post' enctype='multipart/form-data')
+                            .row.mt-2
+                                .col-md-12
+                                    .input-group
+                                        .input-group-prepend
+                                            span#inputGroupFileAddon01.input-group-text Tải lên
+                                        .custom-file
+                                            input#txtFile.custom-file-input(type='file' name='txtFile' aria-describedby='inputGroupFileAddon01' accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel")
+                                            label.custom-file-label(for='inputGroupFile01') chọn file
+                            .row.mt-2
+                                .modal-footer
+                                    button.btn.btn-success(type='button' onclick='importSubject()') Import
+                                    button.btn.btn-secondary(type='button' data-dismiss='modal') đóng
+                        script.
+                            $('#mdImport #txtFile').on('change', function () {
+                            //get the file name
+                                var fileName = $(this).val();
+                                //replace the "Choose a file" label
+                                $(this).next('#mdImport .custom-file-label').html(fileName);
+                            });

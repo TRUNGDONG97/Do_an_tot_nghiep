@@ -8,7 +8,8 @@ import Subject from '../api/WebApi/Subject'
 const router = express.Router();
 
 router.get('/', function(req, res, next) {
-    res.render('IndexView');
+    res.redirect('admin/login')
+    // res.render('IndexView');
 });
 router.post('/user/changePass', Other.changePass)
 router.get('/getCountStudent', Other.getCountStudent)
@@ -56,4 +57,5 @@ router.post('/subject/add', Subject.addSubject)
 router.post('/subject/delete', Subject.deleteSubject)
 router.post('/subject/edit', Subject.editSubject)
 router.post('/subject/save', Subject.saveSubject)
+router.post('/subject/import', Subject.importSubject)
 module.exports = router;

@@ -55,7 +55,7 @@ const getUserInfo = async (req, res, next) => {
             })
             return;
         }
-        
+
         res.json({
             "status": 0,
             "code": 403,
@@ -248,6 +248,7 @@ const getClass = async (req, res, next) => {
                     include: [{
                         model: StudentModel
                     }]
+                   
                 },
                 {
                     model: ScheduleClassModel,
@@ -260,7 +261,8 @@ const getClass = async (req, res, next) => {
                     teacher_id: teacher.rows[0].id
                 },
                 order: [
-                    ['Schedule_classes', 'day_of_week', 'ASC']
+                    ['Schedule_classes', 'schedule', 'ASC'],
+
                 ],
                 // distinct: true
             })
@@ -281,7 +283,7 @@ const getClass = async (req, res, next) => {
         return;
 
     } catch (error) {
-        // console.log(error)
+        console.log(error)
         res.json({
             "status": 0,
             "code": 404,
@@ -498,7 +500,7 @@ const createAbsent = async (req, res, next) => {
             "status": 1,
             "code": 200,
             "message": 'thành công',
-            "data": {  classAbsent: createAbsentClass }
+            "data": { classAbsent: createAbsentClass }
         })
         return;
     } catch (error) {
@@ -531,7 +533,7 @@ const getDetailAbsent = async (req, res, next) => {
             })
             return;
         }
-        
+
         // [sequelize.fn('count', sequelize.col('AbsentStudentModel.student_id')), 'absentCount']
         const getDetailAbsent = await StudentModel.findAndCountAll({
             attributes: ['id', 'name', 'phone', 'birthday', 'address', 'email', 'url_avatar',
@@ -712,8 +714,8 @@ const getNotification = async (req, res, next) => {
                 attributes: ['id', 'class_id', 'teacher_id', 'absent_class_id', 'content', 'created_date'],
                 where: {
                     teacher_id: teacher.rows[0].id
-                },  order: [
-                    ['created_date','DESC']
+                }, order: [
+                    ['created_date', 'DESC']
                 ]
             })
             res.json({
@@ -757,7 +759,7 @@ const cancelAbsent = async (req, res, next) => {
     try {
         const classAbsent = await AbsentClassModel.findAndCountAll({
             where: {
-                 class_id,
+                class_id,
                 status: 1,
                 is_active: 1
             }
@@ -772,12 +774,12 @@ const cancelAbsent = async (req, res, next) => {
             })
             return;
         }
-        const absentClass=await AbsentClassModel.update({
+        const absentClass = await AbsentClassModel.update({
             status: 0,
             is_active: 0
         }, {
             where: {
-                id:classAbsent.rows[0].id
+                id: classAbsent.rows[0].id
             }
         })
         const liststudent = await StudentModel.findAndCountAll({
@@ -789,8 +791,8 @@ const cancelAbsent = async (req, res, next) => {
             }],
             distinct: true
         })
-        const classes=await ClassModel.findAll({
-            id:class_id
+        const classes = await ClassModel.findAll({
+            id: class_id
         })
         for (let index = 0; index < liststudent.count; index++) {
             await NotificationModel.create({
@@ -802,7 +804,7 @@ const cancelAbsent = async (req, res, next) => {
             })
             if (liststudent.rows[index].device_id) {
                 pushNotificationAppStudent(liststudent.rows[index].device_id,
-                    "Lớp " +classes[0].class_code + ' huỷ điểm danh',
+                    "Lớp " + classes[0].class_code + ' huỷ điểm danh',
                     { class_id: class_id })
             }
         }
@@ -810,7 +812,52 @@ const cancelAbsent = async (req, res, next) => {
             "status": 1,
             "code": 200,
             "message": 'thành công',
-            "data": 'absentClass'
+            "data": ''
+        })
+        return;
+    } catch (error) {
+        console.log(error)
+        res.json({
+            "status": 0,
+            "code": 404,
+            "message": "Đã có lỗi xảy ra",
+            "data": ''
+        })
+        return;
+    }
+}
+const changePoint = async (req, res, next) => {
+    const { class_id, student_id, mid_semester, end_semester } = req.body
+    // const { token } = req.headers    
+    try {
+        const studentClass = await StudentClassModel.findAll({
+            where: {
+                class_id,
+                student_id
+            }
+        })
+        if (studentClass.length < 1) {
+            res.json({
+                "status": 0,
+                "code": 404,
+                "message": 'Lớp không có sinh viên này',
+                "data": ''
+            })
+            return;
+        }
+        const newStuClas= await StudentClassModel.update({
+            mid_semester,
+            end_semester
+        }, {
+            where: {
+                id: studentClass[0].id
+            }
+        })
+        res.json({
+            "status": 1,
+            "code": 200,
+            "message": 'thành công',
+            "data": newStuClas
         })
         return;
     } catch (error) {
@@ -834,5 +881,6 @@ export default {
     getDetailAbsent,
     getAbsentStudent,
     getNotification,
-    cancelAbsent
+    cancelAbsent,
+    changePoint
 }

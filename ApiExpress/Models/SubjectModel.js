@@ -20,6 +20,9 @@ const Subject = sequelize.define('Subject', {
     },
     time: {
         type: Sequelize.STRING
+    },
+    is_active:{
+        type:Sequelize.INTEGER
     }
 
 }, {

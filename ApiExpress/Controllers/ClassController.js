@@ -24,18 +24,18 @@ const detailClass = async (req, res, next) => {
     }
     try {
         const classes = await ClassModel.findAll({
+            // attributes:['id','teacher_id','status','class_code','subject_id'
+            //     [sequelize.fn('count', sequelize.col('Absent_Student.studen_id')), 'count']],
             include: [{
                 model: StudentClassModel,
                 include: [{
                     model: StudentModel,
                     // include:[{
                     //     model:AbsentStudentModel,
-                    //     attributes:[[sequelize.fn('count', sequelize.col('Absent_Student.studen_id')), 'count']],
                     //     where:{
-                    //         class_id:id,
                     //         status:1
                     //     },
-                    //     group:['Absent_Student.student_id']
+                       
                     // }]
                 }]
             },
@@ -49,6 +49,7 @@ const detailClass = async (req, res, next) => {
                 model: ScheduleClassModel
             },
             ],
+            // group:['Absent_Student.student_id'],
             where: {
                 class_code: id
             }

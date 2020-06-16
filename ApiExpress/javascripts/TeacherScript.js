@@ -156,7 +156,7 @@ function addTeacher() {
         },
         cache: false,
         timeout: 50000,
-        beforeSend:function(){
+        beforeSend: function () {
             $('#modalLoad').modal('show');
         }
     }).done(function (res) {
@@ -280,7 +280,7 @@ function editTeacher(id) {
         type: 'POST',
         cache: false,
         timeout: 50000,
-        beforeSend:function(){
+        beforeSend: function () {
             $('#modalLoad').modal('show');
         }
     }).done(function (res) {
@@ -434,7 +434,7 @@ function saveTeacher(id) {
         type: 'POST',
         cache: false,
         timeout: 50000,
-        beforeSend:function(){
+        beforeSend: function () {
             $('#modalLoad').modal('show');
         }
     }).done(function (res) {
@@ -522,7 +522,8 @@ function importTeacher() {
         })
         return;
     }
-    var arrTeacher
+    $('#mdImport').modal('hide')
+    $('#modalLoad').modal('show');
     var reader = new FileReader();
     reader.readAsArrayBuffer(fileUpload.files[0]);
     reader.onload = function (e) {
@@ -533,38 +534,75 @@ function importTeacher() {
             binary += String.fromCharCode(bytes[i]);
         }
         // call 'xlsx' to read the file
-        var workbook = XLSX.read(binary, { type: 'binary', cellDates: true, cellStyles: true });
-        var firstSheet = workbook.SheetNames[0];
-        arrTeacher = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[firstSheet]);
-        // console.log(arrTeacher[0].name)
-        // console.log(arrTeacher[0])
-        if (arrTeacher.length == 0) {
-            swal({
-                title: "File không có dữ liệu",
-                text: "",
-                icon: "warning"
-            })
-            return;
-        }
-        $('#mdImport').modal('hide')
+        var workbook = XLSX.read(binary, {
+            type: 'binary',
+            cellDates: true, 
+            cellStyles: true,
+            cellNF: true,
+            cellText: false
+        });
+        var wopts = { bookType: 'xlsx', bookSST: false, type: 'base64' };
+        var wbout = XLSX.write(workbook, wopts);
+        // console.log(wbout)
+        var blob = new Blob([s2ab(atob(wbout))], { type: 'application/octet-stream' });
+        var formData = new FormData();
+        formData.append('filetoupload', blob, files[0].name);
+        var namefile = files[0].name.replace(/ /g, "_");
+        console.log(namefile,'formData')
+
+        uploadFile(formData, namefile)
+    }
+}
+function s2ab(s) {
+    var buf = new ArrayBuffer(s.length);
+    var view = new Uint8Array(buf);
+    for (var i = 0; i != s.length; ++i)
+        view[i] = s.charCodeAt(i) & 0xFF;
+    return buf;
+}
+function uploadFile(fileData, namefile) {
+    $.ajax({
+        url: "/uploadFile",
+        type: 'POST',
+        data: fileData,
+        contentType: false, // Not to set any content header  
+        processData: false, // Not to process data  
+        cache: false,
+        enctype: 'multipart/form-data'
+    }).done(function (res) {
         $.ajax({
             url: '/teacher/import',
-            data: { listTeacher: JSON.stringify(arrTeacher) },
+            data: { namefile },
             type: 'POST',
-            beforeSend: function () {
-                $('#modalLoad').modal('show');
-            },
         }).done(function (res) {
-
-            // console.log(res.result)
-            getTeacher(1)
+            if (res.result == 0) {
+                $('#modalLoad').modal('hide');
+                swal({
+                    title: "File chưa có dữ liệu",
+                    text: "",
+                    icon: "warning",
+                })
+                return;
+            }
+            if (res.result == 2) {
+                $('#modalLoad').modal('hide');
+                swal({
+                    title: "Form file sai",
+                    text: "",
+                    icon: "warning",
+                })
+                return;
+            }
             $('#modalLoad').modal('hide');
             swal({
-                title: " Thành công",
+                title: "Thêm  thành công",
                 text: "",
-                icon: "success"
-            })
-            return;
+                icon: "warning"
+            });
+            $("#txtFile").val("")
+            getTeacher(1)
+            // console.log(res)
+
         }).fail(function (jqXHR, textStatus, errorThrown) {
             // If fail
             $('#modalLoad').modal('hide');
@@ -577,9 +615,20 @@ function importTeacher() {
             console.log(textStatus + ': ' + errorThrown);
             return;
         })
-    };
-}
 
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        // If fail
+        $('#modalLoad').modal('hide');
+        swal({
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown.message);
+        // console.log(jqXHR);
+    })
+}
 
 
 function checkedMail(email) {
@@ -616,7 +665,7 @@ function uploadImage(fileData) {
         cache: false,
         enctype: 'multipart/form-data'
     }).done(function (res) {
-    
+
     }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
         swal({

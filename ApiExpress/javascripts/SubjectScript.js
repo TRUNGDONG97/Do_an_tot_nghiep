@@ -316,7 +316,130 @@ function saveSubject(id) {
         return;
     })
 }
+function importSubject() {
+    var fileUpload = $("#txtFile").get(0);
+    var files = fileUpload.files;
+    if (files.length <= 0) {
+        swal({
+            title: "Chưa chọn file ",
+            text: "",
+            icon: "warning"
+        })
+        return;
+    }
+    $('#mdImport').modal('hide')
+    $('#modalLoad').modal('show');
+    var reader = new FileReader();
+    reader.readAsArrayBuffer(fileUpload.files[0]);
+    reader.onload = function (e) {
 
+        var binary = "";
+        var bytes = new Uint8Array(e.target.result);
+        var length = bytes.byteLength;
+        for (var i = 0; i < length; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        // call 'xlsx' to read the file
+        var workbook = XLSX.read(binary,
+            {
+                type: 'binary',
+                cellDates: true,
+                cellStyles: true,
+                cellNF: true,
+                cellText: false
+            });
+        // var firstSheet = workbook.SheetNames[0];
+        // arrStudent = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[firstSheet]);
+        // console.log(arrStudent[0])
+        var wopts = { bookType: 'xlsx', bookSST: false, type: 'base64' };
+        var wbout = XLSX.write(workbook, wopts);
+        // console.log(wbout)
+        var blob = new Blob([s2ab(atob(wbout))], { type: 'application/octet-stream' });
+        var formData = new FormData();
+        formData.append('filetoupload', blob, files[0].name);
+        var namefile = files[0].name.replace(/ /g, "_");
+        console.log(namefile,'formData')    
+
+        uploadFile(formData, namefile)
+        // $('#modalLoad').modal('hide');
+    };
+}
+function s2ab(s) {
+    var buf = new ArrayBuffer(s.length);
+    var view = new Uint8Array(buf);
+    for (var i = 0; i != s.length; ++i)
+        view[i] = s.charCodeAt(i) & 0xFF;
+    return buf;
+}
+function uploadFile(fileData, namefile) {
+    $.ajax({
+        url: "/uploadFile",
+        type: 'POST',
+        data: fileData,
+        contentType: false, // Not to set any content header  
+        processData: false, // Not to process data  
+        cache: false,
+        enctype: 'multipart/form-data'
+    }).done(function (res) {
+        $.ajax({
+            url: '/subject/import',
+            data: { namefile },
+            type: 'POST',
+        }).done(function (res) {
+            if(res.result==0){
+                $('#modalLoad').modal('hide');
+                swal({
+                    title: "File chưa có dữ liệu",
+                    text: "",
+                    icon: "warning",
+                })
+                return;
+            }
+            if(res.result==2){
+                $('#modalLoad').modal('hide');
+                swal({
+                    title: "Form file sai",
+                    text: "",
+                    icon: "warning",
+                })
+                return;
+            }
+            $('#modalLoad').modal('hide');
+            swal({
+                title: "Thêm  thành công",
+                text: "",
+                icon: "warning"
+            });
+            $("#txtFile").val("")
+            getSubject(1)
+            // console.log(res)
+
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            // If fail
+            $('#modalLoad').modal('hide');
+            swal({
+                title: "Đã có lỗi xảy ra",
+                text: "",
+                icon: "warning",
+                dangerMode: true,
+            })
+            console.log(textStatus + ': ' + errorThrown);
+            return;
+        })
+
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        // If fail
+        $('#modalLoad').modal('hide');
+        swal({
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown.message);
+        // console.log(jqXHR);
+    })
+}
 // function checkedMail(email) {
 //     var email_regex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 //     if (!email_regex.test(email)) {

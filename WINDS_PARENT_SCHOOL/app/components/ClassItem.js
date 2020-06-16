@@ -49,13 +49,13 @@ export default class ClassItem extends Component {
                         <View style={{ paddingVertical: 10, paddingHorizontal: 16, flex: 1 }}>
                             <Content
                                 img={R.images.ic_calendar}
-                                title1={"Thứ " + item.Schedule_classes[0].day_of_week + " " + item.Schedule_classes[0].time_start + " " + item.Schedule_classes[0].time_end}
-                                title2={item.Schedule_classes[1] ? "Thứ " + item.Schedule_classes[1].day_of_week + " " + item.Schedule_classes[1].time_start + " " + item.Schedule_classes[1].time_end : null} />
-                            <Content
+                                title1={item.Schedule_classes[0].schedule}
+                                title2={item.Schedule_classes[1] ? item.Schedule_classes[1].schedule : null} />
+                            {/* <Content
                                 img={R.images.ic_location}
                                 title1={item.Schedule_classes[0].room_name}
                                 title2={item.Schedule_classes[1] ? item.Schedule_classes[1].room_name : null}
-                            />
+                            /> */}
                         </View>
                         <View style={{ justifyContent: "center" }}>
                             <Icon.Entypo

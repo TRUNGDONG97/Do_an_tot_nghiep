@@ -7,6 +7,7 @@ import { getArrayPages, PageCount, readFileExel } from '../../constants/Funtions
 import xlsx from 'xlsx'
 import StudentClassModel from '../../models/StudentClassModel';
 import md5 from 'md5'
+import DateUtil from '../../constants/DateUtil'
 const getStudent = async (req, res, next) => {
 
     try {
@@ -397,42 +398,62 @@ const detailStudent = async (req, res, next) => {
     }
 }
 const importStudent = async (req, res, next) => {
-    const { listStudent } = req.body
-    const jsonListStudent = JSON.parse(listStudent);
-    console.log(jsonListStudent[0].sex)
+    const { namefile } = req.body
+    var workbook = xlsx.readFile(__dirname.slice(0, __dirname.length - 10) + 'public/upload/' + namefile,
+        { cellDates: true });
+    const sheet_name_list = workbook.SheetNames;
+    const list_student = xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+    if (list_student.length < 1) {
+        res.send({
+            result: 0
+        })
+        return;
+    }
+    console.log(list_student[0].avatar)
     try {
-        //    console.log(jsonListStudent.length)
-        for (let index = 0; index < jsonListStudent.length; index++) {
+        for (let index = 0; index < list_student.length; index++) {
+            if (!list_student[index].mssv) {
+                res.send({
+                    result: 2
+                })
+                return;
+            }
+        }
+        //    console.log(list_student.length)
+        for (let index = 0; index < list_student.length; index++) {
             var countMssv = await StudentModel.count({
                 where: {
-                    mssv: jsonListStudent[index].mssv.toString()
+                    mssv: list_student[index].mssv.toString()
                 }
             })
+            console.log(list_student[index].mssv,'countMssv')
             if (countMssv > 0) {
                 await StudentModel.update({
-                    name: jsonListStudent[index].name,
-                    password: md5(jsonListStudent[index].mssv.toString()),
-                    address: jsonListStudent[index].address,
-                    birthday: jsonListStudent[index].birthday,
-                    sex: jsonListStudent[index].sex=="nam"?1:0,
-                    email: jsonListStudent[index].email,
-                    phone:"0"+jsonListStudent[index].phone.toString()
+                    name: list_student[index].name,
+                    password: md5(list_student[index].mssv.toString()),
+                    address: list_student[index].address,
+                    birthday: list_student[index].birthday?DateUtil.formatInputDate(list_student[index].birthday):"",
+                    sex: list_student[index].sex=="nam"?1:0,
+                    email: list_student[index].email,
+                    phone:list_student[index].phone?"0"+list_student[index].phone.toString():""
                 }, {
                     where: {
-                        mssv: jsonListStudent[index].mssv.toString()
+                        mssv: list_student[index].mssv.toString()
                     }
                 })
+                console.log(1)
             } else {
                 await StudentModel.create({
-                    name: jsonListStudent[index].name,
-                    mssv: jsonListStudent[index].mssv,
-                    password: md5(jsonListStudent[index].mssv.toString()),
-                    address: jsonListStudent[index].address,
-                    birthday: jsonListStudent[index].birthday,
-                    sex: jsonListStudent[index].sex=="nam"?1:0,
-                    email: jsonListStudent[index].email,
-                    phone:"0"+ jsonListStudent[index].phone
+                    name: list_student[index].name,
+                    mssv: list_student[index].mssv,
+                    password: md5(list_student[index].mssv.toString()),
+                    address: list_student[index].address,
+                    birthday: list_student[index].birthday?DateUtil.formatInputDate(list_student[index].birthday):"",
+                    sex: list_student[index].sex=="nam"?1:0,
+                    email: list_student[index].email,
+                    phone:list_student[index].phone?"0"+list_student[index].phone.toString():""
                 })
+                console.log(2)
             }
         }
         res.send({
