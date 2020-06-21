@@ -38,3 +38,12 @@ export const GET_DETAIL_ABSENT_FAIL = 'daotao/get_detail_absent_fail';
 export const GET_STUDENT_ABSENT = 'daotao/get_student_absent';
 export const GET_STUDENT_ABSENT_SUCCESS = 'daotao/get_student_absent_success';
 export const GET_STUDENT_ABSENT_FAIL = 'daotao/get_student_absent_fail';
+
+export const GET_DETAIL_CLASS = 'daotao/get_detail_class';
+export const GET_DETAIL_CLASS_SUCCESS = 'daotao/get_detail_class_success';
+export const GET_DETAIL_CLASS_FAIL = 'daotao/get_detail_class_fail';
+
+export const CHANGE_ABSENT_STUDENT = 'daotao/change_absent_student';
+export const CHANGE_ABSENT_STUDENT_SUCCESS = 'daotao/change_absent_student_success';
+export const CHANGE_ABSENT_STUDENT_FAIL = 'daotao/change_absent_student_fail';
+

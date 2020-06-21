@@ -25,6 +25,9 @@ router.get('/teacher/getDetailAbsent', Teacher.getDetailAbsent)
 router.get('/getAbsentStudent', Teacher.getAbsentStudent)
 router.get('/teacher/getNotification', Teacher.getNotification)
 router.post('/teacher/cancelAbsent', Teacher.cancelAbsent)
-router.post('/teacher/changePoint', Teacher.changePoint)
+// router.post('/teacher/absentForStudent', Teacher.absentForStudent)
+router.get('/teacher/getDetailClass', Teacher.getDetailClass)
+router.post('/teacher/changeAbsentStudent', Teacher.changeAbsentStudent)
+// router.post('/teacher/changePoint', Teacher.changePoint)
 
 module.exports = router;

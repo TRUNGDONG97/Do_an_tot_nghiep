@@ -1,10 +1,13 @@
-import { GET_DETAIL_ABSENT, GET_DETAIL_ABSENT_SUCCESS, GET_DETAIL_ABSENT_FAIL } from "../actions/type";
+import {
+  GET_DETAIL_ABSENT, GET_DETAIL_ABSENT_SUCCESS, GET_DETAIL_ABSENT_FAIL,
+CHANGE_ABSENT_STUDENT,CHANGE_ABSENT_STUDENT_SUCCESS,CHANGE_ABSENT_STUDENT_FAIL
+} from "../actions/type";
 const initialState = {
   listStudent: [],
   countAbsent: null,
   total: null,
-  absentClass:{},
-  class:{},
+  absentClass: {},
+  class: {},
   // mail: {},
   // promotion: [],
   isLoading: true,
@@ -13,6 +16,7 @@ const initialState = {
 };
 export default function (state = initialState, action) {
   switch (action.type) {
+    case CHANGE_ABSENT_STUDENT:
     case GET_DETAIL_ABSENT:
       return {
         ...state,
@@ -20,7 +24,7 @@ export default function (state = initialState, action) {
         error: null,
         listStudent: []
       };
-
+    case CHANGE_ABSENT_STUDENT_SUCCESS:
     case GET_DETAIL_ABSENT_SUCCESS:
       return {
         ...state,
@@ -33,7 +37,7 @@ export default function (state = initialState, action) {
         absentClass: action.payload.absentClass,
         classes: action.payload.classes,
       };
-
+    case CHANGE_ABSENT_STUDENT_FAIL:
     case GET_DETAIL_ABSENT_FAIL:
       return { ...state, error: action.payload, isLoading: false, listStudent: [] };
     default:

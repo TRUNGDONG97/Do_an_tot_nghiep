@@ -34,7 +34,7 @@ export class AppContainer extends Component {
     onReceived(notification) {
         reactotron.log("Notification received: ", notification);
         const class_id=notification.payload.additionalData.class_id
-        NavigationUtil.push(SCREEN_ROUTER.DETAIL_CLASS, { class_id: class_id })
+        NavigationUtil.navigate(SCREEN_ROUTER.DETAIL_CLASS, { class_id: class_id })
     }
 
     onOpened(openResult) {
@@ -45,6 +45,7 @@ export class AppContainer extends Component {
         const class_id=openResult.notification.payload.additionalData.class_id;
         // reactotron.log("class_id",openResult.notification.payload);
         NavigationUtil.navigate(SCREEN_ROUTER.DETAIL_CLASS,{class_id:class_id});
+        return;
     }
 
     componentDidMount() {

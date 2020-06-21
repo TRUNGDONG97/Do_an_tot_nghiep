@@ -74,7 +74,7 @@ export default class LoginScreen extends Component {
           );
         }
       );
-      console.log(response);
+      // console.log(response);
     } catch (err) {
       this.setState({ ...this.state, error: err, isLoading: false });
     }

@@ -63,7 +63,7 @@ export class AbsentStudentScreen extends Component {
                 }
             >
                 <View style={styles._viewUser}>
-                    {this._renderUserItem('Họ và tên', studentAbsentState.student.name)}
+                    {this._renderUserItem('Họ và tên', studentAbsentState.student.first_name+" " +studentAbsentState.student.last_name)}
                     {this._renderUserItem('MSSV', studentAbsentState.student.mssv)}
                     {this._renderUserItem('Ngày sinh', studentAbsentState.student.birthday.split("-").reverse().join("/"))}
                     {this._renderUserItem('Số điện thoại', studentAbsentState.student.phone)}
@@ -162,10 +162,10 @@ export class AbsentStudentScreen extends Component {
                 <View style={[styles.rowTable, { flex: 3 }]}>
                     <Text style={theme.fonts.regular14}
                         numberOfLines={2}
-                    >{item.date_absent?item.date_absent.split("-").reverse().join("/"):'not'}</Text>
+                    >{item.date_absent?item.date_absent.split("-").reverse().join("/"):null}</Text>
                 </View>
                 <View style={[styles.rowTable, { flex: 2 }]}>
-                    <Text style={theme.fonts.regular14}>{item.time_absent? item.time_absent.slice(0, 5):'not'}</Text>
+                    <Text style={theme.fonts.regular14}>{item.time_absent? item.time_absent.slice(0, 5):null}</Text>
                 </View>
                 <View style={[styles.rowTable, { flex: 1 }]}>
                     <Icon.Octicons

@@ -35,6 +35,9 @@ const Absent_Student = sequelize.define('Absent_Student', {
     },
     device_id:{
         type:Sequelize.STRING
+    },
+    list_ssid_stu:{
+        type:Sequelize.STRING
     }
 
 }, {

@@ -5,6 +5,7 @@ import ListAbsentReducer from "./ListAbsentReducer";
 import DetailAbsentReducer from "./DetailAbsentReducer";
 import StudentAbsentReducer from "./StudentAbsentReducer";
 import ListNotifyReducer from "./ListNotifyReducer";
+import DetailClassReducer from "./DetailClassReducer";
 import { RESET } from "../actions/type";
 
 
@@ -14,7 +15,8 @@ import { RESET } from "../actions/type";
   listAbsentReducer:ListAbsentReducer,
   detailAbsentReducer:DetailAbsentReducer,
   studentAbsentReducer:StudentAbsentReducer,
-  listNotifyReducer:ListNotifyReducer
+  listNotifyReducer:ListNotifyReducer,
+  detailClassReducer:DetailClassReducer
 });
 
 const initialState = appReducer({}, {})

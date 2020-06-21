@@ -4,7 +4,9 @@ import ClassModel from '../../models/ClassModel'
 import ScheduleClassModel from '../../models/ScheduleClassModel'
 import SubjectModel from '../../models/SubjectModel'
 import StudentModel from '../../models/StudentModel'
+import AbsentStudentModel from '../../models/AbsentStudentModel'
 import StudentClassModel from '../../models/StudentClassModel'
+import AbsentClassModel from '../../models/AbsentClassModel'
 import Constants from '../../constants/Constants'
 import pug from 'pug'
 import { getArrayPages, PageCount } from '../../constants/Funtions'
@@ -15,6 +17,7 @@ import fs from 'fs'
 import xlsx from 'xlsx'
 import DateUtil from '../../constants/DateUtil'
 import md5 from 'md5'
+
 const getClass = async (req, res, next) => {
     const { currentPage } = req.body
     try {
@@ -350,65 +353,39 @@ const addStuInclass = async (req, res, next) => {
     // console.log(mssv)
     // console.log(class_id)
     try {
-        const student = await StudentModel.findAndCountAll({
+        const student = await StudentModel.findAll({
             where: {
                 mssv
             }
         })
         // console.log(student.count)
-        if (student.count < 1) {
+        if (student.length < 1) {
             res.send({
                 result: 0
             })
             return;
         }
-        const class_student = await ClassModel.findAndCountAll({
-            include: [{
-                model: StudentClassModel,
-                include: [{
-                    model: StudentModel,
-                    where: {
-                        mssv
-                    }
-                }],
-            }],
+        const class_student = await StudentClassModel.findAll({
             where: {
-                id: class_id
+                class_id,
+                student_id: student[0].id
             },
-            distinct: true
         })
 
-        if (class_student.rows[0].Student_classes.length > 0) {
+        if (class_student.length > 0) {
             res.send({
                 result: 1
             })
             return;
         }
         await StudentClassModel.create({
-            student_id: student.rows[0].id,
+            student_id: student[0].id,
             class_id
         })
-        const new_class_stu = await ClassModel.findAll({
-            include: [{
-                model: StudentClassModel,
-                include: [{
-                    model: StudentModel
-                }]
-            }],
-            where: {
-                id: class_id
-            },
 
-        })
-        // console.log(new_class_stu[0].Student_classes[0].class_id)
-        var urlTable = `${process.cwd()}/table/TableDetailClass.pug`;
-        var htmlTable = await pug.renderFile(urlTable, {
-            student_classes: new_class_stu[0].Student_classes
-        });
-        // console.log(new_class_stu[0].Schedule_classes[0])
         res.send({
             result: 2,
-            htmlTable
+            // htmlTable
         })
         return;
     } catch (error) {
@@ -421,36 +398,66 @@ const addStuInclass = async (req, res, next) => {
 const searchStuInclass = async (req, res, next) => {
     const { mssv, name, class_id } = req.body
     try {
-        const class_student = await ClassModel.findAll({
+        const absentClass = await AbsentClassModel.findAll({
+            where: {
+                class_id,
+                is_active: 1
+            }
+        })
+        var arrIdAbsentClass = [];
+        for (let index = 0; index < absentClass.length; index++) {
+            arrIdAbsentClass.push(absentClass[index].id)
+        }
+        const stuInClass = await StudentModel.findAll({
             include: [{
                 model: StudentClassModel,
-                include: [{
-                    model: StudentModel,
-                    where: {
-                        [Op.and]: [
-                            sequelize.where(sequelize.fn('lower', sequelize.col('name')), {
-                                [Op.like]: '%' + name + '%'
-                            }),
-                            sequelize.where(sequelize.fn("lower", sequelize.col("mssv")), {
-                                [Op.like]: '%' + mssv + '%'
-                            })
-                        ]
-                    },
-                }],
+                where: {
+                    class_id
+                }
+            }],
+        })
+        var arrIdStudent = [];
+        for (let index = 0; index < stuInClass.length; index++) {
+            arrIdStudent.push(stuInClass[index].id)
+        }
+        const listStudent = await StudentModel.findAll({
+            attributes: ['id', 'first_name', 'last_name', 'mssv', 'phone', 'birthday',
+                [sequelize.fn('sum', sequelize.col('Absent_Students.status')), 'count']],
+            include: [{
+                model: AbsentStudentModel,
+                attributes: [],
+                where: {
+                    absent_class_id: arrIdAbsentClass
+                },
+                required: false
             }],
             where: {
-                id: class_id
-            }
+                [Op.and]: [
+                    sequelize.where(sequelize.fn('lower', sequelize.col('last_name')), {
+                        [Op.like]: '%' + name + '%'
+                    }),
+                    sequelize.where(sequelize.fn("lower", sequelize.col("mssv")), {
+                        [Op.like]: '%' + mssv + '%'
+                    }), {
+                        id: arrIdStudent
+                    }
+                ]
+            },
+            group: ['Students.id'],
+            // having:
+            order: [
+                ['last_name', 'ASC']
+            ]
         })
         var urlTable = `${process.cwd()}/table/TableDetailClass.pug`;
         var htmlTable = await pug.renderFile(urlTable, {
-            student_classes: class_student[0].Student_classes
+            student_classes: listStudent
         });
         res.send({
             htmlTable
         })
     } catch (error) {
-        // console.log(error)
+        console.log(error)
         res.status(404).send()
         return;
     }
@@ -597,38 +604,22 @@ const deleteStuInclass = async (req, res, next) => {
     const { student_id, class_id } = req.body
 
     try {
-        const stuInClass = await StudentClassModel.findAndCountAll({
+        const stuInClass = await StudentClassModel.findAll({
             where: {
                 student_id,
                 class_id
             }
         })
-        if (stuInClass.count > 0) {
+        if (stuInClass.length > 0) {
             await StudentClassModel.destroy({
                 where: {
-                    id: stuInClass.rows[0].id
+                    id: stuInClass[0].id
                 }
             })
-            const new_class_stu = await ClassModel.findAll({
-                include: [{
-                    model: StudentClassModel,
-                    include: [{
-                        model: StudentModel
-                    }]
-                }],
-                where: {
-                    id: class_id
-                },
 
-            })
-            // console.log(new_class_stu[0].Student_classes[0].class_id)
-            var urlTable = `${process.cwd()}/table/TableDetailClass.pug`;
-            var htmlTable = await pug.renderFile(urlTable, {
-                student_classes: new_class_stu[0].Student_classes
-            });
             res.send({
                 result: 1,
-                htmlTable
+                // htmlTable
             })
         } else {
             res.send({
@@ -672,6 +663,7 @@ const deleteClass = async (req, res, next) => {
         }
         return;
     } catch (error) {
+        console.log(error)
         res.status(404).send()
         return;
     }

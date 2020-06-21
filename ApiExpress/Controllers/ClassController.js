@@ -11,6 +11,7 @@ import { Op } from 'sequelize'
 import sequelize from 'sequelize'
 import AbsentStudentModel from '../models/AbsentStudentModel'
 import AbsentClassModel from '../models/AbsentClassModel'
+import { where } from 'sequelize'
 
 const getClass = async (req, res, next) => {
 
@@ -24,56 +25,76 @@ const detailClass = async (req, res, next) => {
     }
     try {
         const classes = await ClassModel.findAll({
-            // attributes:['id','teacher_id','status','class_code','subject_id'
-            //     [sequelize.fn('count', sequelize.col('Absent_Student.studen_id')), 'count']],
-            include: [{
-                model: StudentClassModel,
-                include: [{
-                    model: StudentModel,
-                    // include:[{
-                    //     model:AbsentStudentModel,
-                    //     where:{
-                    //         status:1
-                    //     },
-                       
-                    // }]
-                }]
-            },
-            {
-                model: SubjectModel
-            },
-            {
-                model: TeacherModel
-            },
-            {
-                model: ScheduleClassModel
-            },
+            include: [
+                {
+                    model: SubjectModel
+                },
+                {
+                    model: TeacherModel
+                },
+                {
+                    model: ScheduleClassModel
+                },
             ],
             // group:['Absent_Student.student_id'],
             where: {
                 class_code: id
             }
         })
+        if (classes.length < 1) {
+            res.redirect('/admin/class')
+            return;
+        }
         const absentClass = await AbsentClassModel.findAll({
             where: {
                 class_id: classes[0].id,
                 is_active: 1
             }
         })
-        // const listStudent =await StudentModel.findAll({
-
-        // })
-        
-        // console.log(classes.length)
-        if (classes.length < 1) {
-            res.redirect('/admin/class')
-            return;
+        var arrIdAbsentClass=[];
+        for (let index = 0; index < absentClass.length; index++) {
+            arrIdAbsentClass.push(absentClass[index].id)
         }
+        const stuInClass = await StudentModel.findAll({
+            include: [{
+                model: StudentClassModel,
+                where: {
+                    class_id: classes[0].id
+                }
+            }],
+        })
+        var arrIdStudent = [];
+        for (let index = 0; index < stuInClass.length; index++) {
+            arrIdStudent.push(stuInClass[index].id)
+        }
+        const listStudent = await StudentModel.findAll({
+            attributes: ['id', 'first_name','last_name', 'mssv', 'phone', 'birthday',
+                [sequelize.fn('sum', sequelize.col('Absent_Students.status')), 'count']],
+            include: [{
+                model: AbsentStudentModel,
+                attributes: [],
+                where: {
+                    // class_id: classes[0].id,
+                    absent_class_id:arrIdAbsentClass
+                },
+                required:false
+            }],
+            where: {
+                id: arrIdStudent
+            },
+            row:true,
+            group: ['Students.id'],
+            order: [
+                ['last_name', 'ASC']
+            ]
+        })
+
+        // console.log(listStudent[0].get('count'));
         res.render('DetailClassView', {
             class_code: id,
             classes: classes[0],
-            student_classes: classes[0].Student_classes,
-            countAbsent:absentClass.length
+            student_classes: listStudent,
+            countAbsent: absentClass.length
         });
         return;
     } catch (error) {

@@ -11,7 +11,9 @@ import {
   UPDATE_USER,
   GET_LIST_ABSENT,
   GET_DETAIL_ABSENT,
-  GET_STUDENT_ABSENT
+  GET_STUDENT_ABSENT,
+  GET_DETAIL_CLASS,
+  CHANGE_ABSENT_STUDENT
 } from "./type";
 
 
@@ -43,34 +45,34 @@ export const changeStatusStudent = listStudent => ({
 });
 
 //
-export const sendAbsent = (
-  absentID,
-  classID,
-  absentType,
-  note,
-  dayLate,
-  listabsentDetail,
-  is_absent,
-  scheduleID
-) => ({
-  type: SEND_ABSENT,
-  payload: {
-    absentID: absentID,
-    classID: classID,
-    absentType: absentType,
-    absentStatus: 1,
-    note: note,
-    dayLate: dayLate,
-    listabsentDetail: listabsentDetail,
-    is_absent: is_absent,
-    scheduleID: scheduleID
-  }
-});
+// export const sendAbsent = (
+//   absentID,
+//   classID,
+//   absentType,
+//   note,
+//   dayLate,
+//   listabsentDetail,
+//   is_absent,
+//   scheduleID
+// ) => ({
+//   type: SEND_ABSENT,
+//   payload: {
+//     absentID: absentID,
+//     classID: classID,
+//     absentType: absentType,
+//     absentStatus: 1,
+//     note: note,
+//     dayLate: dayLate,
+//     listabsentDetail: listabsentDetail,
+//     is_absent: is_absent,
+//     scheduleID: scheduleID
+//   }
+// });
 
 
 export const getListNotifyAction = () => ({
   type: GET_LIST_NOTIFICATION,
-  payload: { }
+  payload: {}
 });
 export const getUserInfo = () => ({
   type: GET_USER_INFOR,
@@ -97,3 +99,13 @@ export const getStudentAbsent = (class_id, student_id) => ({
     student_id: student_id
   }
 });
+export const getDetailClass = (class_id) => ({
+    type: GET_DETAIL_CLASS,
+    payload: {
+      class_id
+    }
+})
+export const changeAbsentStudent = (payload) => ({
+    type: CHANGE_ABSENT_STUDENT,
+    payload: payload
+})

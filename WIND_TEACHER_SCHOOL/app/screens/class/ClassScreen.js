@@ -5,7 +5,7 @@ import { getListClass } from '@action'
 import {
     Block, WindsHeader,
     BackgroundHeader, Loading,
-    FastImage, ClassItem, Empty
+    FastImage, ClassItem, Empty,Error
 } from '@app/components'
 import R from '@R'
 import theme from '@theme'

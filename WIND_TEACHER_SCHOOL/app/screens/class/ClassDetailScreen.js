@@ -8,7 +8,7 @@ import {
     ScrollView,
     ImageBackground,
     TouchableOpacity,
-    TextInput,
+    TextInput, RefreshControl,
 } from 'react-native'
 import { connect } from 'react-redux'
 import theme from '@theme'
@@ -18,7 +18,7 @@ import {
     AppHeader, Block, Button,
     Empty, Checkbox, BackgroundHeader,
     WindsHeader, Icon, Loading,
-    ModalDialog
+    ModalDialog, Error
 } from '@component'
 import NavigationUtil from '@app/navigation/NavigationUtil'
 import Mockup from '@app/constants/Mockup'
@@ -26,9 +26,11 @@ import LinearGradient from 'react-native-linear-gradient'
 import FastImage from 'react-native-fast-image'
 import reactotron from 'reactotron-react-native'
 import Geolocation from '@react-native-community/geolocation';
-import { showMessages } from '@app/utils/Alert'
+import { showMessages, showConfirm } from '@app/utils/Alert'
 import { createAbsent, cancelAbsent } from '@app/constants/Api'
 import Toast, { BACKGROUND_TOAST } from "@app/utils/Toast";
+import wifi from 'react-native-android-wifi'
+import { getDetailClass } from '@action'
 export class ClassDetailScreen extends Component {
     constructor(props) {
         super(props)
@@ -40,28 +42,54 @@ export class ClassDetailScreen extends Component {
                 latitude: null
             },
             isLoading: false,
-            isModalVisible: false,
-            mid_semester: null,
-            end_semester: null,
-            index: null,
-            itemStudent: null
+            isRefresh: false
+            // isModalVisible: false,
+            // mid_semester: null,
+            // end_semester: null,
+            // index: null,
+            // itemStudent: null
         }
     }
-    _startAbsent = async (gps_latitude, gps_longitude) => {
+    componentDidMount() {
+        this.props.getDetailClass(this.state.class_id)
+    }
+    // getWifiNetworksOnPress() {
+    //     wifi.reScanAndLoadWifiList((wifiStringList) => {
+    //         // reactotron.log(wifiStringList);
+    //         var wifiArray = JSON.parse(wifiStringList);
+    //         this.setState({
+    //             ...this.state,
+    //             wifiList: wifiArray,
+    //             //   modalVisible: true
+    //         });
+    //     },
+    //         (error) => {
+    //             reactotron.log(error);
+    //         }
+    //     );
+    // }
+    // serviceCheckOnPress() {
+    //     wifi.isEnabled(
+    //         (isEnabled) => {
+    //             this.setState({
+    //                 ...this.state,
+    //                 isWifiNetworkEnabled: isEnabled
+    //             });
+    //             // console.log(isEnabled);
+    //         });
+    // }
+    _startAbsent = async (gps_latitude, gps_longitude, listNameWifi) => {
         const { class_id } = this.state
         if (!gps_latitude || !gps_longitude) {
-            Toast.show('Chưa định vị được vị trí của máy', BACKGROUND_TOAST.SUCCESS);
+            Toast.show('Chưa định vị được vị trí của máy', BACKGROUND_TOAST.FAIL);
             return;
         }
         const payload = {
             class_id,
             gps_latitude,
-            gps_longitude
+            gps_longitude,
+            listNameWifi
         }
-        this.setState({
-            ...this.state,
-            isLoading: true
-        });
         try {
             const response = await createAbsent(payload);
             reactotron.log(response, 'res');
@@ -87,17 +115,57 @@ export class ClassDetailScreen extends Component {
         }
     }
     getLocationUser = async () => {
+        this.setState({
+            ...this.state,
+            isLoading: true,
+        });
         await Geolocation.getCurrentPosition(
             position => {
                 const { latitude, longitude } = position.coords;
-                this._startAbsent(latitude, longitude)
-                reactotron.log(latitude, longitude)
+                wifi.isEnabled(
+                    (isEnabled) => {
+                        reactotron.log(isEnabled)
+                        if (!isEnabled) {
+                            Toast.show('Bạn chưa bật wifi', BACKGROUND_TOAST.FAIL);
+                            return;
+                        }
+
+                        wifi.reScanAndLoadWifiList((wifiStringList) => {
+                            // reactotron.log(wifiStringList);
+                            var wifiArray = JSON.parse(wifiStringList);
+                            // reactotron.log(wifiArray,'wifiArray')
+                            var listNameWifi = []
+                            for (let index = 0; index < wifiArray.length; index++) {
+                                listNameWifi.push(wifiArray[index].SSID)
+                            }
+                            reactotron.log(latitude, longitude)
+                            this._startAbsent(latitude, longitude, listNameWifi)
+                        },
+                            (error) => {
+                                this.setState({
+                                    ...this.state,
+                                    isLoading: false
+                                });
+                                reactotron.log(error);
+                                Toast.show("Chưa lấy danh sách wifi có thể kết nối", BACKGROUND_TOAST.FAIL);
+
+                            }
+                        );
+                    });
+
+                // this._startAbsent(latitude, longitude)
+                // reactotron.log(latitude, longitude)
                 // return;
             },
             error => {
+                this.setState({
+                    ...this.state,
+                    isLoading: false
+                });
                 reactotron.log(error, 'error getCurrentPosition')
-                Toast.show("Chưa lấy được vị trí", BACKGROUND_TOAST.FAIL);
+                Toast.show("Chưa lấy được vị trí bạn cần cho phép ứng dụng truy cập vị trí bạn", BACKGROUND_TOAST.FAIL);
             },
+            { enableHighAccuracy: false }
         );
     }
     _cancelAbsent = async () => {
@@ -138,7 +206,7 @@ export class ClassDetailScreen extends Component {
                 <SafeAreaView style={theme.styles.containter}>
                     <BackgroundHeader />
                     <WindsHeader title={item.Subject.subject_name} />
-                    {this._renderModalPoint()}
+                    {/* {this._renderModalPoint()} */}
                     {this._renderBody()}
                 </SafeAreaView>
             </Block>
@@ -146,9 +214,20 @@ export class ClassDetailScreen extends Component {
     }
     _renderBody() {
         const item = this.props.navigation.getParam('class')
-        if (this.state.isLoading) return <Loading />;
+        const { detailClassState } = this.props
+        if (this.state.isLoading || detailClassState.isLoading) return <Loading />;
         // reactotron.log('Student_classes', item.Student_classes)
-
+        if (detailClassState.error)
+            return (
+                <Error
+                    onPress={() => {
+                        this.props.getListClass();
+                    }}
+                />
+            );
+        // if (detailClassState.data.length == 0)
+        //     return <Empty description={"Chưa có sinh viên nào"}
+        //     />
         return (
             // <ScrollView horizontal
             //     contentContainerStyle={{ width: 1000 }}
@@ -157,14 +236,23 @@ export class ClassDetailScreen extends Component {
             <View
                 style={{
                     marginTop: 5,
-                    flex: 1
+                    flex: 1,
+                    // paddingBottom: 20
                 }}
-                showsVerticalScrollIndicator={false}
+            // showsVerticalScrollIndicator={false}
+            // refreshControl={
+            //     <RefreshControl
+            //         refreshing={this.state.isRefresh}
+            //         onRefresh={() => {
+            //             this.props.getDetailClass(this.state.class_id);
+            //         }}
+            //     />
+            // }
             >
 
                 <View style={styles._viewUser}>
                     {this._renderUserItem('Mã lớp học', item.class_code)}
-                    {this._renderUserItem(R.strings.number_of_people, item.Student_classes.length)}
+                    {this._renderUserItem(R.strings.number_of_people, detailClassState.data.length)}
                     {this._renderUserItem("Mã môn học", item.Subject.subject_code)}
                 </View>
                 <View style={{
@@ -188,7 +276,7 @@ export class ClassDetailScreen extends Component {
 
                     <TouchableOpacity style={{ flex: 1, marginHorizontal: 20, borderRadius: 5 }}
                         onPress={() => {
-                            showMessages("", "Bạn chắc chắn hủy điểm danh", this._cancelAbsent())
+                            showConfirm("", "Bạn chắc chắn hủy điểm danh", this._cancelAbsent)
                         }}
                     >
                         <LinearGradient
@@ -216,25 +304,27 @@ export class ClassDetailScreen extends Component {
 
 
                 {/* <LinearGradient
-                        style={styles._lgListClass}
-                        colors={["#ff740d", "#f9ad2e"]}
-                        start={{ x: 0.7, y: 1 }} //transparent
-                        end={{ x: 0, y: 0.1 }}>
-                        <Text style={[theme.fonts.regular18, { color: theme.colors.white }]}>
-                            {R.strings.list_class}</Text>
-                    </LinearGradient> */}
+                    style={styles._lgListClass}
+                    colors={["#ff740d", "#f9ad2e"]}
+                    start={{ x: 0.7, y: 1 }} //transparent
+                    end={{ x: 0, y: 0.1 }}>
+                    <Text style={[theme.fonts.regular18, { color: theme.colors.white }]}>
+                        {R.strings.list_class}</Text>
+                </LinearGradient> */}
 
                 <ScrollView
                     contentContainerStyle={{
-                        width: 600,
+                        width: 500,
                         // flex: 1
                         // backgroundColor:'red'
-                        paddingBottom: 10
+                        paddingBottom: 10,
+                        marginTop: 10,
+
                     }}
                     horizontal
                     showsHorizontalScrollIndicator={false}
                 >
-                    <ScrollView style={{ paddingBottom: 100 }}
+                    <ScrollView style={{ paddingBottom: 20 }}
                         showsVerticalScrollIndicator={false}
                     >
                         <View
@@ -243,47 +333,48 @@ export class ClassDetailScreen extends Component {
                                 backgroundColor: theme.colors.backgroundBlue,
                                 borderTopWidth: 0.5,
                                 borderTopColor: theme.colors.gray,
-                                marginTop: 10,
+                                marginTop:10
                             }
                             ]}
                         >
                             <View style={[styles.rowTable, { flex: 1 }]}>
                                 <Text style={theme.fonts.regular14}>{R.strings.number}</Text>
                             </View>
-                            <View style={[styles.rowTable, { flex: 5 }]}>
+                            <View style={[styles.rowTable, { flex: 6 }]}>
                                 <Text style={theme.fonts.regular14}>{R.strings.name}</Text>
                             </View>
                             <View style={[styles.rowTable, { flex: 3 }]}>
                                 <Text style={theme.fonts.regular14}>MSSV</Text>
                             </View>
-                            <View style={[styles.rowTable, { flex: 2 }]}>
+                            <View style={[styles.rowTable, { flex: 3 }]}>
+                                <Text style={theme.fonts.regular14}>Điểm danh</Text>
+                            </View>
+                            {/* <View style={[styles.rowTable, { flex: 2 }]}>
                                 <Text style={theme.fonts.regular14}>Giữa kì</Text>
                             </View>
                             <View style={[styles.rowTable, { flex: 2 }]}>
                                 <Text style={theme.fonts.regular14}>Cuối kì</Text>
-                            </View>
-                            <View style={[styles.rowTable, { flex: 1 }]}>
-                            </View>
+                            </View> */}
+                            {/* <View style={[styles.rowTable, { flex: 1 }]}>
+                            </View> */}
                         </View>
                         {
-                            item.Student_classes.length == 0 ? (
+                            detailClassState.data.length == 0 ? (
                                 <Empty description={'chưa có học sinh nào'}
                                 />
                             ) : (
 
-                                    item.Student_classes.map((item, index) => (
+                                    detailClassState.data.map((item, index) => (
                                         <View key={index.toString()} style={{ width: "100%" }}>
                                             {this._renderRowTable(item, index)}
                                         </View>
                                     ))
                                 )
                         }
+
                     </ScrollView>
                 </ScrollView>
-                {/* <Button title='Chia sẻ vị trí' style={{ alignSelf: 'center', marginBottom: 100, marginTop: 50, }} /> */}
-
             </View>
-            // </ScrollView>
         )
     }
 
@@ -296,30 +387,30 @@ export class ClassDetailScreen extends Component {
                 onPress={() => {
                     NavigationUtil.navigate(SCREEN_ROUTER.ABSENT_STUDENT, {
                         class_id: this.state.class_id,
-                        student_id: item.Student.id
+                        student_id: item.id
                     })
                 }}
             >
                 <View style={[styles.rowTable, { flex: 1 }]}>
                     <Text style={theme.fonts.regular14}>{index + 1}</Text>
                 </View>
-                <View style={[styles.rowTable, { flex: 5 }]}>
+                <View style={[styles.rowTable, { flex: 6 }]}>
                     <Text style={theme.fonts.regular14}
                         numberOfLines={2}
-                    >{item.Student.name}</Text>
+                    >{item.first_name + " " + item.last_name}</Text>
                 </View>
                 <View style={[styles.rowTable, { flex: 3 }]}>
-                    <Text style={theme.fonts.regular14}>{item.Student.mssv}</Text>
+                    <Text style={theme.fonts.regular14}>{item.mssv}</Text>
                 </View>
-                <View style={[styles.rowTable, { flex: 2 }]}>
+                <View style={[styles.rowTable, { flex: 3 }]}>
                     <Text style={theme.fonts.regular14}>
-                        {item.mid_semester ? item.mid_semester : null}</Text>
+                        {item.count ? item.count : 0}</Text>
                 </View>
-                <View style={[styles.rowTable, { flex: 2 }]}>
+                {/* <View style={[styles.rowTable, { flex: 2 }]}>
                     <Text style={theme.fonts.regular14}>
                         {item.end_semester ? item.end_semester : null}</Text>
-                </View>
-                <TouchableOpacity style={[styles.rowTable, { flex: 1 }]}
+                </View> */}
+                {/* <TouchableOpacity style={[styles.rowTable, { flex: 1 }]}
                     onPress={() => {
                         this.setState({
                             ...this.state,
@@ -335,7 +426,7 @@ export class ClassDetailScreen extends Component {
                         name='edit'
                         color={theme.colors.backgroundHeader}
                         size={20} />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 {/* <View style={[styles.rowTable, { flex: 1 }]}>
                     <Icon.AntDesign
                         name='infocirlce'
@@ -418,7 +509,7 @@ export class ClassDetailScreen extends Component {
                                     borderWidth: 0.5,
                                     borderColor: 'black',
                                     borderRadius: 3,
-                                    textAlign:'center'
+                                    textAlign: 'center'
                                 }}
                             >
                             </TextInput>
@@ -448,7 +539,7 @@ export class ClassDetailScreen extends Component {
                                     borderWidth: 0.5,
                                     borderColor: 'black',
                                     borderRadius: 3,
-                                    textAlign:"center"
+                                    textAlign: "center"
                                 }}
                             >
                             </TextInput>
@@ -459,13 +550,13 @@ export class ClassDetailScreen extends Component {
                                 flexDirection: 'row',
                                 justifyContent: 'space-between',
                                 marginHorizontal: 20,
-                                marginBottom:20
+                                marginBottom: 20
                             }}
                         >
                             <View />
                             <TouchableOpacity
-                                onPress={()=>{
-                                    alert(this.state.mid_semester+this.state.end_semester)
+                                onPress={() => {
+                                    alert(this.state.mid_semester + this.state.end_semester)
                                 }}
                             >
                                 <Text style={[theme.fonts.regular18, { color: 'green' }]}>Sửa điểm</Text>
@@ -480,11 +571,12 @@ export class ClassDetailScreen extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    classListState: state.classListReducer,
+    // classListState: state.classListReducer,
+    detailClassState: state.detailClassReducer,
 })
 
 const mapDispatchToProps = {
-
+    getDetailClass
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClassDetailScreen)

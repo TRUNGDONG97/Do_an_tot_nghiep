@@ -9,7 +9,10 @@ const Student= sequelize.define('Students', {
         primaryKey: true,
         autoIncrement: true
     },
-    name: {
+    first_name: {
+        type: Sequelize.STRING
+    },
+    last_name: {
         type: Sequelize.STRING
     },
     phone: {

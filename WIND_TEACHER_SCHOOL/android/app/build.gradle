@@ -181,6 +181,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-android-wifi')
     implementation project(':@react-native-community_geolocation')
     implementation project(':react-native-fbsdk')
     implementation project(':react-native-code-push')

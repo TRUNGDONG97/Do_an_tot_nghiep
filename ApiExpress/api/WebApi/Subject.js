@@ -142,7 +142,7 @@ const deleteSubject = async (req, res, next) => {
             //         subject_id:id
             //     }
             // })
-            await SubjectModel.destroy({
+            await SubjectModel.update({
                 is_active: 0
             }, {
                 where: {
@@ -159,6 +159,7 @@ const deleteSubject = async (req, res, next) => {
         }
         return;
     } catch (error) {
+        console.log(error)
         res.status(404).send()
         return;
     }

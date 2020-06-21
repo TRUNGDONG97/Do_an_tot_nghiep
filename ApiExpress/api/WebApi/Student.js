@@ -16,7 +16,7 @@ const getStudent = async (req, res, next) => {
             offset: Constants.PER_PAGE * (currentPage - 1),
             limit: Constants.PER_PAGE,
             order: [
-                ['name', 'ASC']
+                ['last_name', 'ASC']
             ]
         })
         // console.log(count)
@@ -49,14 +49,17 @@ const searchStudent = async (req, res, next) => {
     try {
         if (mssv == "") {
             students = await StudentModel.findAll({
-                where: sequelize.where(sequelize.fn("lower", sequelize.col("name")), {
+                where: sequelize.where(sequelize.fn("lower", sequelize.col("last_name")), {
                     [Op.like]: '%' + name + '%'
                 }),
                 offset: Constants.PER_PAGE * (currentPage - 1),
-                limit: Constants.PER_PAGE
+                limit: Constants.PER_PAGE,
+                order: [
+                    ['last_name', 'ASC']
+                ]
             })
             count = await StudentModel.count({
-                where: sequelize.where(sequelize.fn("lower", sequelize.col("name")), {
+                where: sequelize.where(sequelize.fn("lower", sequelize.col("last_name")), {
                     [Op.like]: '%' + name + '%'
                 })
             })
@@ -66,7 +69,10 @@ const searchStudent = async (req, res, next) => {
                     [Op.like]: '%' + mssv + '%'
                 }),
                 offset: Constants.PER_PAGE * (currentPage - 1),
-                limit: Constants.PER_PAGE
+                limit: Constants.PER_PAGE,
+                order: [
+                    ['last_name', 'ASC']
+                ]
             })
             count = await StudentModel.count({
                 where: sequelize.where(sequelize.fn("lower", sequelize.col("mssv")), {
@@ -77,21 +83,25 @@ const searchStudent = async (req, res, next) => {
             students = await StudentModel.findAll({
                 where: {
                     [Op.and]: [
-                        sequelize.where(sequelize.fn('lower', sequelize.col('name')), {
+                        sequelize.where(sequelize.fn('lower', sequelize.col('last_name')), {
                             [Op.like]: '%' + name + '%'
                         }),
                         sequelize.where(sequelize.fn("lower", sequelize.col("mssv")), {
                             [Op.like]: '%' + mssv + '%'
                         })
-                    ]
+                    ],
+                    
                 },
                 offset: Constants.PER_PAGE * (currentPage - 1),
-                limit: Constants.PER_PAGE
+                limit: Constants.PER_PAGE,
+                order: [
+                    ['last_name', 'ASC']
+                ]
             })
             count = await StudentModel.count({
                 where: {
                     [Op.and]: [
-                        sequelize.where(sequelize.fn('lower', sequelize.col('name')), {
+                        sequelize.where(sequelize.fn('lower', sequelize.col('last_name')), {
                             [Op.like]: '%' + name + '%'
                         }),
                         sequelize.where(sequelize.fn("lower", sequelize.col("mssv")), {
@@ -162,7 +172,8 @@ const deleteStudent = async (req, res, next) => {
 }
 const addStudent = async (req, res, next) => {
     const {
-        name,
+        first_name,
+        last_name,
         phone,
         mssv,
         birthday,
@@ -201,7 +212,8 @@ const addStudent = async (req, res, next) => {
             return;
         }
         const newStudent = await StudentModel.create({
-            name,
+            first_name,
+            last_name,
             phone,
             password: md5(mssv),
             birthday,
@@ -257,7 +269,8 @@ const editStudent = async (req, res, next) => {
 const saveStudent = async (req, res, next) => {
     const {
         id,
-        name,
+        first_name,
+        last_name,
         phone,
         mssv,
         birthday,
@@ -309,9 +322,10 @@ const saveStudent = async (req, res, next) => {
             }
         }
         const updateStudent = await StudentModel.update({
-            name,
+            first_name,
+            last_name,
             phone,
-            password: mssv,
+            password: md5(mssv),
             birthday,
             address,
             email,
@@ -429,7 +443,8 @@ const importStudent = async (req, res, next) => {
             console.log(list_student[index].mssv,'countMssv')
             if (countMssv > 0) {
                 await StudentModel.update({
-                    name: list_student[index].name,
+                    first_name: list_student[index].first_name,
+                    last_name: list_student[index].last_name,
                     password: md5(list_student[index].mssv.toString()),
                     address: list_student[index].address,
                     birthday: list_student[index].birthday?DateUtil.formatInputDate(list_student[index].birthday):"",
@@ -444,7 +459,8 @@ const importStudent = async (req, res, next) => {
                 console.log(1)
             } else {
                 await StudentModel.create({
-                    name: list_student[index].name,
+                    first_name: list_student[index].first_name,
+                    last_name: list_student[index].last_name,
                     mssv: list_student[index].mssv,
                     password: md5(list_student[index].mssv.toString()),
                     address: list_student[index].address,

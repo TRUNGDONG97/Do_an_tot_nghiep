@@ -238,14 +238,16 @@ export class ChangeUserInfo extends Component {
             gender
         } = this.state;
         var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-
+        var vnf_regex = /(03|07|08|09|01[2|6|8|9])+([0-9]{8})\b/g;
         if (phone == "") {
             showMessages("Thông báo", "Bạn chưa nhập số điện thoại");
         } else if (email == "") {
             showMessages("Thông báo", "Bạn chưa nhập email");
         } else if (!filter.test(email)) {
             showMessages("Thông báo", "Bạn nhập sai email");
-        } else {
+        } else if (!vnf_regex.test(phone)) {
+            showMessages("Thông báo", "Bạn nhập không đúng dạng số điện thoại");
+        } {
             this.props.updateUser({
                 phone: phone.trim(),
                 birthday: birthday,

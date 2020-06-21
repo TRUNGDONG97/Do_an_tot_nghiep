@@ -6,6 +6,7 @@ table.table.table-bordered.table-hover
             th MSSV
             th Ngày sinh
             th Số điện thoại
+            th Điểm danh
             //- th Điểm giữa kì         
             //- th Điểm cuối kì
             th
@@ -18,12 +19,13 @@ table.table.table-bordered.table-hover
             each item in student_classes
                 tr
                     td #{STT=STT+1}
-                    td #{item.Student.name}
-                    td #{item.Student.mssv}
-                    td #{item.Student.birthday}
-                    td #{item.Student.phone}
+                    td #{item.first_name+" "+item.last_name}
+                    td #{item.mssv}
+                    td #{item.birthday}
+                    td #{item.phone}
+                    td #{item.get('count')?item.get('count'):0}
                     //- td #{item.mid_semester?item.mid_semester:''}
                     //- td #{item.mid_semester?item.mid_semester:''}
                     td
-                        button#deleteStuInCla.btn.btn-danger(type='button' title='Xóa Danh Mục' onclick='deleteStuInClass('+item.Student.id+','+item.class_id+')')
+                        button#deleteStuInCla.btn.btn-danger(type='button' title='Xóa Danh Mục' onclick='deleteStuInClass('+item.id+')')
                             i.far.fa-trash-alt

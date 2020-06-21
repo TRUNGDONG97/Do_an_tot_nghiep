@@ -168,7 +168,8 @@ const addStudent = async () => {
         })
         return;
     }
-    var name = $.trim($("#txtAddName").val());
+    var first_name = $.trim($("#txtAddFirstName").val());
+    var last_name = $.trim($("#txtAddLastName").val());
     var mssv = $.trim($("#txtAddMssv").val());
     var phone = $.trim($("#txtAddPhone").val());
     var birthday = $.trim($("#txtAddBirthday").val());
@@ -179,7 +180,7 @@ const addStudent = async () => {
     var fileUpload = $("#ImageStudent").get(0);
     var files = fileUpload.files;
 
-    if (name == '' || mssv == '' || phone == '' || birthday == '' || address == '') {
+    if (first_name == ''||last_name=='' || mssv == '' || phone == '' || birthday == '' || address == '') {
         swal({
             title: "Chưa nhập đầy đủ thông tin",
             text: "",
@@ -187,9 +188,9 @@ const addStudent = async () => {
         })
         return;
     }
-    // checkedMssv(mssv)
-    // checkedPhone(phone)
-    // checkedMail(email)
+    checkedMssv(mssv)
+    checkedPhone(phone)
+    checkedMail(email)
     // console.log(files.length);
     var srcImg;
     if (files.length > 0) {
@@ -208,7 +209,8 @@ const addStudent = async () => {
         url: '/student/add',
         type: 'POST',
         data: {
-            name,
+            first_name,
+            last_name,
             phone,
             mssv,
             birthday,
@@ -342,7 +344,8 @@ function saveStudent(id) {
         })
         return;
     }
-    var name = $.trim($("#txtEditName").val());
+    var first_name = $.trim($("#txtEditFirstName").val());
+    var last_name = $.trim($("#txtEditLastName").val());
     var mssv = $.trim($("#txtEditMssv").val());
     var phone = $.trim($("#txtEditPhone").val());
     var birthday = $.trim($("#txtEditBirthday").val());
@@ -353,9 +356,9 @@ function saveStudent(id) {
     var fileUpload = $("#editImageStudent").get(0);
     var files = fileUpload.files;
 
-    // console.log(files.length)
+    // console.log(first_name,last_name)
 
-    if (name == '' || mssv == '' || phone == '' || birthday == '' || address == '') {
+    if (first_name == '' ||last_name == '' || mssv == '' || phone == '' || birthday == '' || address == ''||email=='') {
         swal({
             title: "Chưa nhập đầy đủ thông tin",
             text: "",
@@ -387,7 +390,8 @@ function saveStudent(id) {
         url: '/student/save',
         data: {
             id,
-            name,
+            first_name,
+            last_name,
             phone,
             mssv,
             birthday,

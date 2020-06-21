@@ -31,7 +31,13 @@ import {
   GET_DETAIL_ABSENT,
   GET_STUDENT_ABSENT_SUCCESS,
   GET_STUDENT_ABSENT_FAIL,
-  GET_STUDENT_ABSENT
+  GET_STUDENT_ABSENT,
+  GET_DETAIL_CLASS_SUCCESS,
+  GET_DETAIL_CLASS_FAIL,
+  GET_DETAIL_CLASS,
+  CHANGE_ABSENT_STUDENT_SUCCESS,
+  CHANGE_ABSENT_STUDENT_FAIL,
+  CHANGE_ABSENT_STUDENT
 } from "../actions/type";
 
 import * as API from "../../constants/Api";
@@ -101,19 +107,19 @@ export function* absentByTeacher(action) {
   }
 }
 
-export function* sendAbsent(action) {
-  try {
-    const response = yield call(API.sendAbsent, action.payload);
-    yield put({ type: SEND_ABSENT_SUCCESS, payload: response.result });
-    // Alert.alert("Thông báo", response.message);
-    showMessages("Thông báo", response.message);
-    NavigationUtil.goBack()
-    // alert(JSON.stringify(response))
-  } catch (err) {
-    yield put({ type: SEND_ABSENT_FAIL, payload: err });
-    // alert(err+'lỗi')
-  }
-}
+// export function* sendAbsent(action) {
+//   try {
+//     const response = yield call(API.sendAbsent, action.payload);
+//     yield put({ type: SEND_ABSENT_SUCCESS, payload: response.result });
+//     // Alert.alert("Thông báo", response.message);
+//     showMessages("Thông báo", response.message);
+//     NavigationUtil.goBack()
+//     // alert(JSON.stringify(response))
+//   } catch (err) {
+//     yield put({ type: SEND_ABSENT_FAIL, payload: err });
+//     // alert(err+'lỗi')
+//   }
+// }
 
 export function* getListNotify() {
   try {
@@ -183,13 +189,37 @@ export function* getStudentAbsent(action) {
     // alert(err)
   }
 }
+export function* getDetailClass(action) {
+  try {
+    const response = yield call(API.getDetailClass,action.payload)
+    // reactotron.log(response)
+    yield put({ type: GET_DETAIL_CLASS_SUCCESS, payload: response.data })
+    // alert(JSON.stringify(response))
+  } catch (err) {
+    yield put({ type: GET_DETAIL_CLASS_FAIL, payload: err })
+    // alert(err)
+  }
+}
+export function* changeAbsentStudent(action) {
+  try {
+    const response = yield call(API.changeAbsentStudent,action.payload)
+    reactotron.log(response)
+    yield put({ type: CHANGE_ABSENT_STUDENT_SUCCESS, payload: response.data })
+    // alert(JSON.stringify(response))
+  } catch (err) {
+    yield put({ type: CHANGE_ABSENT_STUDENT_FAIL, payload: err })
+    // alert(err)
+  }
+}
 export const watchGetListCLass = takeEvery(GET_CLASS_LIST, getListClass);
 // export const watchGetSalary = takeEvery(GET_SALARY, getSalary);
 export const watchAbsentTeacher = takeEvery(REQUEST_ABSENT, absentByTeacher);
-export const watchSendAbsent = takeEvery(SEND_ABSENT, sendAbsent);
+// export const watchSendAbsent = takeEvery(SEND_ABSENT, sendAbsent);
 export const watchGetListNotify = takeEvery(GET_LIST_NOTIFICATION, getListNotify);
 export const watchGetUserInfo = takeEvery(GET_USER_INFOR, getUserInfo);
 export const watchUpdateUser = takeEvery(UPDATE_USER, updateUser);
 export const watchGetListAbsent = takeEvery(GET_LIST_ABSENT, getListAbsent);
 export const watchGetDetailAbsent = takeEvery(GET_DETAIL_ABSENT, getDetailAbsent);
 export const watchGetStudentAbsent = takeEvery(GET_STUDENT_ABSENT, getStudentAbsent);
+export const watchGetDetailClass = takeEvery(GET_DETAIL_CLASS, getDetailClass);
+export const watchChangeAbsentStudent = takeEvery(CHANGE_ABSENT_STUDENT, changeAbsentStudent);

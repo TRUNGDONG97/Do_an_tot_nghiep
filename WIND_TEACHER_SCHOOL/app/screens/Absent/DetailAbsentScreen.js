@@ -12,7 +12,9 @@ import NavigationUtil from '@app/navigation/NavigationUtil'
 import LinearGradient from 'react-native-linear-gradient'
 import FastImage from 'react-native-fast-image'
 import reactotron from 'reactotron-react-native'
-import { getDetailAbsent } from '@action/'
+import { getDetailAbsent, changeAbsentStudent } from '@action/'
+import { showConfirm } from '@app/utils/Alert';
+import Toast, { BACKGROUND_TOAST } from "@app/utils/Toast";
 export class DetailAbsentScreen extends Component {
     constructor(props) {
         super(props)
@@ -23,6 +25,11 @@ export class DetailAbsentScreen extends Component {
     }
     componentDidMount() {
         this.props.getDetailAbsent(this.state.absent_class_id)
+    }
+    _changeAbsent =async (absent_student_id) => {
+        // alert(absent_student_id)
+        await this.props.changeAbsentStudent(absent_student_id)
+        Toast.show("Cập nhật điểm danh thành công", BACKGROUND_TOAST.SUCCESS);
     }
     render() {
 
@@ -61,7 +68,7 @@ export class DetailAbsentScreen extends Component {
             >
                 <View style={styles._viewUser}>
                     {this._renderUserItem('Tên lớp học', detailAbsentState.classes.Subject.subject_name)}
-                    {this._renderUserItem('Mã lớp học',detailAbsentState.classes.class_code)}
+                    {this._renderUserItem('Mã lớp học', detailAbsentState.classes.class_code)}
                     {this._renderUserItem('Ngày điểm danh',
                         detailAbsentState.absentClass.date_absent.split("-").reverse().join("/"))}
                     {this._renderUserItem("Số lượng điểm danh",
@@ -82,7 +89,7 @@ export class DetailAbsentScreen extends Component {
                             backgroundColor: theme.colors.backgroundBlue,
                             borderTopWidth: 0.5,
                             borderTopColor: theme.colors.gray,
-                            marginTop: 10,
+                            marginTop: 20,
                         }
                         ]}
                     >
@@ -95,8 +102,8 @@ export class DetailAbsentScreen extends Component {
                         <View style={[styles.rowTable, { flex: 1 }]}>
                             <Text style={theme.fonts.regular14}></Text>
                         </View>
-                        {/* <View style={[styles.rowTable, { flex: 1 }]}>
-                        </View> */}
+                        <View style={[styles.rowTable, { flex: 1 }]}>
+                        </View>
                     </View>
                     {
                         detailAbsentState.total == 0 ? (
@@ -131,7 +138,7 @@ export class DetailAbsentScreen extends Component {
         )
     }
     _renderRowTable(item, index) {
-        const class_id=this.props.detailAbsentState.classes.id;
+        const class_id = this.props.detailAbsentState.classes.id;
         return (
             <TouchableOpacity
                 style={[styles._vColumn, {
@@ -151,7 +158,7 @@ export class DetailAbsentScreen extends Component {
                 <View style={[styles.rowTable, { flex: 6 }]}>
                     <Text style={theme.fonts.regular14}
                         numberOfLines={2}
-                    >{item.name}</Text>
+                    >{item.first_name + " " + item.last_name}</Text>
                 </View>
                 <View style={[styles.rowTable, { flex: 1 }]}>
                     {/* <Text style={theme.fonts.regular14}>{}</Text> */}
@@ -160,6 +167,21 @@ export class DetailAbsentScreen extends Component {
                         color={item.Absent_Students[0].status == 1 ? theme.colors.green : theme.colors.red}
                         size={16} />
                 </View>
+                <TouchableOpacity style={[styles.rowTable, { flex: 1 }]}
+                    onPress={() => {
+                        showConfirm('Thông báo',
+                            item.Absent_Students[0].status == 1 ?
+                                'Bạn có chắc chắn huỷ điểm danh này?' :
+                                "Bạn có chắc chắn điểm danh cho học sinh " + item.first_name + " " + item.last_name + "?",
+                            () => this._changeAbsent(item.Absent_Students[0].id))
+
+                    }}
+                >
+                    <Icon.Feather
+                        name='edit'
+                        color={theme.colors.backgroundHeader}
+                        size={20} />
+                </TouchableOpacity>
             </TouchableOpacity>
         )
     }
@@ -170,7 +192,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    getDetailAbsent
+    getDetailAbsent, changeAbsentStudent
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailAbsentScreen)
@@ -202,14 +224,14 @@ const styles = StyleSheet.create({
         elevation: 5,
 
     },
-    _viewHeader: {
-        marginHorizontal: 20,
-        paddingVertical: 12,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 15,
-        borderRadius: 5
-    },
+    // _viewHeader: {
+    //     marginHorizontal: 10,
+    //     paddingVertical: 12,
+    //     alignItems: 'center',
+    //     justifyContent: 'center',
+    //     marginTop: 15,
+    //     borderRadius: 5
+    // },
     rowTable: {
         // flex: 1,
         borderRightWidth: 0.5,
@@ -224,7 +246,7 @@ const styles = StyleSheet.create({
         borderLeftWidth: 0.5,
         borderLeftColor: theme.colors.gray,
         borderBottomColor: theme.colors.gray,
-        marginHorizontal: 20,
+        marginHorizontal: 10,
 
     },
     bgButton: {
@@ -244,7 +266,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 30,
+        marginTop: 20,
         paddingVertical: 10,
         borderRadius: 5
     }

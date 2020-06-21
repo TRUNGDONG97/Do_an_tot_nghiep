@@ -4,7 +4,7 @@ $(document).ready(function () {
     //    alert(urlParams.get('id'))
     $('#tabClass a').css({ "background-color": "#17a2b8", "color": "#fff" })
 });
-function addStudentInclass(class_id) {
+function addStudentInclass() {
     if (!navigator.onLine) {
         swal({
             title: "Kiểm tra kết nối internet!",
@@ -13,6 +13,7 @@ function addStudentInclass(class_id) {
         })
         return;
     }
+    const class_id= $.trim($("#class_id").val());
     var mssv = $.trim($("#txtMssvStudent").val());
     if (mssv == '') {
         swal({
@@ -22,6 +23,7 @@ function addStudentInclass(class_id) {
         })
         return;
     }
+    console.log(class_id,mssv)
     $.ajax({
         url: '/class/addStuInclass',
         type: 'POST',
@@ -55,8 +57,11 @@ function addStudentInclass(class_id) {
             text: "",
             icon: "success"
         })
+        $("#txtNameStudent").val('');
+        $("#txtMssvStudent").val('');
+        searchStudentInclass()
         // console.log(res.htmlTable, 'htmlTable')
-        $('#tableDetailClass').html(res.htmlTable)
+        // $('#tableDetailClass').html(res.htmlTable)
         return;
     }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
@@ -71,7 +76,7 @@ function addStudentInclass(class_id) {
     });
 }
 
-function searchStudentInclass(class_id) {
+function searchStudentInclass() {
     if (!navigator.onLine) {
         swal({
             title: "Kiểm tra kết nối internet!",
@@ -80,11 +85,12 @@ function searchStudentInclass(class_id) {
         })
         return;
     }
+    const class_id= $.trim($("#class_id").val());
     var mssv = $.trim($("#txtMssvStudent").val());
     var name = $.trim($("#txtNameStudent").val());
-    if (mssv == '' && name == '') {
-        return;
-    }
+    // if (mssv == '' && name == '') {
+    //     return;
+    // }
     $.ajax({
         url: '/class/searchStuInclass',
         type: 'POST',
@@ -111,7 +117,7 @@ function searchStudentInclass(class_id) {
         return;
     });
 }
-function deleteStuInClass(student_id, class_id) {
+function deleteStuInClass(student_id) {
     if (!navigator.onLine) {
         swal({
             title: "Kiểm tra kết nối internet!",
@@ -120,6 +126,7 @@ function deleteStuInClass(student_id, class_id) {
         })
         return;
     }
+    const class_id= $.trim($("#class_id").val());
     console.log(student_id, class_id)
     swal({
         title: "Bạn chắc chắn xóa chứ?",
@@ -134,7 +141,7 @@ function deleteStuInClass(student_id, class_id) {
                     url: '/class/deleteStuInclass',
                     type: 'POST',
                     data: {
-                        student_id, class_id
+                        student_id, class_id:parseInt(class_id)
                     },
                     cache: false,
                     timeout: 50000,
@@ -146,7 +153,10 @@ function deleteStuInClass(student_id, class_id) {
                             text: "",
                             icon: "success"
                         });
-                        $('#tableDetailClass').html(res.htmlTable)
+                        $("#txtNameStudent").val('');
+                        $("#txtMssvStudent").val('');
+                        searchStudentInclass()
+                        // $('#tableDetailClass').html(res.htmlTable)
                     } else {
                         swal({
                             title: "Lớp không có sinh viên này",

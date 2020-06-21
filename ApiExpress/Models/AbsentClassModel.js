@@ -36,6 +36,9 @@ const Absent_Class = sequelize.define('Absent_Class', {
     },
     is_active:{
         type:Sequelize.INTEGER
+    },
+    list_ssid:{
+        type:Sequelize.STRING
     }
 }, {
     //

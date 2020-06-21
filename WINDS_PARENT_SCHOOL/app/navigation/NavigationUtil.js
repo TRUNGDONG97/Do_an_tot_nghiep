@@ -1,4 +1,4 @@
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions,StackActions } from 'react-navigation';
 
 let _navigator; // eslint-disable-line
 
@@ -20,9 +20,17 @@ function goBack() {
     NavigationActions.back()
     );
 }
-
+function push(routeName, params) {
+  _navigator.dispatch(
+    StackActions.push({
+      routeName,
+      params
+    })
+  );
+}
 export default {
   navigate,
   setTopLevelNavigator,
   goBack,
+  push
 };

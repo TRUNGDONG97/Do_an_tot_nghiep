@@ -7,7 +7,7 @@ import Toast, { BACKGROUND_TOAST } from "@app/utils/Toast";
 function createAxios() {
   // AsyncStorage.setItem("token", '49FF532E930B0F4A67C279EBEB1867C7') //full
   var axiosInstant = axios.create();
-  axiosInstant.defaults.baseURL = "http://7c8a5f17f2a6.ngrok.io/app";
+  axiosInstant.defaults.baseURL = "http://410379b3195c.ngrok.io/app";
   axiosInstant.defaults.timeout = 20000;
   axiosInstant.defaults.headers = { "Content-Type": "application/json" };
 
@@ -79,7 +79,7 @@ export const requestLogin = (payload) => {
     getAxios.post("login", payload)
   );
 };
-export const requestLogout= () => {
+export const requestLogout = () => {
   return handleResult(getAxios.get("logout"));
 };
 //get list class
@@ -117,11 +117,11 @@ export const absentByTeacher = payload => {
 };
 
 // send absent
-export const sendAbsent = payload => {
-  return handleResult(
-    getAxios.post("api/Service/UpdateAbsentbyTeacherID", payload)
-  );
-};
+// export const sendAbsent = payload => {
+//   return handleResult(
+//     getAxios.post("api/Service/UpdateAbsentbyTeacherID", payload)
+//   );
+// };
 
 // change pass
 export const changePass = payload => {
@@ -146,13 +146,13 @@ export const updateUser = payload => {
   return handleResult(getAxios.post(`teacher/changeUserInfo`, payload));
 };
 export const getListAbsent = () => {
-  return handleResult(getAxios.get(`teacher/getListAbsent` ));
+  return handleResult(getAxios.get(`teacher/getListAbsent`));
 };
 export const getDetailAbsent = (payload) => {
-  return handleResult(getAxios.get(`teacher/getDetailAbsent?absent_class_id=${payload.absent_class_id}` ));
+  return handleResult(getAxios.get(`teacher/getDetailAbsent?absent_class_id=${payload.absent_class_id}`));
 };
 export const getStudentAbsent = (payload) => {
-  return handleResult(getAxios.get(`getAbsentStudent?class_id=${payload.class_id}&student_id=${payload.student_id}` ));
+  return handleResult(getAxios.get(`getAbsentStudent?class_id=${payload.class_id}&student_id=${payload.student_id}`));
 };
 
 export const createAbsent = payload => {
@@ -160,4 +160,10 @@ export const createAbsent = payload => {
 };
 export const cancelAbsent = payload => {
   return handleResult(getAxios.post(`teacher/cancelAbsent`, payload));
+};
+export const getDetailClass = (payload) => {
+  return handleResult(getAxios.get(`teacher/getDetailClass?class_id=${payload.class_id}`));
+};
+export const changeAbsentStudent = (payload) => {
+  return handleResult(getAxios.post(`teacher/changeAbsentStudent`, { absent_student_id: payload }));
 };

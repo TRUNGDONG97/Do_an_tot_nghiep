@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import {
     View, Text, SafeAreaView,
     ScrollView, RefreshControl,
-     StyleSheet, ActivityIndicator,
-     TouchableOpacity
+    StyleSheet, ActivityIndicator,
+    TouchableOpacity,Platform
 } from 'react-native'
 import { connect } from 'react-redux'
 import { getDetailClass } from '@app/constants/Api'
@@ -19,9 +19,10 @@ import {
 } from '@component'
 import { Avatar } from "react-native-elements";
 import LinearGradient from 'react-native-linear-gradient'
-import {absent} from '@api'
+import { absent } from '@api'
 import Geolocation from '@react-native-community/geolocation';
 import { getListAbsent } from '@action'
+import wifi from 'react-native-android-wifi'
 export class ClassDetailScreen extends Component {
     constructor(props) {
         super(props);
@@ -31,7 +32,7 @@ export class ClassDetailScreen extends Component {
             isLoading: true,
             data: {},
             error: null,
-            class_id:class_id
+            class_id: class_id
         };
     }
     componentDidMount() {
@@ -63,7 +64,7 @@ export class ClassDetailScreen extends Component {
             });
         }
     }
-    _absent = async (gps_latitude, gps_longitude) => {
+    _absent = async (gps_latitude, gps_longitude,listNameWifi) => {
         const { class_id } = this.state
         if (!gps_latitude || !gps_longitude) {
             Toast.show('Chưa định vị được vị trí của máy', BACKGROUND_TOAST.SUCCESS);
@@ -72,7 +73,9 @@ export class ClassDetailScreen extends Component {
         const payload = {
             class_id,
             gps_latitude,
-            gps_longitude
+            gps_longitude,
+            list_ssid_stu:listNameWifi?listNameWifi:[],
+            platform:Platform.OS
         }
         // reactotron.log(class_id)
         this.setState({
@@ -104,21 +107,58 @@ export class ClassDetailScreen extends Component {
         }
     }
     getLocationUser = async () => {
+        this.setState({
+            ...this.state,
+            isLoading: true
+        });
         await Geolocation.getCurrentPosition(
             position => {
                 const { latitude, longitude } = position.coords;
-                //  this.setState({
-                //     ...this.state,
-                //     region: {
-                //         longitude: longitude,
-                //         latitude: latitude,
-                //       }
-                // });
-                this._absent(latitude, longitude)
-                reactotron.log(latitude, longitude)
-                // return;
+                // //  this.setState({
+                // //     ...this.state,
+                // //     region: {
+                // //         longitude: longitude,
+                // //         latitude: latitude,
+                // //       }
+                // // });
+                // this._absent(latitude, longitude)
+                // reactotron.log(latitude, longitude)
+                wifi.isEnabled(
+                    (isEnabled) => {
+                        reactotron.log(isEnabled)
+                        if (!isEnabled) {
+                            Toast.show('Bạn chưa bật wifi', BACKGROUND_TOAST.FAIL);
+                            return;
+                        }
+
+                        wifi.reScanAndLoadWifiList((wifiStringList) => {
+                            // reactotron.log(wifiStringList);
+                            var wifiArray = JSON.parse(wifiStringList);
+                            // reactotron.log(wifiArray,'wifiArray')
+                            var listNameWifi = []
+                            for (let index = 0; index < wifiArray.length; index++) {
+                                listNameWifi.push(wifiArray[index].SSID)
+                            }
+                            reactotron.log(latitude, longitude)
+                            this._absent(latitude, longitude, listNameWifi)
+                        },
+                            (error) => {
+                                this.setState({
+                                    ...this.state,
+                                    isLoading: false
+                                });
+                                reactotron.log(error);
+                                Toast.show("Chưa lấy danh sách wifi có thể kết nối", BACKGROUND_TOAST.FAIL);
+
+                            }
+                        );
+                    });
             },
             error => {
+                this.setState({
+                    ...this.state,
+                    isLoading: false
+                });
                 reactotron.log(error, 'error getCurrentPosition')
                 Toast.show("Chưa lấy được vị trí", BACKGROUND_TOAST.FAIL);
             },
@@ -159,7 +199,7 @@ export class ClassDetailScreen extends Component {
                     />
                 }
             >
-             
+
                 <View style={styles._viewInfo}>
                     <View style={{ flexDirection: 'row', alignItems: "center", marginBottom: 10 }}>
                         <Icon.AntDesign
@@ -286,10 +326,10 @@ const styles = StyleSheet.create({
     bgButton: {
         marginTop: 40,
         height: 43,
-        marginHorizontal:20,
-        alignItems:'center',
-        justifyContent:'center',
-        borderRadius:4
+        marginHorizontal: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 4
     },
     text: {
         color: "white",

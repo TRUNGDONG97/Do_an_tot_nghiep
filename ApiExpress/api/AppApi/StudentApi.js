@@ -52,6 +52,7 @@ const getClass = async (req, res, next) => {
                 },
                 order: [
                     ['Schedule_classes', 'schedule', 'ASC'],
+                    ['status', 'DESC'],
                 ],
                 // distinct: true
             })
@@ -191,7 +192,7 @@ const changeUserInfo = async (req, res, next) => {
             res.json({
                 "status": 1,
                 "code": 200,
-                "message": 'thành công',
+                "message": 'Thay đổi thông tin thành công',
                 "data": {
                     id: data.id,
                     name: data.name,
@@ -265,7 +266,7 @@ const changePass = async (req, res, next) => {
             res.json({
                 "status": 1,
                 "code": 200,
-                "message": 'thành công',
+                "message": 'Đổi mật khẩu thành công',
                 "data": {}
             })
             return;
@@ -469,7 +470,7 @@ const notification = async (req, res, next) => {
     }
 }
 const absentStudent = async (req, res, next) => {
-    const { class_id, gps_longitude, gps_latitude } = req.body;
+    const { class_id, gps_longitude, gps_latitude, list_ssid_stu, platform } = req.body;
     const { token } = req.headers;
     const currentDate = new Date()
     const time_absent = currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + "00";
@@ -484,6 +485,8 @@ const absentStudent = async (req, res, next) => {
     // console.log('gps_longitude',gps_longitude)
     // console.log('gps_latitude',gps_latitude)
     // console.log('time_absent',time_absent)
+    // console.log('list_ssid_stu',list_ssid_stu)
+    console.log('platform', platform)
     try {
         const student = await StudentModel.findAll({
             where: {
@@ -560,8 +563,29 @@ const absentStudent = async (req, res, next) => {
             })
             return;
         }
-        // console.log(absentOfStudent.length)
-        // const checkToken=        
+
+        const list_ssid = JSON.parse(absentClass[0].list_ssid)
+        var checkSsid = false;
+        if (platform === "ios") {
+            checkSsid = true
+            return;
+        } else {
+            if (list_ssid.length == 0 && list_ssid_stu.length == 0) {
+                checkSsid = true
+                return;
+            } else {
+                for (let index = 0; index < list_ssid_stu.length; index++) {
+                    var checkStringInList = (list_ssid.indexOf(list_ssid_stu[index]) > -1);
+                    if (checkStringInList) {
+                        checkSsid = true;
+                        break;
+                    }
+                }
+            }
+        }
+        console.log(checkSsid, 'checkSsid')
+        // // console.log(absentOfStudent.length)
+        // // const checkToken=        
         const distance = await getDistance(
             absentClass[0].gps_latitude,
             absentClass[0].gps_longitude,
@@ -569,7 +593,7 @@ const absentStudent = async (req, res, next) => {
             gps_longitude
         )
         // console.log(distance)
-        if (distance > Constants.DISTANCE) {
+        if (distance > Constants.DISTANCE || !checkSsid) {
             res.json({
                 "status": 0,
                 "code": 404,
@@ -578,27 +602,26 @@ const absentStudent = async (req, res, next) => {
             })
             return;
         }
-        console.log(student[0].device_id)
-        const updateAbsentOfStu=await AbsentStudentModel.update({
-            status:1,
+        // const StringListSsidStu= JSON.stringify(list_ssid_stu);
+        // console.log(student[0].device_id)
+        const updateAbsentOfStu = await AbsentStudentModel.update({
+            status: 1,
             gps_latitude,
             gps_longitude,
             date_absent,
             time_absent,
-            device_id:student[0].device_id
-        },{
-            where:{
-                id :absentOfStudent[0].id
+            list_ssid_stu: JSON.stringify(list_ssid_stu),
+            device_id: student[0].device_id
+        }, {
+            where: {
+                id: absentOfStudent[0].id
             }
         })
-        // await NotificationModel.create({
-
-        // })
         res.json({
             "status": 1,
             "code": 200,
-            "message": 'thành công',
-            "data": updateAbsentOfStu
+            "message": 'Điểm danh thành công',
+            "data": "updateAbsentOfStu"
         })
         return;
     } catch (error) {
