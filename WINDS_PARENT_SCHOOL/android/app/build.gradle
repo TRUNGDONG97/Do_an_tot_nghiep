@@ -135,6 +135,7 @@ android {
         versionCode 4
         versionName "1.0.2"
         multiDexEnabled true
+        missingDimensionStrategy 'react-native-camera', 'general'
     }
     splits {
         abi {
@@ -181,6 +182,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-camera')
     implementation project(':react-native-android-wifi')
     implementation project(':@react-native-community_geolocation')
     implementation project(':react-native-fbsdk')

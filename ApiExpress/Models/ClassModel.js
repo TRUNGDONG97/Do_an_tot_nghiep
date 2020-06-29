@@ -22,9 +22,14 @@ const Class = sequelize.define('Class', {
     },
     status: {
         type: Sequelize.INTEGER
+    },
+    priority: {
+        type: Sequelize.INTEGER
+    },
+    is_active: {
+        type: Sequelize.INTEGER
     }
 }, {
-    //
     timestamps: false,
     freezeTableName: true,
 })

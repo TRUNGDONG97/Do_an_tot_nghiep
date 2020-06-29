@@ -100,17 +100,6 @@ module.exports.pushNotificationAppTeacher = (device, message, data) => {
 	);
 }
 module.exports.getDistance = (lat1, lon1, lat2, lon2) => {
-	// distance.get(
-	// 	{
-	// 	  index: 1,
-	// 	  origin: gpsClass.gps_latitude +',' + gpsClass.gps_longitude ,
-	// 	  destination:	gpsStudent.gps_latitude +','+ gpsStudent.gps_longitude
-	// 	},
-	// 	function(err, data) {
-	// 	  if (err) return console.log(err);
-	// 	  console.log(data);
-	// 	  return data.distanceValue
-	// 	});
 	var radlat1 = Math.PI * lat1 / 180;
 	var radlat2 = Math.PI * lat2 / 180;
 	var theta = lon1 - lon2;

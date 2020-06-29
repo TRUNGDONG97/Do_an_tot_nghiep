@@ -20,7 +20,7 @@ style
                 input.form-control(type=type id=id value=value maxlength="100")   
           .col-md-6.col-sm-6.col-6
             + propTeacher('txtEditName','Họ và tên','text' ,teacher.name)
-            + propTeacher('txtEditPhone','Số điện','phone',teacher.phone.trim())
+            + propTeacher('txtEditPhone','Số điện thoại','phone',teacher.phone.trim())
             + propTeacher('txtEditAddress','Địa chỉ','text',teacher.address)
             + propTeacher('txtEditEmail','Email','text',teacher.email)
             .row(style='margin-top:25px;margin-bottom:20px;')
@@ -28,7 +28,7 @@ style
               .col-md-8.col-sm-8.col-8
                 input#txtEditBirthday(data-date-format='yyyy-mm-dd' value=teacher.birthday)
           .col-md-6.col-sm-6.col-6
-            + propTeacher('txtEditSalary','Lương','number',teacher.salary)
+            //- + propTeacher('txtEditSalary','Lương','number',teacher.salary)
               //- p(style='margin-top:25px;') vnđ
             .row(style='margin-top:20px;')
               label.col-md-4.col-sm-4.col-4(style='padding-right:10px;') Giới tính:

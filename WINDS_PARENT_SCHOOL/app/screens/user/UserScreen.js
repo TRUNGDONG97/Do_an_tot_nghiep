@@ -141,7 +141,7 @@ export class UserScreen extends Component {
                                     style={[theme.fonts.bold18, { flex: 1, color: theme.colors.primaryText }]}
                                     numberOfLines={1}
                                 >
-                                    {UserInfoState.data.name}
+                                    {UserInfoState.data.first_name+" "+UserInfoState.data.last_name}
                                 </Text>
                                 <FastImage
                                     style={{ width: 20, height: 20, marginRight: 5 }}

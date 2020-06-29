@@ -50,6 +50,7 @@ router.post('/class/delete', Class.deleteClass)
 router.post('/class/deleteStuInclass', Class.deleteStuInclass)
 router.post('/class/updateAllStatusClass', Class.updateAllStatusClass)
 router.post('/class/import', Class.importClass)
+router.get('/class/exportFile', Class.exportFile)
 
 router.post('/getSubject', Subject.getSubject)
 router.post('/subject/search', Subject.searchSubject)

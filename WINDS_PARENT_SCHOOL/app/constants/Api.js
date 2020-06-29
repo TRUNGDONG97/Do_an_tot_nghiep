@@ -9,7 +9,7 @@ import Toast, { BACKGROUND_TOAST } from "@app/utils/Toast";
 function createAxios() {
   // AsyncStorage.setItem("token", '2323226DADAD') //full
   var axiosInstant = axios.create();
-  axiosInstant.defaults.baseURL = "http://7ff82e6b2c32.ngrok.io/app";
+  axiosInstant.defaults.baseURL = "http://5be080375e36.ngrok.io/app";
   axiosInstant.defaults.timeout = 20000;
   axiosInstant.defaults.headers = { "Content-Type": "application/json" };
 
@@ -107,11 +107,11 @@ export const changePass = payload => {
 export const getListBank = () => {
   return handleResult(getAxios.get("api/Service/GetListBank"));
 };
-export const getDetailClass = class_id=> {
+export const getDetailClass = class_id => {
   return handleResult(getAxios.get(`student/getDetaiClass?class_id=${class_id}`));
 };
 
-export const getListAbsent =() => {
+export const getListAbsent = () => {
   return handleResult(
     getAxios.get("student/getListAbsentClass")
   );
@@ -141,4 +141,13 @@ export const updateUser = payload => {
 };
 export const absent = payload => {
   return handleResult(getAxios.post(`student/absent`, payload));
+};
+export const uploadImage = payload => {
+  return handleResult(getAxios.post(`student/uploadImage`, payload, {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'multipart/form-data',
+    },
+    // onUploadProgress: callback,
+  }));
 };

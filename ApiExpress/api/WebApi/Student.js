@@ -8,8 +8,8 @@ import xlsx from 'xlsx'
 import StudentClassModel from '../../models/StudentClassModel';
 import md5 from 'md5'
 import DateUtil from '../../constants/DateUtil'
-const getStudent = async (req, res, next) => {
 
+const getStudent = async (req, res, next) => {
     try {
         const { currentPage } = req.body
         const { count, rows } = await StudentModel.findAndCountAll({

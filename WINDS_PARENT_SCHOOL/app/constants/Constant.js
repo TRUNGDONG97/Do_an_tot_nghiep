@@ -13,7 +13,8 @@ const SCREEN_ROUTER = {
   CHANGE_PASSWORD: 'ChangePassWord',
   CHANGE_USER_INFO:'ChangeUserInfo',
   LIST_ABSENT:'list_absent',
-  DETAIL_CLASS:'detail_class'
+  DETAIL_CLASS:'detail_class',
+  CAMERA:'camera_screen'
 };
 const LIKE_STATE = {
   LIKE: 1,

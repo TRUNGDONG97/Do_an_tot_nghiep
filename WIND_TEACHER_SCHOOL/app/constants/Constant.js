@@ -18,11 +18,11 @@ const SCREEN_ROUTER = {
   POST: 'Post',
   CLASS_DETAIL: 'ClassDetail',
   ABSENT: 'Absent',
-  CHANGE_PASS:'change_password',
-  REVIEW:'Create_review',
-  CHANGE_USER_INFO:'change_user_info',
-  DETAIL_ABSENT:'detail_absent',
-  ABSENT_STUDENT:'absent_student'
+  CHANGE_PASS: 'change_password',
+  REVIEW: 'Create_review',
+  CHANGE_USER_INFO: 'change_user_info',
+  DETAIL_ABSENT: 'detail_absent',
+  ABSENT_STUDENT: 'absent_student'
 };
 const LIKE_STATE = {
   LIKE: 1,
@@ -49,5 +49,16 @@ const GENDER = {
   MALE: 1,
   FEMALE: 0,
 }
-export { SCREEN_ROUTER, LIKE_STATE, TOPIC, CATEGORY, STATUS_ACCESS, TYPE,GENDER };
+const NOTIFICATION = {
+  ABSENT_CLASS_END: 1,
+  CANCEL_ABSENT: 2,
+}
+export {
+  SCREEN_ROUTER,
+  LIKE_STATE, TOPIC,
+  CATEGORY,
+  STATUS_ACCESS,
+  TYPE, GENDER,
+  NOTIFICATION
+};
 

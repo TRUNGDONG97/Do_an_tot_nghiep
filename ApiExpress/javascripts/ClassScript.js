@@ -2,12 +2,11 @@ $(document).ready(function () {
     $('#tabClass a').css({ "background-color": "#17a2b8", "color": "#fff" })
     const url = window.location.search;
     const urlParams = new URLSearchParams(url);
-    if (urlParams.get("name")) {
-        const name = urlParams.get("name")
-        const nameTeacher = name.split('-').join(' ')
+    if (urlParams.get("phone")) {
+        const phone = urlParams.get("phone")
         // alert(nameTeacher)
         $('#divSearch').html('');
-        getClassTeacher(nameTeacher.trim());
+        getClassTeacher(phone);
         // $('#paginateClass').html('s');
     } else {
         getClass(1)
@@ -18,7 +17,7 @@ $(document).ready(function () {
         // alert('đá')
     })
 });
-function getClassTeacher(nameTeacher) {
+function getClassTeacher(phone) {
     if (!navigator.onLine) {
         swal({
             title: "Kiểm tra kết nối internet!",
@@ -30,7 +29,7 @@ function getClassTeacher(nameTeacher) {
     $.ajax({
         url: '/getClass/Teacher',
         type: 'POST',
-        data: { nameTeacher },
+        data: { phone },
         cache: false,
         timeout: 50000,
     }).done(function (res) {
@@ -96,7 +95,7 @@ function searchClass(currentPage) {
     // var mssv = $.trim($("#txtSearchSubjectMSSV").val());
     var claStatus = $("#seachClassStatus").val()
     // alert(teacherName)
-    if (subCode == "" && subName == "" && claStatus == '' && claCode == '' && roomName == '') {
+    if (subCode == "" && claStatus == '' && claCode == '') {
         getClass(1)
         return;
     }
@@ -224,7 +223,6 @@ function addClass() {
             $("#txtAddAddress").val("");
             $("#schedule1").val("");
             $("#schedule2").val("");
-
             getClass(1)
             return;
         }
@@ -240,7 +238,6 @@ function addClass() {
         $("#txtAddAddress").val("");
         $("#schedule1").val("");
         $("#schedule2").val("");
-
         getClass(1)
         return;
     }).fail(function (jqXHR, textStatus, errorThrown) {
@@ -373,7 +370,18 @@ function saveClass(class_id) {
             icon: "success"
         })
         // $('#tableClass').html(res.htmlTable)
-        getClass(1)
+
+        const url = window.location.search;
+        const urlParams = new URLSearchParams(url);
+        console.log(urlParams.get("phone"),'phone')
+        if (urlParams.get("phone")) {
+            const phone = urlParams.get("phone")
+            $('#divSearch').html('');
+            getClassTeacher(phone);
+            // $('#paginateClass').html('s');
+        } else {
+            getClass(1)
+        }
         $('#editClassModal').modal('hide');
         return;
     }).fail(function (jqXHR, textStatus, errorThrown) {
@@ -399,7 +407,7 @@ function deleteClass(id, class_code) {
         return;
     }
     swal({
-        title: "Bạn chắc chắn hủy lớp" + class_code + " ?",
+        title: "Bạn chắc chắn xóa lớp" + class_code + " ?",
         text: "",
         icon: "warning",
         buttons: true,
@@ -419,11 +427,21 @@ function deleteClass(id, class_code) {
                     // console.log(res.result)
                     if (res.result == 1) {
                         swal({
-                            title: "Hủy thành công!",
+                            title: "Xóa thành công!",
                             text: "",
                             icon: "success"
                         });
-                        getClass(1)
+                        const url = window.location.search;
+                        const urlParams = new URLSearchParams(url);
+                        if (urlParams.get("phone")) {
+                            const phone = urlParams.get("phone")
+                            // alert(nameTeacher)
+                            $('#divSearch').html('');
+                            getClassTeacher(phone);
+                            // $('#paginateClass').html('s');
+                        } else {
+                            getClass(1)
+                        }
                     } else {
                         swal({
                             title: "Không tồn tại lớp này",
@@ -561,7 +579,7 @@ function uploadFile(fileData, namefile) {
             data: { namefile },
             type: 'POST',
         }).done(function (res) {
-            if(res.result==0){
+            if (res.result == 0) {
                 $('#modalLoad').modal('hide');
                 swal({
                     title: "File chưa có dữ liệu",
@@ -570,7 +588,7 @@ function uploadFile(fileData, namefile) {
                 })
                 return;
             }
-            if(res.result==2){
+            if (res.result == 2) {
                 $('#modalLoad').modal('hide');
                 swal({
                     title: "Form file sai",
@@ -615,6 +633,7 @@ function uploadFile(fileData, namefile) {
         // console.log(jqXHR);
     })
 }
+
 function checkedPhone(phone) {
     var vnf_regex = /(03|07|08|09|01[2|6|8|9])+([0-9]{8})\b/g;
     if (!vnf_regex.test(phone)) {

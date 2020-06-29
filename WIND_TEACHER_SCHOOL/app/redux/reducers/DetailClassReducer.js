@@ -1,7 +1,9 @@
 import { GET_DETAIL_CLASS,GET_DETAIL_CLASS_SUCCESS,GET_DETAIL_CLASS_FAIL } from "../actions/type";
 
 const initialState = {
-    data: [],
+    listStudent: [],
+    classInfo:null,  
+    totalAbsent:null,  
     isLoading: false,
     error: null
 };
@@ -12,12 +14,17 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 isLoading: true,
-                error: false
+                error: false,
+                listStudent:[],
+                classInfo:null,
+                totalAbsent:null,  
             }
         case GET_DETAIL_CLASS_SUCCESS:
             return {
                 ...state,
-                data: action.payload,
+                listStudent: action.payload.listStudent,
+                classInfo: action.payload.classInfo,
+                totalAbsent: action.payload.countTotalAbsent,
                 isLoading: false,
                 error: null
             }

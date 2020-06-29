@@ -23,6 +23,7 @@
     "react-native": "0.61.2",
     "react-native-android-wifi": "^0.0.41",
     "react-native-auto-height-image": "^3.0.0",
+    "react-native-camera": "^3.30.0",
     "react-native-code-push": "^5.7.0",
     "react-native-datepicker": "^1.7.2",
     "react-native-dropdownalert": "^4.2.1",

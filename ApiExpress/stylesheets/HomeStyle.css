@@ -3,61 +3,12 @@ body {
     flex-direction: row;
 }
 
-.sidebar {
-    position: fixed;
-    left: 0;
-    width: 220px;
-    height: 100%;
-    background-color: #fff;
-    /* margin-top: 15px; */
-    margin-left: 15px;
-}
 
-.sidebar #v-pills-tab a {
-    display: block;
-    height: 100%;
-    width: 100%;
-    line-height: 40px;
-    font-size: 18px;
-    /* color: #fff; */
-    padding-left: 20px;
-    /* box-sizing: border-box; */
-    margin-top: 5px;
-    box-shadow: 0px 0px 1px;
-}
 
 .container-tab {
     margin-top: 15px;
     margin-left: 250px;
 }
-
-.div-logo {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    /* width: 100%; */
-    background-color: #fff;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    border-radius: 5px;
-    box-shadow: 0px 0px 1px;
-}
-
-.div-logo img {
-    height: 150px;
-    width: 100px;
-    margin-left: 20px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-}
-
-.div-logo .dropdown button {
-    margin-right: 100px;
-    background-color: #fff !important;
-    color: red;
-    margin-top: 10px;
-}
-
 .container-fluid .row {
     justify-content: space-around;
     /* margin: auto; */
@@ -77,7 +28,10 @@ body {
     padding: 10px;
     color: #fff;
 }
-
+.option-home{
+    margin-right: 10px;
+    margin-right: 10px;
+}
 #student-selection {
     background-image: linear-gradient(to bottom right, rgb(241, 137, 137), rgb(202, 11, 11));
 }

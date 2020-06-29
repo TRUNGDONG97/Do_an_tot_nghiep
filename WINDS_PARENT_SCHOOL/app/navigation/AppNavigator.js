@@ -19,9 +19,8 @@ import { Icon, ImageViewerScreen } from '@component'
 import ChangeUserInfo from '@screen/user/ChangeUserInfo'
 import ListAbsentScreen from '@screen/absent/ListAbsentScreen'
 import ClassDetailScreen from '@screen/class/ClassDetailScreen'
-import {
-    Image
-} from "react-native";
+import CameraScreen from '@screen/class/CameraScreen'
+
 const TabBarComponent = props => <BottomTabBar {...props} />;
 
 const Auth = createStackNavigator({
@@ -133,6 +132,7 @@ const MainStack = createStackNavigator({
     [SCREEN_ROUTER.CHANGE_PASSWORD]: ChangePassWordScreen,
     [SCREEN_ROUTER.CHANGE_USER_INFO]: ChangeUserInfo,
     [SCREEN_ROUTER.DETAIL_CLASS]: ClassDetailScreen,
+    [SCREEN_ROUTER.CAMERA]: CameraScreen,
 },
     {
         defaultNavigationOptions: {

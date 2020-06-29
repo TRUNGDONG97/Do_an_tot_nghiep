@@ -38,7 +38,8 @@ const detailClass = async (req, res, next) => {
             ],
             // group:['Absent_Student.student_id'],
             where: {
-                class_code: id
+                class_code: id,
+                is_active:1
             }
         })
         if (classes.length < 1) {

@@ -9,7 +9,7 @@ const initialState = {
 export default function (state = initialState, action) {
     switch (action.type) {
         case GET_LIST_CLASS: {
-            return { ...state, isLoading: true }
+            return { ...state, isLoading: true ,error:null}
         }
         case GET_LIST_CLASS_SUCCESS: {
             return {

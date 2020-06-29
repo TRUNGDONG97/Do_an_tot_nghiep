@@ -23,7 +23,7 @@ import R from "@R";
 import { showMessages } from "@app/utils/Alert";
 import OneSignal from "react-native-onesignal";
 import { requestLogin } from "@api";
-
+import reactotron from 'reactotron-react-native'
 export default class LoginScreen extends Component {
   state = {
     username: "",
@@ -36,10 +36,12 @@ export default class LoginScreen extends Component {
 
   componentDidMount() {
     OneSignal.getPermissionSubscriptionState(async status => {
+      reactotron.log("Device info: ",status);
       this.setState({
         deviceID: status.userId
       });
     });
+   
   }
 
   login = async () => {

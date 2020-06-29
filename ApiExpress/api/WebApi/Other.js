@@ -34,7 +34,6 @@ const uploadFile = async(req, res, next) => {
         })
         return;
     });
-
 }
 
 const changePass = async(req, res, next) => {
@@ -83,7 +82,11 @@ const getCountStudent = async(req, res, next) => {
 }
 const getCountTeacher = async(req, res, next) => {
     try {
-        const countTeacher = await TeacherModel.count()
+        const countTeacher = await TeacherModel.count({
+            where:{
+                is_active:1
+            }
+        })
         res.send({
             countTeacher
         })
@@ -95,7 +98,11 @@ const getCountTeacher = async(req, res, next) => {
 }
 const getCountClass = async(req, res, next) => {
     try {
-        const countClass = await ClassModel.count()
+        const countClass = await ClassModel.count({
+            where:{
+                is_active:1
+            }
+        })
         res.send({
             countClass
         })
@@ -107,7 +114,11 @@ const getCountClass = async(req, res, next) => {
 }
 const getCountSubject = async(req, res, next) => {
     try {
-        const countSubject = await SubjectModel.count()
+        const countSubject = await SubjectModel.count({
+            where:{
+                is_active:1
+            }
+        })
         res.send({
             countSubject
         })

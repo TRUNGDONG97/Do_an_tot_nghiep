@@ -14,10 +14,11 @@ html
           i.fas.fa-tachometer-alt
             |  &nbsp;  Tổng quan      
       .container-fluid      
-        .row
+        .row(style="margin-right:20px")
           // Count item widget
-          .row.col-md-6
-            #student-selection.selection.col-md-5
+          //- .row.col-md-6
+          .col-md-3
+            #student-selection.selection
               .wrapper.count-title.d-flex
                 .icon
                   i.fas.fa-user-graduate
@@ -27,7 +28,8 @@ html
                   span Số lượng : 
                   //- p#numberStudent
 
-            #teacher-selection.selection.col-md-5
+          .col-md-3
+            #teacher-selection.selection
               .wrapper.count-title.d-flex
                 .icon
                   i.fas.fa-chalkboard-teacher
@@ -35,8 +37,9 @@ html
                   strong.text-uppercase Giáo viên
                   br
                   span Số lượng : 
-          .row.col-md-6
-            #class-selection.selection.col-md-5
+          //- .row.col-md-6
+          .col-md-3
+            #class-selection.selection
               .wrapper.count-title.d-flex
                 .icon
                   i.fas.fa-house-user
@@ -44,7 +47,8 @@ html
                   strong.text-uppercase Lớp học
                   br
                   span Số lượng: 
-            #subject-selection.selection.col-md-5
+          .col-md-3
+            #subject-selection.selection
               .wrapper.count-title.d-flex
                 .icon
                   i.fas.fa-book

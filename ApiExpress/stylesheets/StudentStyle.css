@@ -12,7 +12,7 @@ body {
     background-color: #f3f5f9;
 }
 
-.container-tab {
+/* .container-tab {
     margin-left: 240px;
 }
 
@@ -20,7 +20,7 @@ body {
     margin-top: 10px;
     color: rgb(74, 99, 104);
     margin-left: 5px;
-}
+} */
 
 .container-tab .container-fluid th {
     text-align: center;

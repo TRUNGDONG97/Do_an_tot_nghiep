@@ -27,9 +27,6 @@ const Teacher = sequelize.define('Teacher', {
         type: Sequelize.STRING,
         unique: 'compositeIndex'
     },
-    note: {
-        type: Sequelize.STRING
-    },
     device_id: {
         type: Sequelize.STRING
     },
@@ -47,6 +44,9 @@ const Teacher = sequelize.define('Teacher', {
     },
     salary: {
         type: Sequelize.INTEGER
+    },
+    is_active:{
+        type:Sequelize.INTEGER
     }
 },{
     //

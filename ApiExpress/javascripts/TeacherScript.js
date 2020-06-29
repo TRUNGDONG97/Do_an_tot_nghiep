@@ -109,11 +109,10 @@ function addTeacher() {
     var email = $.trim($("#txtAddEmail").val());
     var sex = $('#addSexFemale').prop('checked')
     var status = $('#addTeacherStatus').val();
-    var salary = $('#txtAddSalary').val();
     //get file image
     var fileUpload = $("#ImageTeacher").get(0);
     var files = fileUpload.files;
-    if (name == '' || phone == '' || birthday == '' || address == '' || status == '' || salary == '') {
+    if (name == '' || phone == '' || birthday == '' || address == '' || status == '') {
         swal({
             title: "Chưa nhập đầy đủ thông tin",
             text: "",
@@ -124,21 +123,17 @@ function addTeacher() {
     checkedPhone(phone)
     checkedMail(email)
     // console.log(files.length);
-    if (files.length <= 0) {
-        swal({
-            title: "Chưa thêm ảnh ",
-            text: "",
-            icon: "warning"
-        })
-        return;
+    var srcImg = null
+    if (files.length > 0) {
+        var fileData = new FormData();
+        var fileName = "";
+        for (var i = 0; i < files.length; i++) {
+            fileData.append(files[i].name, files[i]);
+            fileName = files[i].name;
+        }
+        srcImg = window.location.origin + "/upload/" + fileName.replace(/ /g, "_");
     }
-    var fileData = new FormData();
-    var fileName = "";
-    for (var i = 0; i < files.length; i++) {
-        fileData.append(files[i].name, files[i]);
-        fileName = files[i].name;
-    }
-    var srcImg = window.location.origin + "/upload/" + fileName.replace(/ /g, "_");
+
 
     $.ajax({
         url: "/teacher/add",
@@ -152,7 +147,6 @@ function addTeacher() {
             status,
             sex: sex ? 0 : 1,
             url_avatar: srcImg,
-            salary
         },
         cache: false,
         timeout: 50000,
@@ -181,7 +175,10 @@ function addTeacher() {
             })
             return;
         }
-        uploadImage(fileData)
+        if (srcImg) {
+            uploadImage(fileData)
+        }
+
         $("#addTeacherModal").modal("hide");
         $("#txtAddName").val("");
         $("#txtAddPhone").val("");
@@ -235,7 +232,7 @@ function deleteTeacher(id) {
                     cache: false,
                     timeout: 50000,
                 }).done(function (res) {
-                    // console.log(res.result)
+                    console.log(res.result)
                     if (res.result == 1) {
                         swal({
                             title: "Xóa thành công!",
@@ -243,13 +240,22 @@ function deleteTeacher(id) {
                             icon: "success"
                         });
                         getTeacher(1)
-                    } else {
+                        return;
+                    }
+                    if (res.result == 2) {
                         swal({
-                            title: "Không tồn tại giáo viên này",
+                            title: "Không thể xóa giáo viên này vì giáo viên này có lớp đang học",
                             text: "",
                             icon: "warning"
                         });
+                        return;
                     }
+                    swal({
+                        title: "Không tồn tại giáo viên này",
+                        text: "",
+                        icon: "warning"
+                    });
+
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     // If fail
                     swal({
@@ -371,7 +377,6 @@ function saveTeacher(id) {
     var birthday = $.trim($("#txtEditBirthday").val());
     var address = $.trim($("#txtEditAddress").val());
     var email = $.trim($("#txtEditEmail").val());
-    var salary = $.trim($("#txtEditSalary").val());
     var status = $('#editTeacherStatus').val();
     var sex = $('#editSexFemale').prop('checked')
     var srcImg = $('#imageTeacher').attr('data-default-file')
@@ -379,17 +384,16 @@ function saveTeacher(id) {
     var fileUpload = $("#imageTeacher").get(0);
     var files = fileUpload.files;
 
-    // console.log(name)
-    // console.log(phone)
-    // console.log(birthday)
-    // console.log(address)
-    // console.log(email)
-    // console.log(salary)
-    // console.log(status)
-    // console.log(sex)
+    console.log(name)
+    console.log(phone)
+    console.log(birthday)
+    console.log(address)
+    console.log(email)
+    console.log(status)
+    console.log(sex)
 
 
-    if (name == '' || phone == '' || birthday == '' || address == '' || status == '' || salary == '' || email == '') {
+    if (name == '' || phone == '' || birthday == '' || address == '' || status == '' || email == '') {
         swal({
             title: "Chưa nhập đầy đủ thông tin",
             text: "",
@@ -409,14 +413,14 @@ function saveTeacher(id) {
         srcImg = window.location.origin + "/upload/avatarStudent/" + fileName.replace(/ /g, "_");
     }
     // console.log(srcImg)
-    if (srcImg == null) {
-        swal({
-            title: "Cần thêm ảnh cho giáo viên",
-            text: "",
-            icon: "warning"
-        })
-        return;
-    }
+    // if (srcImg == null) {
+    //     swal({
+    //         title: "Cần thêm ảnh cho giáo viên",
+    //         text: "",
+    //         icon: "warning"
+    //     })
+    //     return;
+    // }
     $.ajax({
         url: '/teacher/save',
         data: {
@@ -426,7 +430,6 @@ function saveTeacher(id) {
             birthday,
             address,
             email,
-            salary,
             sex: sex ? 0 : 1,
             url_avatar: srcImg,
             status
@@ -458,7 +461,10 @@ function saveTeacher(id) {
             })
             return;
         }
-        uploadImage(fileData)
+        if (files.length > 0) {
+            uploadImage(fileData)
+        }
+
         $("#editTeacherModal").modal("hide");
         $('#modalLoad').modal('hide');
         // $("#txtEditName").val("");
@@ -497,8 +503,8 @@ function detailClassTeacher(id) {
         cache: false,
         timeout: 50000
     }).done(function (res) {
-        const nameTeacher = res.teacher.name.split(' ').join('-')
-        window.location.href = '/admin/class?name=' + nameTeacher;
+        const phone = res.teacher.phone;
+        window.location.href = '/admin/class?phone=' + phone;
     }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
@@ -536,7 +542,7 @@ function importTeacher() {
         // call 'xlsx' to read the file
         var workbook = XLSX.read(binary, {
             type: 'binary',
-            cellDates: true, 
+            cellDates: true,
             cellStyles: true,
             cellNF: true,
             cellText: false
@@ -548,7 +554,7 @@ function importTeacher() {
         var formData = new FormData();
         formData.append('filetoupload', blob, files[0].name);
         var namefile = files[0].name.replace(/ /g, "_");
-        console.log(namefile,'formData')
+        console.log(namefile, 'formData')
 
         uploadFile(formData, namefile)
     }

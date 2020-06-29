@@ -34,9 +34,9 @@ import { getDetailClass } from '@action'
 export class ClassDetailScreen extends Component {
     constructor(props) {
         super(props)
-        const item = this.props.navigation.getParam('class')
+        const class_id = this.props.navigation.getParam('class_id')
         this.state = {
-            class_id: item.id,
+            class_id,
             region: {
                 longitude: null,
                 latitude: null
@@ -165,7 +165,7 @@ export class ClassDetailScreen extends Component {
                 reactotron.log(error, 'error getCurrentPosition')
                 Toast.show("Chưa lấy được vị trí bạn cần cho phép ứng dụng truy cập vị trí bạn", BACKGROUND_TOAST.FAIL);
             },
-            { enableHighAccuracy: false }
+            { enableHighAccuracy: Platform.OS != 'android', timeout: 2000 }
         );
     }
     _cancelAbsent = async () => {
@@ -200,12 +200,15 @@ export class ClassDetailScreen extends Component {
         this.refDialog.handleVisible()
     }
     render() {
-        const item = this.props.navigation.getParam('class')
+        // const item = this.props.navigation.getParam('class')
+        const { detailClassState } = this.props
+        // reactotron.log(!detailClassState.classInfo,'check');
         return (
             <Block>
                 <SafeAreaView style={theme.styles.containter}>
                     <BackgroundHeader />
-                    <WindsHeader title={item.Subject.subject_name} />
+                    <WindsHeader
+                        title={detailClassState.classInfo ? detailClassState.classInfo.Subject.subject_name : 'Chi tiết lớp học'} />
                     {/* {this._renderModalPoint()} */}
                     {this._renderBody()}
                 </SafeAreaView>
@@ -213,15 +216,15 @@ export class ClassDetailScreen extends Component {
         )
     }
     _renderBody() {
-        const item = this.props.navigation.getParam('class')
+        // const item = this.props.navigation.getParam('class')
         const { detailClassState } = this.props
         if (this.state.isLoading || detailClassState.isLoading) return <Loading />;
-        // reactotron.log('Student_classes', item.Student_classes)
+        reactotron.log('Student_classes', detailClassState)
         if (detailClassState.error)
             return (
                 <Error
                     onPress={() => {
-                        this.props.getListClass();
+                        this.props.getDetailClass(this.state.class_id);
                     }}
                 />
             );
@@ -229,31 +232,24 @@ export class ClassDetailScreen extends Component {
         //     return <Empty description={"Chưa có sinh viên nào"}
         //     />
         return (
-            // <ScrollView horizontal
-            //     contentContainerStyle={{ width: 1000 }}
-            //     showsHorizontalScrollIndicator={false}
-            // >
+           
             <View
                 style={{
                     marginTop: 5,
                     flex: 1,
                     // paddingBottom: 20
                 }}
-            // showsVerticalScrollIndicator={false}
-            // refreshControl={
-            //     <RefreshControl
-            //         refreshing={this.state.isRefresh}
-            //         onRefresh={() => {
-            //             this.props.getDetailClass(this.state.class_id);
-            //         }}
-            //     />
-            // }
+        
             >
 
                 <View style={styles._viewUser}>
-                    {this._renderUserItem('Mã lớp học', item.class_code)}
-                    {this._renderUserItem(R.strings.number_of_people, detailClassState.data.length)}
-                    {this._renderUserItem("Mã môn học", item.Subject.subject_code)}
+                    {this._renderUserItem('Mã lớp học',
+                       detailClassState.classInfo? detailClassState.classInfo.class_code:'')}
+                    {this._renderUserItem(R.strings.number_of_people, detailClassState.listStudent.length)}
+                    {this._renderUserItem("Mã môn học",
+                        detailClassState.classInfo?detailClassState.classInfo.Subject.subject_code:'')}
+                    {this._renderUserItem("Số điểm danh",
+                        detailClassState.totalAbsent?detailClassState.totalAbsent:'')}
                 </View>
                 <View style={{
                     flexDirection: 'row',
@@ -333,7 +329,7 @@ export class ClassDetailScreen extends Component {
                                 backgroundColor: theme.colors.backgroundBlue,
                                 borderTopWidth: 0.5,
                                 borderTopColor: theme.colors.gray,
-                                marginTop:10
+                                marginTop: 10
                             }
                             ]}
                         >
@@ -359,12 +355,12 @@ export class ClassDetailScreen extends Component {
                             </View> */}
                         </View>
                         {
-                            detailClassState.data.length == 0 ? (
+                            detailClassState.listStudent.length == 0 ? (
                                 <Empty description={'chưa có học sinh nào'}
                                 />
                             ) : (
 
-                                    detailClassState.data.map((item, index) => (
+                                    detailClassState.listStudent.map((item, index) => (
                                         <View key={index.toString()} style={{ width: "100%" }}>
                                             {this._renderRowTable(item, index)}
                                         </View>

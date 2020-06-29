@@ -8,12 +8,12 @@ table.table.table-bordered.table-hover
             th Email
             th Giới tính
             th Trạng thái
-            th Lương
+            //- th Lương
             th
     tbody#tbodyTableTeacher
         if teachers.length <=0        
             tr
-                td(colspan='9' style='text-align: center;') Chưa có giáo viên nào.
+                td(colspan='8' style='text-align: center;') Chưa có giáo viên nào.
         else
             each item in teachers
                 tr
@@ -24,7 +24,7 @@ table.table.table-bordered.table-hover
                     td #{item.email}
                     td #{item.sex==1?'Nam':'Nữ'}
                     td #{item.status==0?'Đã nghỉ':(item.status==1?'Thực tập':'Chính thức')}
-                    td.salary #{item.salary}
+                    //- td.salary #{item.salary}
                     td
                         button#detailClassTeacher.btn.btn-primary(type='button'  onclick='detailClassTeacher('+item.id+')')
                             i.fas.fa-info-circle
@@ -68,27 +68,27 @@ table.table.table-bordered.table-hover
                     i.fas.fa-chevron-right
                 button.btn.page-item(onclick='searchTeacher('+pageCount+')')
                     i.fas.fa-angle-double-right
-script(type='text/javascript').
-    $(document).ready(function () {
-        $('.salary').each(
-            function () {
-                if ($(this).text() == "") {
-                    $(this).text('0 vnđ')
-                } else {
-                    $(this).text(formatNumber($(this).text(), '.', ','))
-                }
-            }
-        )
-    });
+//- script(type='text/javascript').
+//-     $(document).ready(function () {
+//-         $('.salary').each(
+//-             function () {
+//-                 if ($(this).text() == "") {
+//-                     $(this).text('0 vnđ')
+//-                 } else {
+//-                     $(this).text(formatNumber($(this).text(), '.', ','))
+//-                 }
+//-             }
+//-         )
+//-     });
 
-    function formatNumber(nStr, decSeperate, groupSeperate) {
-        nStr += '';
-        x = nStr.split(decSeperate);
-        x1 = x[0];
-        x2 = x.length > 1 ? '.' + x[1] : '';
-        var rgx = /(\d+)(\d{3})/;
-        while (rgx.test(x1)) {
-            x1 = x1.replace(rgx, '$1' + groupSeperate + '$2');
-        }
-        return x1 + x2 + " vnđ";
-    }
+//-     function formatNumber(nStr, decSeperate, groupSeperate) {
+//-         nStr += '';
+//-         x = nStr.split(decSeperate);
+//-         x1 = x[0];
+//-         x2 = x.length > 1 ? '.' + x[1] : '';
+//-         var rgx = /(\d+)(\d{3})/;
+//-         while (rgx.test(x1)) {
+//-             x1 = x1.replace(rgx, '$1' + groupSeperate + '$2');
+//-         }
+//-         return x1 + x2 + " vnđ";
+//-     }

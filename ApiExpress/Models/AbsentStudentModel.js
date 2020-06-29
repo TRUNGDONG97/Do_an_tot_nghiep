@@ -38,8 +38,10 @@ const Absent_Student = sequelize.define('Absent_Student', {
     },
     list_ssid_stu:{
         type:Sequelize.STRING
+    },
+    img_absent:{
+        type:Sequelize.STRING
     }
-
 }, {
     //
     timestamps: false,

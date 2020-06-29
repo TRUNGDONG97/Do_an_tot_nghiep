@@ -1,5 +1,5 @@
 const OPTION = {
-    maxAge: 1000 * 60 * 10, // would expire after 15 minutes
+    maxAge: 1000 * 60 * 30, // would expire after 30 minutes
     httpOnly: true, // The cookie only accessible by the web server
     signed: true,
 }

@@ -17,7 +17,7 @@ const login = async (req, res, next) => {
     // console.log(password);
     // console.log(type);
 
-
+    console.log(deviceID,'device_id')
     if (user == '' || password == '' || (type != 1 && type != 2)) {
         res.json({
             "status": 0,
@@ -30,7 +30,7 @@ const login = async (req, res, next) => {
     try {
         if (type == 1) {
             const student = await StudentModel.findAndCountAll({
-                attributes: ['id', 'name', 'phone', 'birthday', 'address', 'email', 'device_id', 'token', 'url_avatar', 'sex', 'mssv'],
+                attributes: ['id', 'first_name','last_name', 'phone', 'birthday', 'address', 'email', 'device_id', 'token', 'url_avatar', 'sex', 'mssv'],
                 where: {
                     mssv: user,
                     password: md5(password)
@@ -73,7 +73,8 @@ const login = async (req, res, next) => {
                 attributes: ['id', 'name', 'phone', 'birthday', 'address', 'email', 'device_id', 'token', 'url_avatar', 'sex', 'status', 'salary'],
                 where: {
                     phone: user,
-                    password: md5(password)
+                    password: md5(password),
+                    status:[1,2]
                 }
             })
 
@@ -143,7 +144,8 @@ const logout = async (req, res, next) => {
         })
         if (teacher.count > 0) {
             await TeacherModel.update({
-                token: null
+                token: null,
+                device_id:null
             }, {
                 where: {
                     id: teacher.rows[0].id
@@ -164,7 +166,8 @@ const logout = async (req, res, next) => {
         })
         if (student.count > 0) {
             await StudentModel.update({
-                token: null
+                token: null,
+                device_id:null
             }, {
                 where: {
                     id: student.rows[0].id

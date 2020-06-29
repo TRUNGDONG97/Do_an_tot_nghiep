@@ -3,7 +3,7 @@ import {
     View, Text, SafeAreaView,
     ScrollView, RefreshControl,
     StyleSheet, ActivityIndicator,
-    TouchableOpacity,Platform
+    TouchableOpacity, Platform
 } from 'react-native'
 import { connect } from 'react-redux'
 import { getDetailClass } from '@app/constants/Api'
@@ -27,6 +27,7 @@ export class ClassDetailScreen extends Component {
     constructor(props) {
         super(props);
         const class_id = this.props.navigation.getParam('class_id')
+        // console.log(class_id)
         this.state = {
             refreshing: false,
             isLoading: true,
@@ -64,48 +65,6 @@ export class ClassDetailScreen extends Component {
             });
         }
     }
-    _absent = async (gps_latitude, gps_longitude,listNameWifi) => {
-        const { class_id } = this.state
-        if (!gps_latitude || !gps_longitude) {
-            Toast.show('Chưa định vị được vị trí của máy', BACKGROUND_TOAST.SUCCESS);
-            return;
-        }
-        const payload = {
-            class_id,
-            gps_latitude,
-            gps_longitude,
-            list_ssid_stu:listNameWifi?listNameWifi:[],
-            platform:Platform.OS
-        }
-        // reactotron.log(class_id)
-        this.setState({
-            ...this.state,
-            isLoading: true
-        });
-        try {
-            const response = await absent(payload);
-            reactotron.log(response, 'res');
-            Toast.show(response.message, BACKGROUND_TOAST.SUCCESS);
-            this.setState({
-                ...this.state,
-                isLoading: false,
-            });
-            this.props.getListAbsent()
-            NavigationUtil.navigate(SCREEN_ROUTER.LIST_ABSENT);
-
-        } catch (error) {
-            if (error.message == "Network Error") {
-                Toast.show(I18n.t("network_err"), BACKGROUND_TOAST.FAIL);
-            }
-            //showMessages(I18n.t("notification"),I18n.t("error") );
-            Toast.show('Vui lòng thử lại', BACKGROUND_TOAST.FAIL)
-            this.setState({
-                ...this.state,
-                isLoading: false
-            });
-            reactotron.log(error);
-        }
-    }
     getLocationUser = async () => {
         this.setState({
             ...this.state,
@@ -114,14 +73,6 @@ export class ClassDetailScreen extends Component {
         await Geolocation.getCurrentPosition(
             position => {
                 const { latitude, longitude } = position.coords;
-                // //  this.setState({
-                // //     ...this.state,
-                // //     region: {
-                // //         longitude: longitude,
-                // //         latitude: latitude,
-                // //       }
-                // // });
-                // this._absent(latitude, longitude)
                 // reactotron.log(latitude, longitude)
                 wifi.isEnabled(
                     (isEnabled) => {
@@ -140,7 +91,19 @@ export class ClassDetailScreen extends Component {
                                 listNameWifi.push(wifiArray[index].SSID)
                             }
                             reactotron.log(latitude, longitude)
-                            this._absent(latitude, longitude, listNameWifi)
+                            // this._absent(latitude, longitude, listNameWifi)
+                            NavigationUtil.navigate(SCREEN_ROUTER.CAMERA, {
+                                data: {
+                                    latitude,
+                                    longitude,
+                                    listNameWifi,
+                                    class_id: this.state.class_id
+                                }
+                            })
+                            this.setState({
+                                ...this.state,
+                                isLoading: false
+                            });
                         },
                             (error) => {
                                 this.setState({
@@ -162,6 +125,7 @@ export class ClassDetailScreen extends Component {
                 reactotron.log(error, 'error getCurrentPosition')
                 Toast.show("Chưa lấy được vị trí", BACKGROUND_TOAST.FAIL);
             },
+            { enableHighAccuracy: Platform.OS != 'android', timeout: 2000 }
         );
     }
     render() {
@@ -177,13 +141,14 @@ export class ClassDetailScreen extends Component {
     }
     _renderBody() {
         const { data, error, isLoading } = this.state
+        // const{classListState}=this.props
         const class_id = this.props.navigation.getParam('class_id')
         if (isLoading) return <Loading />;
         if (error)
             return (
                 <Error
                     onPress={() => {
-                        this.props.getListClassAction();
+                        this._getData(class_id);
                     }}
                 />
             );
@@ -195,7 +160,7 @@ export class ClassDetailScreen extends Component {
                 refreshControl={
                     <RefreshControl
                         refreshing={this.state.refreshing}
-                        onRefresh={() => { this.props.getDetailClass(class_id) }}
+                        onRefresh={() => { this._getData(class_id) }}
                     />
                 }
             >
@@ -246,6 +211,7 @@ export class ClassDetailScreen extends Component {
                         this.getLocationUser();
                         // alert('dds')
                         // reactotron.log(this.state.region)
+
                     }}>
                     <LinearGradient
                         style={styles.bgButton}
@@ -292,7 +258,7 @@ export class ClassDetailScreen extends Component {
 }
 
 const mapStateToProps = (state) => ({
-
+    // classListState: state.listClassReducer,
 })
 
 const mapDispatchToProps = {

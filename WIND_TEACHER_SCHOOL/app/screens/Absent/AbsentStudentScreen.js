@@ -30,7 +30,7 @@ export class AbsentStudentScreen extends Component {
             <Block>
                 <SafeAreaView style={theme.styles.containter}>
                     <BackgroundHeader />
-                    <WindsHeader title={"Học sinh điểm danh"} />
+                    <WindsHeader title={"Chi tiết điểm danh sinh viên"} />
                     {this._renderBody()}
                 </SafeAreaView>
             </Block>

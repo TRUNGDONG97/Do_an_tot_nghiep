@@ -39,7 +39,7 @@ export default class ClassItem extends Component {
                 <Ripple rippleDuration={500}
                     rippleSequential={true}
                     onPress={() => {
-                        NavigationUtil.navigate(SCREEN_ROUTER.CLASS_DETAIL, { class: item })
+                        NavigationUtil.navigate(SCREEN_ROUTER.CLASS_DETAIL, { class_id: item.id })
                     }}>
                     <Block style={[theme.styles.styleBlockHeader, { alignItems: 'center' }]}>
                         <Text style={(theme.fonts.bold16,

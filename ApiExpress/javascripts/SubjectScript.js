@@ -1,7 +1,7 @@
-$(document).ready(function() {
+$(document).ready(function () {
     $('#tabSubject a').css({ "background-color": "#17a2b8", "color": "#fff" })
     getSubject(1)
-    $('#btnSearchSubject').click(function() {
+    $('#btnSearchSubject').click(function () {
         searchSubject(1)
     })
 
@@ -22,10 +22,10 @@ function getSubject(currentPage) {
         data: { currentPage },
         cache: false,
         timeout: 50000,
-    }).done(function(res) {
+    }).done(function (res) {
         $('#tableSubject').html(res.htmlTable)
         return
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
             title: "Đã có lỗi xảy ra",
@@ -66,18 +66,18 @@ function searchSubject(currentPage) {
         // dataType: "json",
         cache: false,
         timeout: 50000,
-    }).done(function(res) {
+    }).done(function (res) {
         $('#tableSubject').html(res.htmlTable)
         return
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
-                title: "Đã có lỗi xảy ra",
-                text: "",
-                icon: "warning",
-                dangerMode: true,
-            })
-            // console.log(textStatus + ': ' + errorThrown);
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown);
         return;
     });
 }
@@ -117,7 +117,7 @@ function addSubject() {
         },
         cache: false,
         timeout: 50000,
-    }).done(function(res) {
+    }).done(function (res) {
         console.log(res.result)
         if (res.result == 0) {
             $("#txtSubjectCode").val("");
@@ -141,15 +141,15 @@ function addSubject() {
         })
         getSubject(1)
         return;
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
-                title: "Đã có lỗi xảy ra",
-                text: "",
-                icon: "warning",
-                dangerMode: true,
-            })
-            // console.log(textStatus + ': ' + errorThrown);
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown);
         return;
     })
 }
@@ -164,12 +164,12 @@ function deleteSubject(id) {
         return;
     }
     swal({
-            title: "Bạn chắc chắn xóa chứ?",
-            text: "",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true
-        })
+        title: "Bạn chắc chắn xóa chứ?",
+        text: "",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true
+    })
         .then((isConFirm) => {
             if (isConFirm) {
                 $.ajax({
@@ -180,7 +180,7 @@ function deleteSubject(id) {
                     },
                     cache: false,
                     timeout: 50000,
-                }).done(function(res) {
+                }).done(function (res) {
                     // console.log(res.result)
                     if (res.result == 1) {
                         swal({
@@ -189,22 +189,31 @@ function deleteSubject(id) {
                             icon: "success"
                         });
                         getSubject(1)
-                    } else {
+                        return;
+                    }
+                    if (res.result == 2) {
                         swal({
-                            title: "Không tồn tại môn  này",
+                            title: "Không thể xóa môn học này vì môn học này có lớp đang học.",
                             text: "",
                             icon: "warning"
                         });
+                        return;
                     }
-                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    swal({
+                        title: "Không tồn tại môn  này",
+                        text: "",
+                        icon: "warning"
+                    });
+
+                }).fail(function (jqXHR, textStatus, errorThrown) {
                     // If fail
                     swal({
-                            title: "Đã có lỗi xảy ra",
-                            text: "",
-                            icon: "warning",
-                            dangerMode: true,
-                        })
-                        // console.log(textStatus + ': ' + errorThrown);
+                        title: "Đã có lỗi xảy ra",
+                        text: "",
+                        icon: "warning",
+                        dangerMode: true,
+                    })
+                    // console.log(textStatus + ': ' + errorThrown);
                     return;
                 })
             }
@@ -227,12 +236,12 @@ function editSubject(id) {
         type: 'POST',
         cache: false,
         timeout: 50000
-    }).done(function(res) {
+    }).done(function (res) {
 
         $('#divModalEditSubject').html(res.htmlModalEdit)
         $('#editSubjectModal').modal('show');
         return;
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
             title: "Đã có lỗi xảy ra",
@@ -283,7 +292,7 @@ function saveSubject(id) {
         },
         cache: false,
         timeout: 50000,
-    }).done(function(res) {
+    }).done(function (res) {
         // console.log(res.result)
 
         if (res.result == 0) {
@@ -304,15 +313,15 @@ function saveSubject(id) {
         })
         getSubject(1)
         return;
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail
         swal({
-                title: "Đã có lỗi xảy ra",
-                text: "",
-                icon: "warning",
-                dangerMode: true,
-            })
-            // console.log(textStatus + ': ' + errorThrown);
+            title: "Đã có lỗi xảy ra",
+            text: "",
+            icon: "warning",
+            dangerMode: true,
+        })
+        // console.log(textStatus + ': ' + errorThrown);
         return;
     })
 }
@@ -358,7 +367,7 @@ function importSubject() {
         var formData = new FormData();
         formData.append('filetoupload', blob, files[0].name);
         var namefile = files[0].name.replace(/ /g, "_");
-        console.log(namefile,'formData')    
+        console.log(namefile, 'formData')
 
         uploadFile(formData, namefile)
         // $('#modalLoad').modal('hide');
@@ -386,7 +395,7 @@ function uploadFile(fileData, namefile) {
             data: { namefile },
             type: 'POST',
         }).done(function (res) {
-            if(res.result==0){
+            if (res.result == 0) {
                 $('#modalLoad').modal('hide');
                 swal({
                     title: "File chưa có dữ liệu",
@@ -395,7 +404,7 @@ function uploadFile(fileData, namefile) {
                 })
                 return;
             }
-            if(res.result==2){
+            if (res.result == 2) {
                 $('#modalLoad').modal('hide');
                 swal({
                     title: "Form file sai",

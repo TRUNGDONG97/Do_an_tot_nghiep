@@ -15,6 +15,10 @@ import AbsentClassModel from '../../models/AbsentClassModel'
 import AbsentStudentModel from '../../models/AbsentStudentModel'
 import NotificationModel from '../../models/NotificationModel'
 import Constants from '../../constants/Constants'
+import formidable from 'formidable'
+import fs from 'fs'
+import { where } from 'sequelize'
+
 const getClass = async (req, res, next) => {
     const { token } = req.headers
     if (token == '') {
@@ -44,15 +48,22 @@ const getClass = async (req, res, next) => {
                 {
                     model: ScheduleClassModel,
                 }, {
-                    model: SubjectModel
+                    model: SubjectModel,
+                    where:{
+                        is_active:1
+                    }
+                }, {
+                    model: TeacherModel,
+                    attributes: ['id', 'name', 'phone', 'email', 'url_avatar'],
+                    required: false
                 }],
                 where: {
                     status: 1,
                     is_active: 1
                 },
                 order: [
-                    ['Schedule_classes', 'schedule', 'ASC'],
-                    ['status', 'DESC'],
+                    ['priority', 'DESC'],
+                    ['Schedule_classes', 'schedule', 'ASC']
                 ],
                 // distinct: true
             })
@@ -111,7 +122,8 @@ const getUserInfo = async (req, res, next) => {
                 "message": 'thành công',
                 "data": {
                     id: data.id,
-                    name: data.name,
+                    first_name: data.first_name,
+                    last_name: data.last_name,
                     phone: data.phone,
                     birthday: data.birthday.split("-").reverse().join("/"),
                     address: data.address,
@@ -195,7 +207,8 @@ const changeUserInfo = async (req, res, next) => {
                 "message": 'Thay đổi thông tin thành công',
                 "data": {
                     id: data.id,
-                    name: data.name,
+                    first_name: data.first_name,
+                    last_name: data.last_name,
                     phone: data.phone,
                     birthday: data.birthday.split("-").reverse().join("/"),
                     address: data.address,
@@ -319,7 +332,10 @@ const ListAbsentClass = async (req, res, next) => {
                     required: false
                 }, {
                     model: SubjectModel,
-                    attributes: ['subject_name', 'subject_code']
+                    attributes: ['subject_name', 'subject_code'],
+                    where:{
+                        is_active:1
+                    }
                 }, {
                     model: AbsentClassModel,
                     attributes: ['date_absent', 'time_start'],
@@ -337,7 +353,10 @@ const ListAbsentClass = async (req, res, next) => {
                 where: {
                     status: 1,
                     is_active: 1
-                }
+                },
+                order: [
+                    ['priority', 'DESC']
+                ],
                 // distinct: true
             });
             res.json({
@@ -388,7 +407,10 @@ const DetailClass = async (req, res, next) => {
             {
                 model: ScheduleClassModel,
             }, {
-                model: SubjectModel
+                model: SubjectModel,
+                where:{
+                    is_active:1
+                }
             }],
             where: {
                 id: class_id
@@ -470,7 +492,9 @@ const notification = async (req, res, next) => {
     }
 }
 const absentStudent = async (req, res, next) => {
-    const { class_id, gps_longitude, gps_latitude, list_ssid_stu, platform } = req.body;
+    const { class_id, gps_longitude,
+        gps_latitude, list_ssid_stu,
+        platform } = req.body;
     const { token } = req.headers;
     const currentDate = new Date()
     const time_absent = currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + "00";
@@ -479,6 +503,8 @@ const absentStudent = async (req, res, next) => {
     var yyyy = currentDate.getFullYear();
 
     const date_absent = yyyy + '-' + mm + '-' + dd;
+    console.log(req.protocol, "protocol ");
+    console.log(req.get('host'), "host ");
     // console.log('date_absent',date_absent)
     // console.log('token',token)
     // console.log('class_id',class_id)
@@ -486,8 +512,11 @@ const absentStudent = async (req, res, next) => {
     // console.log('gps_latitude',gps_latitude)
     // console.log('time_absent',time_absent)
     // console.log('list_ssid_stu',list_ssid_stu)
-    console.log('platform', platform)
+    // console.log('image',image)
+    // console.log('platform', platform)
+    // console.log('req.body', req.body)
     try {
+
         const student = await StudentModel.findAll({
             where: {
                 token
@@ -611,17 +640,19 @@ const absentStudent = async (req, res, next) => {
             date_absent,
             time_absent,
             list_ssid_stu: JSON.stringify(list_ssid_stu),
-            device_id: student[0].device_id
+            device_id: student[0].device_id,
+            img_absent: req.protocol + '://' + req.get('host') + "/upload/" + absentOfStudent[0].id.toString()+".jpg"
         }, {
             where: {
                 id: absentOfStudent[0].id
             }
         })
+        console.log(updateAbsentOfStu)
         res.json({
             "status": 1,
             "code": 200,
             "message": 'Điểm danh thành công',
-            "data": "updateAbsentOfStu"
+            "data": absentOfStudent[0].id
         })
         return;
     } catch (error) {
@@ -635,7 +666,40 @@ const absentStudent = async (req, res, next) => {
         return;
     }
 }
-
+const uploadImageAbsent = async (req, res, next) => {
+    // console.log(req)
+    var form = new formidable.IncomingForm();
+    form.maxFieldsSize = 20 * 1024 * 1024; // file size 10mb
+    form.uploadDir = "./public/upload/"
+    form.parse(req);
+    form.once('error', function (error) {
+        console.log(error)
+        res.json({
+            "status": 0,
+            "code": 404,
+            "message": "Đã có lỗi xảy ra",
+            "data": ''
+        })
+        return;
+    });
+    form.on('file', function (field, file) {
+        console.log(file.name)
+        // rename the incoming file to the file's name
+        fs.rename(file.path, form.uploadDir + file.name, () => {
+            // console.log(file.path);
+        });
+    });
+    // console.log()
+    form.once('end', () => {
+        res.json({
+            "status": 1,
+            "code": 200,
+            "message": 'Upload ảnh thành công',
+            "data": ''
+        })
+        return;
+    });
+}
 export default {
     getClass,
     getUserInfo,
@@ -644,5 +708,6 @@ export default {
     ListAbsentClass,
     DetailClass,
     notification,
-    absentStudent
+    absentStudent,
+    uploadImageAbsent
 }

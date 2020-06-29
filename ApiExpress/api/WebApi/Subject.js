@@ -135,13 +135,22 @@ const deleteSubject = async (req, res, next) => {
                 is_active: 1
             }
         })
+        const classes = await ClassModel.findAll({
+            where: {
+                status: 1,
+                subject_id: id,
+                is_active:1
+            }
+        })
+        if (classes.length > 0) {
+            res.send({
+                result: 2
+            })
+            return;
+        }
         // console.log(students.length)
         if (subject.length > 0) {
-            // await ClassModel.destroy({
-            //     where:{
-            //         subject_id:id
-            //     }
-            // })
+           
             await SubjectModel.update({
                 is_active: 0
             }, {
@@ -152,11 +161,12 @@ const deleteSubject = async (req, res, next) => {
             res.send({
                 result: 1
             })
-        } else {
-            res.send({
-                result: 0 //Notfound
-            })
+            return;
         }
+        res.send({
+            result: 0 //Notfound
+        })
+
         return;
     } catch (error) {
         console.log(error)
@@ -277,13 +287,13 @@ const importSubject = async (req, res, next) => {
                     subject_code: list_subject[index].subject_code
                 }
             })
-          
+
             if (countSub > 0) {
                 await SubjectModel.update({
-                   subject_name:list_subject[index].subject_name,
-                   credit_hour:list_subject[index].credit_hour,
-                   time:list_subject[index].time,
-                   coefficient:list_subject[index].coefficient,
+                    subject_name: list_subject[index].subject_name,
+                    credit_hour: list_subject[index].credit_hour,
+                    time: list_subject[index].time,
+                    coefficient: list_subject[index].coefficient,
                 }, {
                     where: {
                         subject_code: list_subject[index].subject_code
@@ -292,11 +302,11 @@ const importSubject = async (req, res, next) => {
                 console.log(1)
             } else {
                 await SubjectModel.create({
-                    subject_name:list_subject[index].subject_name,
-                    credit_hour:list_subject[index].credit_hour,
-                    time:list_subject[index].time,
-                    coefficient:list_subject[index].coefficient,
-                    subject_code:list_subject[index].subject_code,
+                    subject_name: list_subject[index].subject_name,
+                    credit_hour: list_subject[index].credit_hour,
+                    time: list_subject[index].time,
+                    coefficient: list_subject[index].coefficient,
+                    subject_code: list_subject[index].subject_code,
                 })
                 console.log(2)
             }

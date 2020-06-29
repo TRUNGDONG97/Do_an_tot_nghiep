@@ -14,6 +14,7 @@
         "crypto-js": "^4.0.0",
         "debug": "~2.6.9",
         "dropify": "^0.2.2",
+        "exceljs": "^4.1.0",
         "express": "~4.16.1",
         "formidable": "^2.0.0-canary.20200504.1",
         "google-distance": "^1.0.1",

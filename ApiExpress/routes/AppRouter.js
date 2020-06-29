@@ -14,6 +14,7 @@ router.get('/student/getListAbsentClass', Student.ListAbsentClass)
 router.get('/student/getDetaiClass', Student.DetailClass)
 router.get('/student/notification', Student.notification)
 router.post('/student/absent', Student.absentStudent)
+router.post('/student/uploadImage', Student.uploadImageAbsent)
 
 router.get('/teacher/getClass', Teacher.getClass)
 router.get('/teacher/getUserInfo', Teacher.getUserInfo)
@@ -28,6 +29,7 @@ router.post('/teacher/cancelAbsent', Teacher.cancelAbsent)
 // router.post('/teacher/absentForStudent', Teacher.absentForStudent)
 router.get('/teacher/getDetailClass', Teacher.getDetailClass)
 router.post('/teacher/changeAbsentStudent', Teacher.changeAbsentStudent)
+
 // router.post('/teacher/changePoint', Teacher.changePoint)
 
 module.exports = router;

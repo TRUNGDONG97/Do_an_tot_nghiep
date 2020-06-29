@@ -1837,13 +1837,28 @@
 													"top": 369,
 													"width": 193.42431640625,
 													"height": 13
+												},
+												{
+													"_type": "ERDColumnView",
+													"_id": "AAAAAAFy3Oad32i46oc=",
+													"_parent": {
+														"$ref": "AAAAAAFw9isK5MhpGsg="
+													},
+													"model": {
+														"$ref": "AAAAAAFy3OadeWi1NIc="
+													},
+													"font": "Arial;13;0",
+													"left": 1133,
+													"top": 384,
+													"width": 193.42431640625,
+													"height": 13
 												}
 											],
 											"font": "Arial;13;0",
 											"left": 1128,
 											"top": 199,
 											"width": 203.42431640625,
-											"height": 188
+											"height": 203
 										}
 									],
 									"font": "Arial;13;0",
@@ -4752,6 +4767,16 @@
 										"$ref": "AAAAAAFw9isK5Mhlg5o="
 									},
 									"name": "list_ssid",
+									"type": "nvarchar",
+									"length": 0
+								},
+								{
+									"_type": "ERDColumn",
+									"_id": "AAAAAAFy3OadeWi1NIc=",
+									"_parent": {
+										"$ref": "AAAAAAFw9isK5Mhlg5o="
+									},
+									"name": "image",
 									"type": "nvarchar",
 									"length": 0
 								}

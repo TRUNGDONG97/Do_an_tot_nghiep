@@ -1,5 +1,5 @@
 import Sequelize from 'sequelize'
-import {sequelize,Op} from '../connectData/Database'
+import { sequelize, Op } from '../connectData/Database'
 const Notification = sequelize.define('Notification', {
     id: {
         type: Sequelize.INTEGER,
@@ -24,16 +24,18 @@ const Notification = sequelize.define('Notification', {
     absent_class_id: {
         type: Sequelize.INTEGER
     },
-    user_id:{
-        type:Sequelize.INTEGER
+    user_id: {
+        type: Sequelize.INTEGER
     },
     content: {
         type: Sequelize.STRING
-    }
-
+    },
+    created_time: {
+        type: Sequelize.TIME
+    },
 }, {
     //
     timestamps: false,
-    freezeTableName: true ,
+    freezeTableName: true,
 })
 export default Notification

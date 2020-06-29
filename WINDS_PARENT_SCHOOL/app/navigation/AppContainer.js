@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text,AppState, Platform, StyleSheet  } from 'react-native'
+import { View, Text, AppState, Platform, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 import AppNavigator from './AppNavigator'
 import OneSignal from "react-native-onesignal";
@@ -22,7 +22,7 @@ export class AppContainer extends Component {
             // if (state == "active") {
             //   dismissAllNotification();
             // }
-          });
+        });
     }
 
     componentWillUnmount() {
@@ -33,8 +33,6 @@ export class AppContainer extends Component {
 
     onReceived(notification) {
         reactotron.log("Notification received: ", notification);
-        const class_id=notification.payload.additionalData.class_id
-        NavigationUtil.navigate(SCREEN_ROUTER.DETAIL_CLASS, { class_id: class_id })
     }
 
     onOpened(openResult) {
@@ -42,9 +40,13 @@ export class AppContainer extends Component {
         reactotron.log("Data: ", openResult.notification.payload.additionalData.class_id);
         reactotron.log("isActive: ", openResult.notification.isAppInFocus);
         reactotron.log("openResult: ", openResult);
-        const class_id=openResult.notification.payload.additionalData.class_id;
+        const class_id = openResult.notification.payload.additionalData.class_id;
+        // const type=openResult.notification.payload.additionalData.type;
         // reactotron.log("class_id",openResult.notification.payload);
-        NavigationUtil.navigate(SCREEN_ROUTER.DETAIL_CLASS,{class_id:class_id});
+
+        NavigationUtil.navigate(SCREEN_ROUTER.DETAIL_CLASS, { class_id: class_id });
+
+
         return;
     }
 
@@ -55,11 +57,11 @@ export class AppContainer extends Component {
     }
     async onIds(device) {
         if (device) {
-          if (!!device.userId)
-            await AsyncStorage.setItem("Device info: ", device.userId)
+            if (!!device.userId)
+                await AsyncStorage.setItem("Device info: ", device.userId)
         }
         reactotron.log("Device info: ", device);
-      }
+    }
     render() {
         return (
             <AppNavigator
