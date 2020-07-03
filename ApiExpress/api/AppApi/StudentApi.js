@@ -355,7 +355,8 @@ const ListAbsentClass = async (req, res, next) => {
                     is_active: 1
                 },
                 order: [
-                    ['priority', 'DESC']
+                    ['priority', 'DESC'],
+                    ['Absent_Classes','date_absent','ASC']
                 ],
                 // distinct: true
             });

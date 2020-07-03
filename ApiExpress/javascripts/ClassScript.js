@@ -91,10 +91,10 @@ function searchClass(currentPage) {
     }
     var subCode = $.trim($("#txtSearchSubjectCode").val());
     var claCode = $.trim($("#txtSearchClassCode").val());
-    // var teacherName = $.trim($("#txtSearchClassTeacher").val());
-    // var mssv = $.trim($("#txtSearchSubjectMSSV").val());
     var claStatus = $("#seachClassStatus").val()
-    // alert(teacherName)
+    // console.log(subCode)
+    // console.log(clas)
+    // console.log(subCode)
     if (subCode == "" && claStatus == '' && claCode == '') {
         getClass(1)
         return;

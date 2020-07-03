@@ -207,7 +207,7 @@ const addTeacher = async (req, res, next) => {
             url_avatar,
             status
         })
-        console.log(newTeacher)
+        // console.log(newTeacher)
         res.send({
             result: 2
         })

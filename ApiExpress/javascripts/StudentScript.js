@@ -71,7 +71,7 @@ function searchStudent(currentPage) {
         getStudent(1)
         return;
     }
-    checkedMssv(mssv)
+    // checkedMssv(mssv)
     $.ajax({
         url: '/student/search',
         type: 'POST',
@@ -180,7 +180,7 @@ const addStudent = async () => {
     var fileUpload = $("#ImageStudent").get(0);
     var files = fileUpload.files;
 
-    if (first_name == ''||last_name=='' || mssv == '' || phone == '' || birthday == '' || address == '') {
+    if (first_name == '' || last_name == '' || mssv == '' || phone == '' || birthday == '' || address == '') {
         swal({
             title: "Chưa nhập đầy đủ thông tin",
             text: "",
@@ -188,10 +188,29 @@ const addStudent = async () => {
         })
         return;
     }
-    checkedMssv(mssv)
-    checkedPhone(phone)
-    checkedMail(email)
+    // checkedMssv(mssv)
+    // checkedPhone(phone)
+    // checkedMail(email)
     // console.log(files.length);
+
+    var email_regex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    if (!email_regex.test(email)) {
+        swal({
+            title: "Email không hợp lệ",
+            text: "",
+            icon: "warning"
+        })
+        return;
+    }
+    var vnf_regex = /(03|07|08|09|01[2|6|8|9])+([0-9]{8})\b/g;
+    if (!vnf_regex.test(phone) || phone.length != 10) {
+        swal({
+            title: "Số điện thoại không hợp lệ ",
+            text: "",
+            icon: "warning"
+        })
+        return;
+    }
     var srcImg;
     if (files.length > 0) {
         var fileData = new FormData();
@@ -221,7 +240,7 @@ const addStudent = async () => {
         },
         cache: false,
         timeout: 50000,
-        beforeSend:function(){
+        beforeSend: function () {
             $('#modalLoad').modal('show');
         }
     }).done(function (res) {
@@ -267,7 +286,7 @@ const addStudent = async () => {
             text: "",
             icon: "success"
         })
-        
+
         if (files.length > 0) {
             uploadImage(fileData)
         }
@@ -358,7 +377,7 @@ function saveStudent(id) {
 
     // console.log(first_name,last_name)
 
-    if (first_name == '' ||last_name == '' || mssv == '' || phone == '' || birthday == '' || address == ''||email=='') {
+    if (first_name == '' || last_name == '' || mssv == '' || phone == '' || birthday == '' || address == '' || email == '') {
         swal({
             title: "Chưa nhập đầy đủ thông tin",
             text: "",
@@ -366,9 +385,28 @@ function saveStudent(id) {
         })
         return;
     }
-    checkedMssv(mssv)
-    checkedPhone(phone)
-    checkedMail(email)
+    // console.log(phone)
+    // checkedMssv(mssv)
+    // checkedPhone(phone)
+    // checkedMail(email)
+    var email_regex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    if (!email_regex.test(email)) {
+        swal({
+            title: "Email không hợp lệ",
+            text: "",
+            icon: "warning"
+        })
+        return;
+    }
+    var vnf_regex = /(03|07|08|09|01[2|6|8|9])+([0-9]{8})\b/g;
+    if (!vnf_regex.test(phone) || phone.length != 10) {
+        swal({
+            title: "Số điện thoại không hợp lệ ",
+            text: "",
+            icon: "warning"
+        })
+        return;
+    }
     if (files.length > 0) {
         var fileData = new FormData();
         var fileName = "";
@@ -403,7 +441,7 @@ function saveStudent(id) {
         type: 'POST',
         cache: false,
         timeout: 50000,
-        beforeSend:function(){
+        beforeSend: function () {
             $('#modalLoad').modal('show');
         }
     }).done(function (res) {
@@ -621,7 +659,7 @@ function uploadFile(fileData, namefile) {
             data: { namefile },
             type: 'POST',
         }).done(function (res) {
-            if(res.result==0){
+            if (res.result == 0) {
                 $('#modalLoad').modal('hide');
                 swal({
                     title: "File chưa có dữ liệu",
@@ -630,7 +668,7 @@ function uploadFile(fileData, namefile) {
                 })
                 return;
             }
-            if(res.result==2){
+            if (res.result == 2) {
                 $('#modalLoad').modal('hide');
                 swal({
                     title: "Form file sai",
@@ -690,7 +728,7 @@ function checkedMail(email) {
 
 function checkedPhone(phone) {
     var vnf_regex = /(03|07|08|09|01[2|6|8|9])+([0-9]{8})\b/g;
-    if (!vnf_regex.test(phone)) {
+    if (!vnf_regex.test(phone) || phone.length != 10) {
         swal({
             title: "Số điện thoại không hợp lệ ",
             text: "",
@@ -710,6 +748,7 @@ function checkedMssv(mssv) {
         })
         return;
     }
+
 }
 
 function uploadImage(fileData) {
@@ -721,7 +760,7 @@ function uploadImage(fileData) {
         processData: false, // Not to process data  
         cache: false,
         enctype: 'multipart/form-data',
-       
+
     }).done(function (res) {
     }).fail(function (jqXHR, textStatus, errorThrown) {
         // If fail

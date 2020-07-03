@@ -96,7 +96,7 @@ export class CameraScreen extends Component {
                 Toast.show(I18n.t("network_err"), BACKGROUND_TOAST.FAIL);
             }
             //showMessages(I18n.t("notification"),I18n.t("error") );
-            Toast.show('Vui lòng thử lại', BACKGROUND_TOAST.FAIL)
+            // Toast.show('Vui lòng thử lại', BACKGROUND_TOAST.FAIL)
             this.setState({
                 ...this.state,
                 isLoading: false

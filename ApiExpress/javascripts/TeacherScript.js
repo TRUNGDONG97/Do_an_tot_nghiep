@@ -120,8 +120,28 @@ function addTeacher() {
         })
         return;
     }
-    checkedPhone(phone)
-    checkedMail(email)
+    // checkedPhone(phone)
+    var vnf_regex = /(03|07|08|09|01[2|6|8|9])+([0-9]{8})\b/g;
+    if (!vnf_regex.test(phone)) {
+        swal({
+            title: "Số điện thoại không hợp lệ ",
+            text: "",
+            icon: "warning"
+        })
+        return;
+    }
+    function checkedMail(email) {
+        var email_regex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        if (!email_regex.test(email)) {
+            swal({
+                title: "Email không hợp lệ",
+                text: "",
+                icon: "warning"
+            })
+            return;
+        }
+    }
+    // checkedMail(email)
     // console.log(files.length);
     var srcImg = null
     if (files.length > 0) {
@@ -401,8 +421,28 @@ function saveTeacher(id) {
         })
         return;
     }
-    checkedPhone(phone)
-    checkedMail(email)
+    // checkedPhone(phone)
+    // checkedMail(email)
+    var vnf_regex = /(03|07|08|09|01[2|6|8|9])+([0-9]{8})\b/g;
+    if (!vnf_regex.test(phone)) {
+        swal({
+            title: "Số điện thoại không hợp lệ ",
+            text: "",
+            icon: "warning"
+        })
+        return;
+    }
+    function checkedMail(email) {
+        var email_regex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        if (!email_regex.test(email)) {
+            swal({
+                title: "Email không hợp lệ",
+                text: "",
+                icon: "warning"
+            })
+            return;
+        }
+    }
     if (files.length > 0) {
         var fileData = new FormData();
         var fileName = "";

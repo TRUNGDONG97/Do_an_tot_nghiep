@@ -126,7 +126,7 @@ export class AbsentItem extends Component {
                 </View>
                 <View style={[styles.rowTable, { flex: 2 }]}>
                     <Text style={theme.fonts.regular14}>
-                        {item.Absent_Students[0].time_absent ? item.Absent_Students[0].time_absent.slice(0, 5) : 'no'}
+                        {item.Absent_Students[0].time_absent ? item.Absent_Students[0].time_absent.slice(0, 5) : null}
                     </Text>
                 </View>
                 <View style={[styles.rowTable, { flex: 1 }]}>
