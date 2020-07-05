@@ -9,7 +9,7 @@ import Toast, { BACKGROUND_TOAST } from "@app/utils/Toast";
 function createAxios() {
   // AsyncStorage.setItem("token", '2323226DADAD') //full
   var axiosInstant = axios.create();
-  axiosInstant.defaults.baseURL = "http://a4dd23b856af.ngrok.io/app";
+  axiosInstant.defaults.baseURL = "http://2309f832d726.ngrok.io/app";
   axiosInstant.defaults.timeout = 20000;
   axiosInstant.defaults.headers = { "Content-Type": "application/json" };
 
@@ -20,13 +20,14 @@ function createAxios() {
         token = "";
       }
       config.headers = {
-        // role: 2,
         token: token
       };
-      // console.log("Token: ", config.headers.token);
+      // config.headers.token = await AsyncStorage.getItem('token', '')
       return config;
     },
-    error => Promise.reject(error)
+    error => {
+      return Promise.reject(error);
+    }
   );
 
   axiosInstant.interceptors.response.use(
@@ -51,9 +52,10 @@ function createAxios() {
     },
     err => {
       setTimeout(() => {
-        Toast.show(response.data.message, BACKGROUND_TOAST.FAIL);
+        Toast.show("Lỗi kết nối", BACKGROUND_TOAST.FAIL);
         // Alert.alert("Thông báo", "Lỗi kết nối");
       }, 100);
+      return Promise.reject(err);
     }
   );
   return axiosInstant;
@@ -65,10 +67,8 @@ export const getAxios = createAxios();
 function handleResult(api) {
   return api.then(res => {
     if (res.data.status != 1) {
-      // console.log("Status != 1\n");
-      return Promise.reject(new Error("err"));
+      return Promise.reject(new Error("Co loi xay ra"));
     }
-    console.log("RequestSuccess\n");
     return Promise.resolve(res.data);
   });
 }

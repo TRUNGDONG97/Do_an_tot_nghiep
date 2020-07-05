@@ -7,7 +7,7 @@ import Toast, { BACKGROUND_TOAST } from "@app/utils/Toast";
 function createAxios() {
   // AsyncStorage.setItem("token", '49FF532E930B0F4A67C279EBEB1867C7') //full
   var axiosInstant = axios.create();
-  axiosInstant.defaults.baseURL = "http://a4dd23b856af.ngrok.io/app";
+  axiosInstant.defaults.baseURL = "http://2309f832d726.ngrok.io/app";
   axiosInstant.defaults.timeout = 20000;
   axiosInstant.defaults.headers = { "Content-Type": "application/json" };
 
@@ -39,20 +39,20 @@ function createAxios() {
         }, 100);
 
         AsyncStorage.setItem("token", "", () => {
-          NavigationUtil.navigate("Auth");
+          NavigationUtil.navigate(SCREEN_ROUTER.AUTH);
         });
       } else if (response.data && response.data.status != 1) {
         setTimeout(() => {
-          // Alert.alert("Thông báo", response.data.message);
           Toast.show(response.data.message, BACKGROUND_TOAST.FAIL);
+          // Alert.alert("Thông báo", response.data.message);
         }, 100);
       }
       return response;
     },
     err => {
       setTimeout(() => {
-        // Alert.alert("Thông báo", "Lỗi kết nối");
         Toast.show("Lỗi kết nối", BACKGROUND_TOAST.FAIL);
+        // Alert.alert("Thông báo", "Lỗi kết nối");
       }, 100);
       return Promise.reject(err);
     }

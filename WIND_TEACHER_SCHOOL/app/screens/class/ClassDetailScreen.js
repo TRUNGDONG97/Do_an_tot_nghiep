@@ -127,6 +127,10 @@ export class ClassDetailScreen extends Component {
                         reactotron.log(isEnabled)
                         if (!isEnabled) {
                             Toast.show('Bạn chưa bật wifi', BACKGROUND_TOAST.FAIL);
+                            this.setState({
+                                ...this.state,
+                                isLoading: false
+                            });
                             return;
                         }
 
@@ -232,24 +236,24 @@ export class ClassDetailScreen extends Component {
         //     return <Empty description={"Chưa có sinh viên nào"}
         //     />
         return (
-           
+
             <View
                 style={{
                     marginTop: 5,
                     flex: 1,
                     // paddingBottom: 20
                 }}
-        
+
             >
 
                 <View style={styles._viewUser}>
                     {this._renderUserItem('Mã lớp học',
-                       detailClassState.classInfo? detailClassState.classInfo.class_code:'')}
+                        detailClassState.classInfo ? detailClassState.classInfo.class_code : '')}
                     {this._renderUserItem(R.strings.number_of_people, detailClassState.listStudent.length)}
                     {this._renderUserItem("Mã môn học",
-                        detailClassState.classInfo?detailClassState.classInfo.Subject.subject_code:'')}
+                        detailClassState.classInfo ? detailClassState.classInfo.Subject.subject_code : '')}
                     {this._renderUserItem("Số điểm danh",
-                        detailClassState.totalAbsent?detailClassState.totalAbsent:'')}
+                        detailClassState.totalAbsent ? detailClassState.totalAbsent : '')}
                 </View>
                 <View style={{
                     flexDirection: 'row',

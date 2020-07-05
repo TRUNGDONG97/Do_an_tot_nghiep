@@ -53,7 +53,7 @@ export class AbsentStudentScreen extends Component {
             );
         return (
             <ScrollView
-                style={{ marginTop: 20, }}
+                style={{ marginTop: 20,marginBottom:10 }}
                 showsVerticalScrollIndicator={false}
                 refreshControl={
                     <RefreshControl

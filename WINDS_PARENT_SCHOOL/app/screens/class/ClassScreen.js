@@ -16,7 +16,7 @@ import {
     FastImage, Icon,
     Content,
     ClassItem,
-    Empty
+    Empty,Error
 } from '@component'
 import R from '@R'
 import theme from '@theme'
@@ -33,7 +33,7 @@ class ClassScreen extends Component {
         };
     }
     async componentDidMount() {
-       await this.props.getListClassAction();
+        await this.props.getListClassAction();
     }
     render() {
         return (
@@ -49,7 +49,7 @@ class ClassScreen extends Component {
 
     renderBody() {
         const { classListState } = this.props
-        reactotron.log('classListState', classListState)
+        reactotron.log('classListState', classListState.error)
         if (classListState.isLoading) return <Loading />;
         if (classListState.error)
             return (
@@ -58,13 +58,14 @@ class ClassScreen extends Component {
                         this.props.getListClassAction();
                     }}
                 />
+
             );
-        if(classListState.data.length==0) return <Empty description={"Chưa có lớp nào"}/>
+        if (classListState.data.length == 0) return <Empty description={"Chưa có lớp nào"} />
         return (
-            <Block flex={1} style={{marginTop:40}}>
+            <Block flex={1} style={{ marginTop: 40 }}>
                 <FlatList
                     showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ paddingHorizontal: 10,paddingBottom:20}}
+                    contentContainerStyle={{ paddingHorizontal: 10, paddingBottom: 20 }}
                     refreshControl={
                         <RefreshControl
                             refreshing={this.state.isRefresh}

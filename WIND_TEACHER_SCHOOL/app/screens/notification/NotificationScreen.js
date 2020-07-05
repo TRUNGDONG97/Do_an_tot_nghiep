@@ -25,6 +25,8 @@ import { connect } from "react-redux";
 import Mockup from "@app/constants/Mockup";
 import reactotron from "reactotron-react-native";
 import { getListNotifyAction } from '@action'
+import NavigationUtil from '@app/navigation/NavigationUtil'
+import { SCREEN_ROUTER } from '@constant'
 export class NotificationScreen extends Component {
   componentDidMount() {
     this.props.getListNotifyAction();
@@ -90,7 +92,13 @@ export class NotiItem extends Component {
   render() {
     const { item, index } = this.props;
     return (
-      <View style={styles._viewItem}>
+      <TouchableOpacity style={styles._viewItem}
+        onPress={() => {
+          NavigationUtil.navigate(SCREEN_ROUTER.DETAIL_ABSENT, {
+            absent_class_id:item.absent_class_id
+          })
+        }}
+      >
         <View
           style={{
             width: 40,
@@ -108,7 +116,7 @@ export class NotiItem extends Component {
             {item.created_date.split("-").reverse().join("/")}
           </Text>
         </Block>
-      </View>
+      </TouchableOpacity>
     );
   }
 }

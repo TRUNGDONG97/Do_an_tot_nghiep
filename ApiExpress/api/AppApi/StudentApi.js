@@ -539,6 +539,7 @@ const absentStudent = async (req, res, next) => {
                 class_id
             }
         })
+        console.log(absentClass.length,'absenc')
         if (absentClass.length < 1) {
             res.json({
                 "status": 0,
@@ -622,7 +623,11 @@ const absentStudent = async (req, res, next) => {
             gps_latitude,
             gps_longitude
         )
-        // console.log(distance)
+        console.log(absentClass[0].gps_latitude)
+        console.log(absentClass[0].gps_longitude)
+        console.log(gps_latitude)
+        console.log(gps_longitude)
+        console.log(distance,'distance')
         if (distance > Constants.DISTANCE || !checkSsid) {
             res.json({
                 "status": 0,

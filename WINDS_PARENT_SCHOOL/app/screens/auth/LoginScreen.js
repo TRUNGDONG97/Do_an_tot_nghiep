@@ -20,7 +20,8 @@ import R from "@R";
 import { showMessages } from "@app/utils/Alert";
 import OneSignal from "react-native-onesignal";
 import { requestLogin } from "@api";
-
+import Toast, { BACKGROUND_TOAST } from "@app/utils/Toast";
+import reactotron from "reactotron-react-native";
 export default class LoginScreen extends Component {
   static navigationOptions = {
     header: null
@@ -59,7 +60,7 @@ export default class LoginScreen extends Component {
         deviceID: this.state.deviceID,
         type: 1
       });
-
+      // reactotron.log(response)
       this.setState(
         {
           ...this.state,
@@ -74,6 +75,18 @@ export default class LoginScreen extends Component {
         }
       );
     } catch (err) {
+      this.setState(
+        {
+          ...this.state,
+          error: null,
+          isLoading: false,
+          data: null
+        })
+      if (err.message == "Network Error") {
+        Toast.show(I18n.t("network_err"), BACKGROUND_TOAST.FAIL);
+      }
+      //showMessages(I18n.t("notification"),I18n.t("error") );
+      Toast.show('Vui lòng thử lại', BACKGROUND_TOAST.FAIL)
       this.setState({ ...this.state, error: err, isLoading: false });
     }
   };

@@ -15,7 +15,7 @@ const TYPE_NOTIFICATION={
     CANCEL_ABSENT:2,
     ABSENT_STUDENT:3
 }
-const DISTANCE=100
+const DISTANCE=250
 export default {
     OPTION,
     PER_PAGE,

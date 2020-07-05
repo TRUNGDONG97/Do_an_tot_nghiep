@@ -45,7 +45,7 @@ export class CameraScreen extends Component {
     takePicture = async () => {
         if (this.camera) {
             const options = {
-                quality: 0.5,
+                quality: 1,
                 base64: true,
                 width: theme.dimension.width,
                 height: theme.dimension.height,
