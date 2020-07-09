@@ -233,20 +233,35 @@
 													"top": 210,
 													"width": 220.078125,
 													"height": 13
+												},
+												{
+													"_type": "ERDColumnView",
+													"_id": "AAAAAAFzLzvGcLc/SHo=",
+													"_parent": {
+														"$ref": "AAAAAAFw9ddGG8XuqTY="
+													},
+													"model": {
+														"$ref": "AAAAAAFzLzvGVLc8/Vo="
+													},
+													"font": "Arial;13;0",
+													"left": 749,
+													"top": 225,
+													"width": 220.078125,
+													"height": 13
 												}
 											],
 											"font": "Arial;13;0",
 											"left": 744,
 											"top": 55,
 											"width": 230.078125,
-											"height": 173
+											"height": 188
 										}
 									],
 									"font": "Arial;13;0",
 									"left": 744,
 									"top": 32,
 									"width": 230.078125,
-									"height": 201,
+									"height": 211,
 									"nameLabel": {
 										"$ref": "AAAAAAFw9ddGGsXtE+E="
 									},
@@ -2200,7 +2215,7 @@
 											"visible": false,
 											"font": "Arial;13;0",
 											"left": 852,
-											"top": 289,
+											"top": 294,
 											"height": 13,
 											"alpha": 1.5707963267948966,
 											"distance": 15,
@@ -2234,7 +2249,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 852,
-											"top": 251,
+											"top": 261,
 											"height": 13,
 											"alpha": -0.5235987755982988,
 											"distance": 30,
@@ -2251,7 +2266,7 @@
 										"$ref": "AAAAAAFw9iSAP8f6+zU="
 									},
 									"lineStyle": 2,
-									"points": "867:360;867:232",
+									"points": "867:360;867:242",
 									"nameLabel": {
 										"$ref": "AAAAAAFw9sCpmMpz69U="
 									},
@@ -3097,6 +3112,16 @@
 									},
 									"name": "teacher_id",
 									"type": "int",
+									"length": 0
+								},
+								{
+									"_type": "ERDColumn",
+									"_id": "AAAAAAFzLzvGVLc8/Vo=",
+									"_parent": {
+										"$ref": "AAAAAAFw9ddGGcXqqqg="
+									},
+									"name": "list_ssid",
+									"type": "nvarchar",
 									"length": 0
 								}
 							]
