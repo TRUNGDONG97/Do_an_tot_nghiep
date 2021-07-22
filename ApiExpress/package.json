@@ -35,7 +35,7 @@
         "sequelize-cli": "^5.5.1",
         "tedious": "^8.2.0",
         "validator": "^13.0.0",
-        "xlsx": "^0.16.1"
+        "xlsx": "^0.17.0"
     },
     "devDependencies": {}
 }
